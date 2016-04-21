@@ -18,7 +18,7 @@ class Interaction:
 
 class PrimitiveInteraction(Interaction):
     def __init__(self, name):
-        super(PrimitiveInteraction, self).__init__()
+        super(PrimitiveInteraction, self).__init__(name)
 
     def unwrap(self):
         """
