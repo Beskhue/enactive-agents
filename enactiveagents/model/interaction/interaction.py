@@ -1,5 +1,5 @@
 """
-Model to hold interaction classes.
+Module to hold interaction classes.
 """
 
 class Interaction:
