@@ -22,7 +22,7 @@ class Controller(events.EventListener):
         quitEvent = events.QuitEvent()
         AppState.get_state().get_event_manager().post_event(quitEvent)
 
-    def processInput(self):
+    def process_input(self):
         """
         Process user input.
         """
@@ -40,4 +40,4 @@ class Controller(events.EventListener):
 
     def notify(self, event):
         if isinstance(event, events.TickEvent):
-            self.processInput()
+            self.process_input()
