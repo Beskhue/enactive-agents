@@ -51,26 +51,26 @@ def main():
     Main function of the application.
     """
     # Initialize the event manager.
-    eventManager = events.EventManager()
-    AppState.get_state().set_event_manager(eventManager)
+    event_manager = events.EventManager()
+    AppState.get_state().set_event_manager(event_manager)
 
     # Initialize and register the application heartbeat.
-    heartBeat = HeartBeat()
-    eventManager.register_listener(heartBeat)
+    heart_beat = HeartBeat()
+    event_manager.register_listener(heart_beat)
 
     # Initialize pygame.
     surface = init()
 
     # Initialize and register the view.
-    mainView = view.View(surface)
-    eventManager.register_listener(mainView)
+    main_view = view.View(surface)
+    event_manager.register_listener(main_view)
 
     # Initialize and register the controller.
-    mainController = controller.Controller()
-    eventManager.register_listener(mainController)
+    main_controller = controller.Controller()
+    event_manager.register_listener(main_controller)
 
     # Start the heartbeat.
-    heartBeat.run()
+    heart_beat.run()
 
 if __name__ == '__main__':
     """

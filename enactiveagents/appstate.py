@@ -23,11 +23,11 @@ class AppState:
 
         return AppState.state
 
-    def set_event_manager(self, eventManager):
-        self.eventManager = eventManager
+    def set_event_manager(self, event_manager):
+        self.event_manager = event_manager
 
     def get_event_manager(self):
-        return self.eventManager
+        return self.event_manager
 
     def set_clock(self, clock):
         self.clock = clock
