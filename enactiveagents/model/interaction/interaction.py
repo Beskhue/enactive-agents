@@ -2,7 +2,9 @@
 Module to hold interaction classes.
 """
 
-class Interaction:
+import abc
+
+class Interaction(object):
     def __init__(self, name):
         self.name = name
 
@@ -13,6 +15,7 @@ class Interaction:
         """
         return self.name
 
+    @abc.abstractmethod
     def unwrap(self):
         raise NotImplementedError("Should be implemented by child")
 
