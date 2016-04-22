@@ -2,8 +2,8 @@
 Module to hold application settings.
 """
 
-WIDTH = 450
-HEIGHT = 450
-MAX_FPS = 60
+CELL_WIDTH = 32
+CELL_HEIGHT = 32
+MAX_FPS = 50000
 
 LISTEN_PORT = 8418

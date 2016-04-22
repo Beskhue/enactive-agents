@@ -34,3 +34,10 @@ class AppState:
 
     def get_clock(self):
         return self.clock
+
+    def set_world(self, world):
+        self.world = world
+
+    def get_world(self):
+        return self.world
+

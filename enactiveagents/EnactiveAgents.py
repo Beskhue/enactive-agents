@@ -8,6 +8,7 @@ import settings
 import events
 from view import view
 from controller import controller
+import experiment.basic
 
 class HeartBeat(events.EventListener):
     """
@@ -41,7 +42,14 @@ def init():
     print("Loading pygame modules.")
     pygame.display.init()
     AppState.get_state().set_clock(pygame.time.Clock())
-    surface = pygame.display.set_mode((settings.WIDTH, settings.HEIGHT))
+    flags = pygame.DOUBLEBUF
+    surface = pygame.display.set_mode(
+        (
+            AppState.get_state().get_world().get_width() * settings.CELL_WIDTH,
+            AppState.get_state().get_world().get_height() * settings.CELL_HEIGHT,
+        ), 
+        flags)
+    surface.set_alpha(None)
     pygame.display.set_caption('Enactive Agents v2')
 
     return surface
@@ -57,6 +65,12 @@ def main():
     # Initialize and register the application heartbeat.
     heart_beat = HeartBeat()
     event_manager.register_listener(heart_beat)
+
+    # Initialize and register the world.
+    basic_experiment = experiment.basic.BasicExperiment()
+    world = basic_experiment.get_world()
+    event_manager.register_listener(world)
+    AppState.get_state().set_world(world)
 
     # Initialize pygame.
     surface = init()
