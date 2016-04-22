@@ -31,12 +31,12 @@ class PrimitiveInteraction(Interaction):
         return [self]
 
 class CompositeInteraction(Interaction):
-    def __init__(self, name, pre, post):
+    def __init__(self, pre, post):
         """
         :param pre: The pre interaction
         :param post: The post interaction
         """
-        super(CompositeInteraction, self).__init__(name)
+        super(CompositeInteraction, self).__init__("Composite")
 
         self.pre = pre
         self.post = post
