@@ -305,6 +305,6 @@ class Mock(MagicMock):
     def __getattr__(cls, name):
             return Mock()
 
-MOCK_MODULES = ['pygame']
+MOCK_MODULES = ['pygame', 'pygame.event']
 sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 
