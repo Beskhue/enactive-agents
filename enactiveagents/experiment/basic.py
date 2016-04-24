@@ -2,7 +2,7 @@
 Module to build experiments (worlds, agents, etc.).
 """
 
-import model.interaction.interaction
+import model.interaction
 import model.agent
 import experiment
 
@@ -28,12 +28,12 @@ class BasicExperiment(experiment.Experiment):
         self.world = self.parse_world(self.world_representation)
 
         # Set up primitives
-        step = model.interaction.interaction.PrimitiveInteraction("Step")
-        turn_right = model.interaction.interaction.PrimitiveInteraction("Turn Right")
-        turn_left = model.interaction.interaction.PrimitiveInteraction("Turn Left")
-        feel = model.interaction.interaction.PrimitiveInteraction("Feel")
-        no_feel = model.interaction.interaction.PrimitiveInteraction("No Feel")
-        bump = model.interaction.interaction.PrimitiveInteraction("Bump")
+        step = model.interaction.PrimitiveInteraction("Step")
+        turn_right = model.interaction.PrimitiveInteraction("Turn Right")
+        turn_left = model.interaction.PrimitiveInteraction("Turn Left")
+        feel = model.interaction.PrimitiveInteraction("Feel")
+        no_feel = model.interaction.PrimitiveInteraction("No Feel")
+        bump = model.interaction.PrimitiveInteraction("Bump")
 
         # Define environment logic for primitives, these functions will be
         # registered to the primitive interactions and will be called once
