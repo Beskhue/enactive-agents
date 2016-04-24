@@ -3,9 +3,9 @@ Module that holds classes that represent agents.
 """
 
 import pygame
-import model.world
+import world
 
-class Agent(model.world.Entity):
+class Agent(world.Entity):
     """
     Class that represents an agent.
     """

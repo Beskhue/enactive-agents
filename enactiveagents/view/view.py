@@ -5,8 +5,7 @@ Main world view.
 import abc
 import events
 import pygame
-import model.agent
-import model.structure
+import model
 from appstate import AppState
 
 class View(events.EventListener):
@@ -111,7 +110,7 @@ class Sprite(pygame.sprite.Sprite):
         :return: The shape of the sprite as a list of vertices.
         :rtype: list
         """
-        if isinstance(self.entity, model.agent.agent.Agent):
+        if isinstance(self.entity, model.agent.Agent):
             return [[.2, .25], [.2, .75], [.85, 0.5]]
         else:
             return [[0,0], [0,1], [1,1], [1,0], [0,0]]

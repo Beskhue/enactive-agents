@@ -6,7 +6,7 @@ import abc
 import math
 import pygame
 import events
-import model.agent
+import agent
 
 class World(events.EventListener):
     """
@@ -70,7 +70,7 @@ class World(events.EventListener):
 
     def notify(self, event):
         for entity in self.entities:
-            if isinstance(entity, model.agent.agent.Agent):
+            if isinstance(entity, agent.Agent):
                 
                 pass
 

@@ -86,7 +86,7 @@ class BasicExperiment(experiment.Experiment):
         motivation[bump] = -10
 
         for entity in self.world.get_entities():
-            if isinstance(entity, model.agent.agent.Agent):
+            if isinstance(entity, model.agent.Agent):
                 entity.set_enact_logic(enact_logic)
                 entity.set_primitives(primitives)
                 entity.set_motivation(motivation)

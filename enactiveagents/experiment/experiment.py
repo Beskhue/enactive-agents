@@ -1,8 +1,7 @@
 import abc
 import model.world
 import model.structure
-import model.agent.agent
-
+import model.agent
 
 class Experiment(object):
     def parse_world(self, world_repr, mapper=None):
@@ -48,7 +47,7 @@ class Experiment(object):
         if symbol == "w":
             return model.structure.Structure()
         elif symbol == "a":
-            return model.agent.agent.Agent()
+            return model.agent.Agent()
         else:
             return None
 
