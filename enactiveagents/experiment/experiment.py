@@ -1,6 +1,6 @@
 import abc
 import model.world
-import model.structure.structure
+import model.structure
 import model.agent.agent
 
 
@@ -46,7 +46,7 @@ class Experiment(object):
         :rtype: model.world.Entity
         """
         if symbol == "w":
-            return model.structure.structure.Structure()
+            return model.structure.Structure()
         elif symbol == "a":
             return model.agent.agent.Agent()
         else:
