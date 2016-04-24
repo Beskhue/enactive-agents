@@ -133,7 +133,7 @@ class Sprite(pygame.sprite.Sprite):
     @property
     def image(self):
         """
-        Get theimage of the sprite.
+        Get the image of the sprite.
         """
         if self.entity.get_rotation() != 0:
             surface = rot_center(self.surface, self.entity.get_rotation())
