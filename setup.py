@@ -13,9 +13,5 @@ if __name__ == "__main__":
         author="Thomas Churchman",
         author_email="thomas@churchman.nl",
         url="https://github.com/beskhue/enactive-agents",
-        packages=setuptools.find_packages(),
-        install_requires=[
-            "pygame>=1.9.1"
-        ],
-        dependency_links=['https://bitbucket.org/pygame/pygame/get/release_1_9_1release.zip#egg=pygame-1.9.1']
+        packages=setuptools.find_packages()
     )
