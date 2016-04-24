@@ -2,9 +2,9 @@
 Module that holds classes that represent structures.
 """
 
-import model.world
+import world
 
-class Structure(model.world.Entity):
+class Structure(world.Entity):
     """
     Class representing structures in the world (i.e., static but potentially
     interactable with by agents).
