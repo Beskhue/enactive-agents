@@ -92,6 +92,5 @@ class BasicExperiment(experiment.Experiment):
                 entity.set_motivation(motivation)
 
 
-
     def get_world(self):
         return self.world

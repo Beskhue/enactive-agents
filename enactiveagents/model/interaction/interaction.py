@@ -12,11 +12,16 @@ class Interaction(object):
         """
         Get the name of this interaction.
         :return: The name of this interaction.
+        :rtype: basestring
         """
         return self.name
 
     @abc.abstractmethod
     def unwrap(self):
+        """
+        Get the sequence of interactions represented by this interaction.
+        :return: The sequence of interactions represented by this itneraction.
+        """
         raise NotImplementedError("Should be implemented by child")
 
 class PrimitiveInteraction(Interaction):
