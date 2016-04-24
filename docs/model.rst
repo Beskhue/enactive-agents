@@ -1,17 +1,32 @@
 model package
 =============
 
-Subpackages
------------
-
-.. toctree::
-
-    model.agent
-    model.interaction
-    model.structure
-
 Submodules
 ----------
+
+model.agent module
+------------------
+
+.. automodule:: model.agent
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+model.interaction module
+------------------------
+
+.. automodule:: model.interaction
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+model.structure module
+----------------------
+
+.. automodule:: model.structure
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 model.world module
 ------------------
