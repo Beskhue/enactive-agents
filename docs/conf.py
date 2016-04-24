@@ -293,7 +293,12 @@ html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # Mock imports
 
-from unittest.mock import MagicMock
+try:
+    # py3 import
+    from unittest.mock import MagicMock
+except ImportError:
+    # py27 import
+    from mock import Mock as MagicMock
 
 class Mock(MagicMock):
     @classmethod
