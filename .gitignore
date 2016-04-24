@@ -3,6 +3,10 @@
 *.pyc
 *.pyproj
 
+# Build
+EnactiveAgents.egg-info/
+dist/
+
 # Docs
 docs/_build
 docs/_static
