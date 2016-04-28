@@ -47,7 +47,7 @@ class Experiment(object):
         if symbol == "w":
             return model.structure.Structure()
         elif symbol == "a":
-            return model.agent.Agent()
+            return model.agent.ConstructiveAgent()
         else:
             return None
 

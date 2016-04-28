@@ -2,8 +2,10 @@
 Module that holds classes that represent agents.
 """
 
+import abc
 import pygame
 import world
+import interaction
 
 class Agent(world.Entity):
     """
@@ -42,3 +44,10 @@ class Agent(world.Entity):
 
     def collidable(self):
         return False
+
+class ConstructiveAgent(Agent):
+    def enact_interaction(self, interaction):
+        if isinstance(interaction, interaction.PrimitiveInteraction):
+            pass
+        else:
+            pass
