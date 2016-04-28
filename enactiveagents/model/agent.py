@@ -46,6 +46,10 @@ class Agent(world.Entity):
         return False
 
 class ConstructiveAgent(Agent):
+    """
+    An agent with a fully recursive existence. It considers all experiment as 
+    abstract and processes all experiments in the same way.
+    """
     def enact_interaction(self, interaction):
         if isinstance(interaction, interaction.PrimitiveInteraction):
             pass
