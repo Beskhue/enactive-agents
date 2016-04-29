@@ -49,10 +49,23 @@ class World(events.EventListener):
                 return True
         return False
 
+    def entity_rect_collision(self, rect):
+        for entity in self.entities:
+            if entity.collidable() and entity.collide(rect):
+                return True
+        return False
+
     def can_step(self, agent):
         position = Position(agent.get_position())
         position.add(agent.get_move_delta(1))
-        return not self.collidable_entity_at(position)
+        return not self.entity_rect_collision(
+            (
+                position.get_x(), 
+                position.get_y(), 
+                agent.get_width(), 
+                agent.get_height()
+            )
+        )
 
     def add_enact_logic(self, agent, callback_dict):
         """
@@ -206,6 +219,9 @@ class Entity(object):
     def get_rotation(self):
         return self.rotation
 
+    def get_rect(self):
+        return (self.position.get_x(), self.position.get_y(), width, height)
+
     def set_position(self, position):
         self.position.set(position)
 
@@ -320,6 +336,12 @@ class Entity(object):
         """
         self.color = color
 
+    def get_width(self):
+        return self.width
+
+    def get_height(self):
+        return self.height
+
     @abc.abstractmethod
     def collidable(self):
         """
@@ -331,10 +353,10 @@ class Entity(object):
 
 def collide(r1, r2):
     return not (
-        r2[0] > r1[0]+r1[2] or
-        r2[0]+r2[2] < r1[0] or
-        r2[1] > r1[1]+r1[3] or
-        r2[1]+r2[3] < r1[1]
+        r2[0] >= r1[0]+r1[2] or # Left side of r2 is to the right of right side of r1
+        r2[0]+r2[2] <= r1[0] or # Right side of r2 is to the left of left side of r1
+        r2[1] >= r1[1]+r1[3] or # Top of r2 is below of bottom of r1
+        r2[1]+r2[3] <= r1[1] # Bottom of r2 is above top of r1
     )
 
 def inside(r, p):
