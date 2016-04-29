@@ -20,6 +20,14 @@ model.interaction module
     :undoc-members:
     :show-inheritance:
 
+model.interactionmemory module
+------------------------------
+
+.. automodule:: model.interactionmemory
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 model.structure module
 ----------------------
 
