@@ -58,3 +58,6 @@ class CompositeInteraction(Interaction):
         :return: A list of primitive interactions.
         """
         return self.pre.unwrap() + self.post.unwrap()
+
+    def __eq__(self, other):
+        self.unwrap() == other.unwrap()
