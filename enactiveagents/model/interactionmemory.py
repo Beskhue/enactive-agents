@@ -75,6 +75,8 @@ class InteractionMemory(object):
         Get the valence of an interaction. If the interaction is a primative,
         get its valence. If the interaction is composite, sum the valences
         of its primitives.
+
+        :param interaction_: The interaction to get the valence of.
         """
         if isinstance(interaction_, interaction.PrimitiveInteraction):
             return self.valences[interaction_]
@@ -84,6 +86,15 @@ class InteractionMemory(object):
             return valence
         else:
             raise TypeError("Expected interaction_ to be either primitive or composite.")
+
+    def get_proclivity(self, interaction):
+        """
+        Get the proclivity of an interaction. Proclivity is defined as the 
+        valence multiplied by the weight.
+
+        :param interaction: The interaction to get the proclivity of.
+        """
+        return self.get_weight(interaction) * self.get_valence(interaction)
 
     def get_primitive_interactions(self):
         return self.primitive_interactions
