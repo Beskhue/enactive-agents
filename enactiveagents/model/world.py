@@ -173,8 +173,8 @@ class Position:
         self.y += delta[1]
 
     def __eq__(self, other):
-        if not isinstance(position, Position):
-            position = Position(position)
+        if not isinstance(other, Position):
+            other = Position(other)
 
         return (self.x, self.y) == (other.x, other.y)
 
@@ -190,7 +190,7 @@ class Entity(object):
 
     width = 1
     height = 1
-    step_size = 0.01
+    step_size = 1
     rect = None
 
     def __init__(self, position = None, rotation = 0):
@@ -340,7 +340,7 @@ def collide(r1, r2):
 def inside(r, p):
     return not (
         p.get_x() < r[0] or
-        p.get_y() > r[1] or
-        p.get_x() > r[0] + r[2] or
-        p.get_y() > r[1] + r[3]
+        p.get_y() < r[1] or
+        p.get_x() >= r[0] + r[2] or
+        p.get_y() >= r[1] + r[3]
     )
