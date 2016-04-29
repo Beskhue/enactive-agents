@@ -4,6 +4,7 @@ Module that holds classes that represent the world.
 
 import abc
 import math
+from random import shuffle
 import pygame
 import events
 import agent
@@ -83,11 +84,40 @@ class World(events.EventListener):
     def add_entity(self, entity):
         self.entities.append(entity)
 
+    def prepare(self, agents):
+        """
+        Let all agents prepare their next interaction. Store any potential data
+        the agents return.
+
+        :param agents: The agents to have prepare their interactions.
+        :return: A dictionary of agents mapping to the data returned by their
+        preparation (this data is to be delivered back to the agents (unmutated) 
+        when they are told to enact their prepared interaction).
+        """
+        agents_data = {}
+        for agent in agents:
+            agents_data[agent] = agent.prepare_interaction()
+            
+    def enact(self, agents_data):
+        """
+        Let all agents enact their prepared interaction.
+
+        :param agents_data: The agent and data mapping as generated in 
+        self.prepare.
+        """
+        for agent, data in agents_data.iteritems():
+            agent.enact_interaction(agents_data[agent])
+
     def notify(self, event):
+        agents = []
         for entity in self.entities:
             if isinstance(entity, agent.Agent):
-                
-                pass
+                agents.append(entity)
+        shuffle(agents)
+        agents_data = self.prepare(agents)
+        self.enact(agents_data)
+
+
 
 class Position:
     
