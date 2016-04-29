@@ -4,9 +4,11 @@ Module that holds classes that represent the world.
 
 import abc
 import math
+import collections
 from random import shuffle
 import pygame
 import events
+import interaction
 import agent
 
 class World(events.EventListener):
@@ -86,17 +88,26 @@ class World(events.EventListener):
 
     def prepare(self, agents):
         """
-        Let all agents prepare their next interaction. Store any potential data
-        the agents return.
+        Let all agents prepare their next interaction. Store the interaction
+        they wish to enact and any potential (optional) data the agents return.
 
         :param agents: The agents to have prepare their interactions.
-        :return: A dictionary of agents mapping to the data returned by their
-        preparation (this data is to be delivered back to the agents (unmutated) 
-        when they are told to enact their prepared interaction).
+        :return: A dictionary of agents mapping to a tuple with the interaction
+        they wish to enact and the data returned by their preparation (this 
+        data is to be delivered back to the agents (unmutated) when they are
+        told which interaction was enacted.
         """
         agents_data = {}
         for agent in agents:
-            agents_data[agent] = agent.prepare_interaction()
+            val = agent.prepare_interaction()
+            if isinstance(val, interaction.PrimitiveInteraction):
+                agents_data[agent] = (val, None)
+            elif isinstance(val, collections.Sequence) and len(val) == 2 and isinstance(val[0], interaction.PrimitiveInteraction):
+                agents_data[agent] = (val[0], val[1])
+            else:
+                raise ValueError("Expected the return value of prepare_interaction to be a primitive interaction or a sequence of an interaction and data.")
+
+        return agents_data
             
     def enact(self, agents_data):
         """
@@ -105,8 +116,16 @@ class World(events.EventListener):
         :param agents_data: The agent and data mapping as generated in 
         self.prepare.
         """
-        for agent, data in agents_data.iteritems():
-            agent.enact_interaction(agents_data[agent])
+        for agent, (interaction, data) in agents_data.iteritems():
+            # Get enact logic
+            callback = self.enact_logic[agent][interaction]
+
+            # Process logic and get actual enacted interaction
+            enacted_interaction = callback(self, agent, interaction)
+
+            # Tell agent which interaction was enacted
+            agent.enacted_interaction(enacted_interaction, data)
+
 
     def notify(self, event):
         agents = []

@@ -41,22 +41,22 @@ class BasicExperiment(experiment.Experiment):
         # The function can manipulate the world and the agents.
         # The return value is the actual enacted interaction (i.e., can be 
         # different form the attempted interaction).
-        def _step(agent, world):
+        def _step(world, agent, interaction):
             if world.can_step(agent):
                 agent.step()
                 return step
             else:
                 return bump
 
-        def _turn_right(agent, world):
+        def _turn_right(world, agent, interaction):
             agent.add_rotation(-90)
             return turn_right
         
-        def _turn_left(agent, world):
+        def _turn_left(world, agent, interaction):
             agent.add_rotation(90)
             return turn_left
 
-        def _feel(agent, world):
+        def _feel(world, agent, interaction):
             if world.can_step(agent):
                 return no_feel
             else:
