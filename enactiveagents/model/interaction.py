@@ -35,6 +35,9 @@ class PrimitiveInteraction(Interaction):
         """
         return [self]
 
+    def __repr__(self):
+        return "PrimitiveInteraction(name=%r)" % self.name
+
 class CompositeInteraction(Interaction):
     def __init__(self, pre, post):
         """
@@ -61,3 +64,6 @@ class CompositeInteraction(Interaction):
 
     def __eq__(self, other):
         self.unwrap() == other.unwrap()
+
+    def __repr__(self):
+        return "CompositeInteraction(pre=%r,post=%r)" % (self.pre, self.post)
