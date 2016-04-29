@@ -59,6 +59,16 @@ class Agent(world.Entity):
     def collidable(self):
         return False
 
+class SimpleAgent(Agent):
+    """
+    An agent with a simple existence.
+    """
+    def prepare_interaction(self):
+        pass
+
+    def enact_interaction(self, data):
+        pass
+
 class ConstructiveAgent(Agent):
     """
     An agent with a fully recursive existence. It considers all experiment as 
