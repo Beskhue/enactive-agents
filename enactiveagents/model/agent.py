@@ -3,6 +3,7 @@ Module that holds classes that represent agents.
 """
 
 import abc
+import random
 import pygame
 import world
 import interaction
@@ -13,7 +14,6 @@ class Agent(world.Entity):
     """
 
     color = (3, 124, 146, 255)
-    interactions = []
 
     def __init__(self):
         super(Agent, self).__init__()
@@ -66,11 +66,38 @@ class SimpleAgent(Agent):
     """
     An agent with a simple existence.
     """
+    composite_interactions = []
+    enacted = None
+
+    def anticipate(self):
+        interactions = []
+        for composite_interaction in self.composite_interactions:
+            if composite_interaction.get_pre() == self.enacted:
+                interactions.append(composite_interaction.get_post())
+
+        return interactions
+
+    def select_experiment(self, anticipations):
+        anticipations.sort(lambda x, y: self.motivation[x] > self.motivation[y])
+        if len(anticipations) > 0 and self.motivation[anticipations[0]] > 0:
+            return anticipations[0]
+        else:
+            return random.choice(self.primitives)
+
+    def learn_composite_interaction(self, context, enacted):
+        composite = interaction.CompositeInteraction(context, enacted)
+        if composite not in self.composite_interactions:
+            self.composite_interactions.append(composite)
+
     def prepare_interaction(self):
-        return self.primitives[1]
+        anticipations = self.anticipate()
+        experiment = self.select_experiment(anticipations)
+        return experiment
 
     def enacted_interaction(self, interaction, data):
-        pass
+        if not self.enacted is None:
+            self.learn_composite_interaction(self.enacted, interaction)
+        self.enacted = interaction
 
 class ConstructiveAgent(Agent):
     """
