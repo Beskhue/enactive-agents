@@ -87,7 +87,7 @@ class BasicExperiment(experiment.Experiment):
 
         for entity in self.world.get_entities():
             if isinstance(entity, model.agent.Agent):
-                entity.set_enact_logic(enact_logic)
+                self.world.add_enact_logic(entity, enact_logic)
                 entity.set_primitives(primitives)
                 entity.set_motivation(motivation)
 

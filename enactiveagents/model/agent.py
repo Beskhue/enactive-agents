@@ -39,9 +39,6 @@ class Agent(world.Entity):
     def set_motivation(self, motivation):
         self.motivation = motivation
 
-    def set_enact_logic(self, enact_logic):
-        self.enact_logic = enact_logic
-
     def collidable(self):
         return False
 

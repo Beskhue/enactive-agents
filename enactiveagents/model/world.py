@@ -14,6 +14,7 @@ class World(events.EventListener):
     """
 
     entities = []
+    enact_logic = {}
     width = 20
     height = 20
 
@@ -49,6 +50,20 @@ class World(events.EventListener):
         position = Position(agent.get_position())
         position.add(agent.get_move_delta(1))
         return not collidable_entity_at(position)
+
+    def add_enact_logic(self, agent, callback_dict):
+        """
+        Set the enact logic for a given agent. callback_dict is a dictionary
+        (map) of primitive interactions to callbacks. The callbacks will be
+        called when the agent attempts to enact a certain (primitive) 
+        interaction. The callback receives as parameters an intance of the
+        world, the agent and the primitive interaction that was enacted.
+
+        The callback should manipulate the world state (e.g., move the agent)
+        and return the primitive interaction that was interacted (potentially
+        different from the interaction that was intended to be interacted).
+        """
+        self.enact_logic[agent] = callback_dict
 
     def get_width(self):
         return self.width
