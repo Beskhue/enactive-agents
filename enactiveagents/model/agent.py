@@ -97,6 +97,11 @@ class SimpleAgent(Agent):
 
         If the list of anticipated interactions is empty or if the best 
         interaction has negative valence, return a random primitive interaction.
+
+        :param anticipations: The list of interactions to choose an experiment
+        from.
+
+        :return: A chosen primitive interaction.
         """
         anticipations.sort(
             key = lambda x: self.interaction_memory.get_valence(x),
@@ -108,6 +113,12 @@ class SimpleAgent(Agent):
             return random.choice(self.interaction_memory.get_primitive_interactions())
 
     def learn_composite_interaction(self, context, enacted):
+        """
+        Learn a composite interaction or reinforce it if it is already known.
+
+        :param context: The context (pre-interaction).
+        :param enacted: The newly enecated interaction (post-interaction).
+        """
         composite = interaction.CompositeInteraction(context, enacted)
         if composite not in self.interaction_memory.get_composite_interactions():
             self.interaction_memory.add_interaction(composite)
