@@ -52,7 +52,7 @@ class World(events.EventListener):
     def can_step(self, agent):
         position = Position(agent.get_position())
         position.add(agent.get_move_delta(1))
-        return not collidable_entity_at(position)
+        return not self.collidable_entity_at(position)
 
     def add_enact_logic(self, agent, callback_dict):
         """
