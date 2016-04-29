@@ -47,6 +47,9 @@ class Agent(world.Entity):
 
         :param data: The data that was returned by prepare_interaction this 
         step.
+
+        :return: The interaction the agent wishes to enact.
+        :rtype: model.interaction.Interaction
         """ 
         raise NotImplementedError("Should be implemented by child.")
 
