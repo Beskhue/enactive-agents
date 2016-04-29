@@ -21,7 +21,7 @@ class InteractionMemory(object):
         :param interaction_: The interaction to add.
         :param weight: The weight of the interaction.
         :param valence: The valence of the interaction, only used for primitive
-        interactions.
+                        interactions.
         """
         if isinstance(interaction_, interaction.PrimitiveInteraction):
             self.primitive_interactions.append(interaction_)
@@ -62,7 +62,7 @@ class InteractionMemory(object):
         """
         Set the valence of an interaction to a specific value.
 
-        :param interaction: The interaction to set the valence of.
+        :param interaction_: The interaction to set the valence of.
         :param valence: The value to set the interaction's valence to.
         """
         if isinstance(interaction_, interaction.PrimitiveInteraction):

@@ -39,7 +39,8 @@ class Agent(world.Entity):
         at the same discrete point in time!
 
         :return: The primitive interaction that is to be enacted and optionally
-        something that will be passed to enacted_interaction of this agent.
+                 something that will be passed to enacted_interaction of this 
+                 agent.
         """
         raise NotImplementedError("Should be implemented by child.")
 
@@ -49,9 +50,9 @@ class Agent(world.Entity):
         Tell the agent which primitive interaction was actually enacted. 
 
         :param interaction: The primitive interaction that was actually
-        enacted.
+                            enacted.
         :param data: The data that was (optionally) returned by 
-        prepare_interaction this step.
+                     prepare_interaction this step.
         """ 
         raise NotImplementedError("Should be implemented by child.")
 
@@ -99,7 +100,7 @@ class SimpleAgent(Agent):
         interaction has negative valence, return a random primitive interaction.
 
         :param anticipations: The list of interactions to choose an experiment
-        from.
+                              from.
 
         :return: A chosen primitive interaction.
         """

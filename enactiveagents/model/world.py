@@ -106,9 +106,9 @@ class World(events.EventListener):
 
         :param agents: The agents to have prepare their interactions.
         :return: A dictionary of agents mapping to a tuple with the interaction
-        they wish to enact and the data returned by their preparation (this 
-        data is to be delivered back to the agents (unmutated) when they are
-        told which interaction was enacted.
+                 they wish to enact and the data returned by their preparation 
+                 (this data is to be delivered back to the agents (unmutated) 
+                 when they are told which interaction was enacted).
         """
         agents_data = {}
         for agent in agents:
@@ -127,7 +127,7 @@ class World(events.EventListener):
         Let all agents enact their prepared interaction.
 
         :param agents_data: The agent and data mapping as generated in 
-        self.prepare.
+                            self.prepare.
         """
         for agent, (interaction, data) in agents_data.iteritems():
             # Get enact logic
