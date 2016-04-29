@@ -18,20 +18,37 @@ class Agent(world.Entity):
     def __init__(self):
         super(Agent, self).__init__()
 
-    def select_interaction(self):
+    @abc.abstractmethod
+    def prepare_interaction(self):
         """
-        Select an interaction to enact.
+        Prepare an interaction to enact. 
+        
+        Interaction enaction is split into two parts to better handle multiple
+        agents. First, all agents prepare the interaction to enact without
+        manipulating the world state, and afterwards all agents (in randomized 
+        order) enact that interaction. 
+        
+        This ensures that an agent at any one point in time does not have
+        access to world state information it should not yet know (especially 
+        when it becomes more complex with e.g. a visual subsystem). If 
+        preparation was immediately followed by enaction, an agent could
+        potentially respond to the interaction of another agent made "earlier"
+        at the same discrete point in time!
 
-        :return: 
+        :return: Something that will be passed to enact_interaction of this
+        agent.
         """
-        pass
+        raise NotImplementedError("Should be implemented by child.")
 
-    def enact_interaction(self, interaction):
+    @abc.abstractmethod
+    def enact_interaction(self, data):
         """
-        :param interaction: The interaction to enact.
-        :type interaction: Interaction
+        Enact the interaction that was prepared.
+
+        :param data: The data that was returned by prepare_interaction this 
+        step.
         """ 
-        pass
+        raise NotImplementedError("Should be implemented by child.")
 
     def set_primitives(self, primitives):
         self.primitives = primitives
@@ -47,8 +64,8 @@ class ConstructiveAgent(Agent):
     An agent with a fully recursive existence. It considers all experiment as 
     abstract and processes all experiments in the same way.
     """
-    def enact_interaction(self, interaction):
-        if isinstance(interaction, interaction.PrimitiveInteraction):
-            pass
-        else:
-            pass
+    def prepare_interaction(self):
+        pass
+
+    def enact_interaction(self, data):
+        pass
