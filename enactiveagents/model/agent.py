@@ -7,6 +7,7 @@ import random
 import pygame
 import world
 import interaction
+import interactionmemory
 
 class Agent(world.Entity):
     """
@@ -17,6 +18,7 @@ class Agent(world.Entity):
 
     def __init__(self):
         super(Agent, self).__init__()
+        self.setup_interaction_memory()
 
     @abc.abstractmethod
     def prepare_interaction(self):
@@ -53,11 +55,20 @@ class Agent(world.Entity):
         """ 
         raise NotImplementedError("Should be implemented by child.")
 
+    @abc.abstractmethod
+    def setup_interaction_memory(self):
+        """
+        Setup the interaction memory of this agent.
+        """
+        raise NotImplementedError("Should be implemented by child.")
+
     def set_primitives(self, primitives):
-        self.primitives = primitives
+        for primitive in primitives:
+            self.interaction_memory.add_interaction(primitive)
 
     def set_motivation(self, motivation):
-        self.motivation = motivation
+        for primitive, valence in motivation.iteritems():
+            self.interaction_memory.set_valence(primitive, valence)
 
     def collidable(self):
         return False
@@ -66,28 +77,33 @@ class SimpleAgent(Agent):
     """
     An agent with a simple existence.
     """
-    composite_interactions = []
     enacted = None
 
     def anticipate(self):
         interactions = []
-        for composite_interaction in self.composite_interactions:
+        for composite_interaction in self.interaction_memory.get_composite_interactions():
             if composite_interaction.get_pre() == self.enacted:
                 interactions.append(composite_interaction.get_post())
 
         return interactions
 
     def select_experiment(self, anticipations):
-        anticipations.sort(lambda x, y: self.motivation[x] > self.motivation[y])
-        if len(anticipations) > 0 and self.motivation[anticipations[0]] > 0:
+        anticipations.sort(lambda x, y: 
+                           self.interaction_memory.get_valence(x) 
+                           > 
+                           self.interaction_memory.get_valence(y)
+        )
+        if len(anticipations) > 0 and self.interaction_memory.get_valence(anticipations[0]) > 0:
             return anticipations[0]
         else:
-            return random.choice(self.primitives)
+            return random.choice(self.interaction_memory.get_primitive_interactions())
 
     def learn_composite_interaction(self, context, enacted):
         composite = interaction.CompositeInteraction(context, enacted)
-        if composite not in self.composite_interactions:
-            self.composite_interactions.append(composite)
+        if composite not in self.interaction_memory.get_composite_interactions():
+            self.interaction_memory.add_interaction(composite)
+        else:
+            self.interaction_memory.increment_weight(composite)
 
     def prepare_interaction(self):
         anticipations = self.anticipate()
@@ -99,11 +115,17 @@ class SimpleAgent(Agent):
             self.learn_composite_interaction(self.enacted, interaction)
         self.enacted = interaction
 
+    def setup_interaction_memory(self):
+        self.interaction_memory = interactionmemory.InteractionMemory()
+
 class ConstructiveAgent(Agent):
     """
     An agent with a fully recursive existence. It considers all experiment as 
     abstract and processes all experiments in the same way.
     """
+    def setup_interaction_memory(self):
+        pass
+
     def prepare_interaction(self):
         pass
 
