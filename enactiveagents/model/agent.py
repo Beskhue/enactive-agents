@@ -80,6 +80,10 @@ class SimpleAgent(Agent):
     enacted = None
 
     def anticipate(self):
+        """
+        Anticipate the possible interactions based on the current context.
+        :return: A list of possible (primitive) interactions.
+        """
         interactions = []
         for composite_interaction in self.interaction_memory.get_composite_interactions():
             if composite_interaction.get_pre() == self.enacted:
@@ -88,10 +92,15 @@ class SimpleAgent(Agent):
         return interactions
 
     def select_experiment(self, anticipations):
-        anticipations.sort(lambda x, y: 
-                           self.interaction_memory.get_valence(x) 
-                           > 
-                           self.interaction_memory.get_valence(y)
+        """
+        Select the best interaction from a list of anticipated interactions.
+
+        If the list of anticipated interactions is empty or if the best 
+        interaction has negative valence, return a random primitive interaction.
+        """
+        anticipations.sort(
+            key = lambda x: self.interaction_memory.get_valence(x),
+            reverse = True
         )
         if len(anticipations) > 0 and self.interaction_memory.get_valence(anticipations[0]) > 0:
             return anticipations[0]
