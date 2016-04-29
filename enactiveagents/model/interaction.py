@@ -46,6 +46,12 @@ class CompositeInteraction(Interaction):
         self.pre = pre
         self.post = post
 
+    def get_pre(self):
+        return self.pre
+
+    def get_post(self):
+        return self.post
+
     def unwrap(self):
         """
         Unwrap the composite interaction.
