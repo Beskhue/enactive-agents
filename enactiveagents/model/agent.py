@@ -144,11 +144,152 @@ class ConstructiveAgent(Agent):
     An agent with a fully recursive existence. It considers all experiment as 
     abstract and processes all experiments in the same way.
     """
-    def setup_interaction_memory(self):
-        pass
+
+    def __init__(self):
+        super(ConstructiveAgent, self).__init__()
+        self.enacting_interaction = False
+        self.enacting_interaction_step = 0
+        self.enacting_interaction_sequence = []
+        self.enacted_sequence = []
+        self.context = []
+
+    def activate_interactions(self):
+        """
+        Step 1 of the sequential system.
+
+        Known composite interactions whose pre-interaction belongs to the 
+        context are activated.
+        """
+        activated = []
+        for composite_interaction in self.interaction_memory.get_composite_interactions():
+            if composite_interaction.get_pre() in self.context:
+                activated.append(composite_interaction)
+
+        return activated
+
+    def propose_interactions(self):
+        """
+        Step 2 of the sequential system.
+
+        Post-interactions of activated interactions are proposed, in order of
+        the weights of the original activated interactions.
+        """
+        activated = self.activate_interactions()
+
+        # TODO: this sort is unnecessary as the propositions are also sorted in
+        # select_intended_interaction.
+        activated.sort(
+            key = lambda x: self.interaction_memory.get_weight(x), 
+            reverse = True
+        )
+        proposed = map(lambda interaction: interaction.get_post(), activated)
+
+        return proposed
+
+    def select_intended_interaction(self):
+        """
+        Step 3 of the sequential system.
+
+        The decisional mechanism; choose an interaction to enact (primitive
+        or composite).
+
+        The intended interaction is selected from the proposed interactions
+        based on the weight of the propositions and the values of the proposed
+        interactions.
+        """
+        proposed = self.propose_interactions()
+        proposed.sort(
+            key = lambda x: self.interaction_memory.get_proclivity(x), 
+            reverse = True
+        )
+        if len(proposed) > 0 and self.interaction_memory.get_proclivity(proposed[0]) > 0:
+            return proposed[0]
+        else:
+            # TODO: in Katja's implementation the activated interactions contain
+            # some set of default interactions. The paper itself does not seem 
+            # to mention how to deal with an empty activated set.
+            return random.choice(self.interaction_memory.get_primitive_interactions())
+
+    def update_context(self, enacted_interaction, learned_or_reinforced):
+        """
+        Step 6 of the sequential system.
+
+        Update the context of the agent. The new context includes the enacted
+        interaction (e_d), the post-interaction of e_d if it exists, and the
+        interactions that were just learned or reinforced and that pass a 
+        certain weight ("stabilized" interactions).
+
+        :param enacted_interaction: The interaction that was enacted (can be
+                                    different from the intended interaction)
+        :param learned_or_reinforced: A list of interactions that were just
+                                      learned or reinforced.
+        """
+        self.context = []
+
+        for interaction_ in learned_or_reinforced:
+            if self.interaction_memory.get_weight(interaction_) > 10:
+                self.context.append(interaction_)
+
+        if isinstance(enacted_interaction, interaction.CompositeInteraction):
+            self.context.append(enacted_interaction.get_post())
+
+        self.context.append(enacted_interaction)
 
     def prepare_interaction(self):
-        pass
+        if not self.enacting_interaction:
+            # Decisional mechanism.
+            # We are not currently enacting the primitives in a sequence of
+            # interactions. Choose a new interaction to enact (steps 1-3).
+            self.enacting_interaction = True
+            self.enacting_interaction_step = 0
+            self.enacted_sequence = []
 
-    def enacted_interaction(self, interaction, data):
-        pass
+            self.intended_interaction = self.select_intended_interaction()
+            self.enacting_interaction_sequence = self.intended_interaction.unwrap()
+            print "-----------------"
+            print self.intended_interaction
+
+        # Enact a primitive interaction from the sequence we are currently
+        # enacting.
+        intended_interaction = self.enacting_interaction_sequence[self.enacting_interaction_step]
+        print "> ", intended_interaction
+
+        # Step 4 of the sequential system, enact the interaction:
+        return (intended_interaction, intended_interaction)
+
+    def enacted_interaction(self, interaction_, data):
+        self.enacting_interaction_step += 1
+        intended_primitive_interaction = data
+
+        self.enacted_sequence.append(interaction_)
+
+        if (
+            not interaction_ is intended_primitive_interaction
+            or
+            self.enacting_interaction_step >= len(self.enacting_interaction_sequence)
+            ):
+            # Failed or done enacting
+            self.enacting_interaction = False
+
+            # Reconstruct enacted interaction from hierarchy of intended
+            # interaction
+            enacted = self.intended_interaction.reconstruct_from_hierarchy(self.enacted_sequence)
+
+            # Step 5: add new or reinforce existing composite interactions
+            learned_or_reinforced = []
+            for pre_interaction in self.context:
+                composite = interaction.CompositeInteraction(pre_interaction, enacted)
+                learned_or_reinforced.append(composite)
+                if composite not in self.interaction_memory.get_composite_interactions():
+                    self.interaction_memory.add_interaction(composite)
+                else:
+                    self.interaction_memory.increment_weight(composite)
+
+            # Step 6: update context
+            self.update_context(enacted, learned_or_reinforced)
+        else: 
+            # Not done
+            pass
+
+    def setup_interaction_memory(self):
+        self.interaction_memory = interactionmemory.InteractionMemory()
