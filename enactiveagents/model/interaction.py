@@ -63,7 +63,7 @@ class CompositeInteraction(Interaction):
         return self.pre.unwrap() + self.post.unwrap()
 
     def __eq__(self, other):
-        self.unwrap() == other.unwrap()
+        return self.pre == other.pre and self.post == other.post
 
     def __ne__(self, other):
         return not (self == other)
