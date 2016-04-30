@@ -93,7 +93,10 @@ class CompositeInteraction(Interaction):
             return pre
 
     def __eq__(self, other):
-        return self.pre == other.pre and self.post == other.post
+        if isinstance(other, CompositeInteraction):
+            return self.pre == other.pre and self.post == other.post
+        else:
+            return False
 
     def __ne__(self, other):
         return not (self == other)
