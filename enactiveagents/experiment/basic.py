@@ -75,6 +75,8 @@ class BasicExperiment(experiment.Experiment):
         primitives.append(turn_right)
         primitives.append(turn_left)
         primitives.append(feel)
+        primitives.append(no_feel)
+        primitives.append(bump)
 
         # Set intrinsic motivation values.
         motivation = {}
