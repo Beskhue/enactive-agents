@@ -131,11 +131,15 @@ class World(events.EventListener):
         """
         for agent, (interaction, data) in agents_data.iteritems():
             # Get enact logic
-            callback = self.enact_logic[agent][interaction]
-
-            # Process logic and get actual enacted interaction
-            enacted_interaction = callback(self, agent, interaction)
-
+            if interaction in self.enact_logic[agent]:
+                callback = self.enact_logic[agent][interaction]
+                
+                # Process logic and get actual enacted interaction
+                enacted_interaction = callback(self, agent, interaction)
+            else:
+                # There is no logic registered with this interaction,
+                # do nothing.
+                enacted_interaction = interaction
             # Tell agent which interaction was enacted
             agent.enacted_interaction(enacted_interaction, data)
 
