@@ -24,6 +24,23 @@ class Interaction(object):
         """
         raise NotImplementedError("Should be implemented by child")
 
+    @abc.abstractmethod
+    def reconstruct_from_hierarchy(self, sequence):
+        """
+        Reconstruct a sequence of enacted (primitive) interactions into the
+        hierarchical structure represented by this interaction.
+
+        See section 4.2 of: Georgeon, O. L., & Ritter, F. E. (2012). 
+        An intrinsically-motivated schema mechanism to model and simulate 
+        emergent cognition. Cognitive Systems Research, 15, 73-92.
+
+        :param sequence: The sequence of primitive interactions to turn into a
+                         composite/primitive interaction.
+        :return: The composite/primitive interaction reconstructed from the 
+                 sequence.
+        """
+        raise NotImplementedError("Should be implemented by child")
+
 class PrimitiveInteraction(Interaction):
     def __init__(self, name):
         super(PrimitiveInteraction, self).__init__(name)
@@ -34,6 +51,9 @@ class PrimitiveInteraction(Interaction):
         :return: The primitive interaction as a singleton.
         """
         return [self]
+
+    def reconstruct_from_hierarchy(self, sequence):
+        return sequence.pop(0)
 
     def __repr__(self):
         return "PrimitiveInteraction(name=%r)" % self.name
@@ -49,6 +69,8 @@ class CompositeInteraction(Interaction):
         self.pre = pre
         self.post = post
 
+        self.hash = hash((hash(self.pre), hash(self.post)))
+
     def get_pre(self):
         return self.pre
 
@@ -62,6 +84,14 @@ class CompositeInteraction(Interaction):
         """
         return self.pre.unwrap() + self.post.unwrap()
 
+    def reconstruct_from_hierarchy(self, sequence):
+        pre = self.pre.reconstruct_from_hierarchy(sequence)
+        if len(sequence) > 0:
+            post = self.post.reconstruct_from_hierarchy(sequence)
+            return CompositeInteraction(pre, post)
+        else:
+            return pre
+
     def __eq__(self, other):
         return self.pre == other.pre and self.post == other.post
 
@@ -70,3 +100,6 @@ class CompositeInteraction(Interaction):
 
     def __repr__(self):
         return "CompositeInteraction(pre=%r,post=%r)" % (self.pre, self.post)
+
+    def __hash__(self):
+        return self.hash
