@@ -80,9 +80,9 @@ class BasicExperiment(experiment.Experiment):
 
         # Set intrinsic motivation values.
         motivation = {}
-        motivation[step] = 7
-        motivation[turn_right] = -1
-        motivation[turn_left] = -1
+        motivation[step] = 1
+        motivation[turn_right] = -2
+        motivation[turn_left] = -2
         motivation[feel] = 0
         motivation[no_feel] = -1
         motivation[bump] = -10
