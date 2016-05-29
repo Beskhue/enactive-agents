@@ -152,6 +152,7 @@ class ConstructiveAgent(Agent):
         self.enacting_interaction_sequence = []
         self.enacted_sequence = []
         self.context = []
+        self.history = []
 
     def activate_interactions(self):
         """
@@ -171,18 +172,16 @@ class ConstructiveAgent(Agent):
         """
         Step 2 of the sequential system.
 
-        Post-interactions of activated interactions are proposed, in order of
-        the weights of the original activated interactions.
+        Post-interactions of activated interactions are proposed together with
+        the weight of the activation interaction (as a tuple).
         """
         activated = self.activate_interactions()
 
-        # TODO: this sort is unnecessary as the propositions are also sorted in
-        # select_intended_interaction.
-        activated.sort(
-            key = lambda x: self.interaction_memory.get_weight(x), 
-            reverse = True
-        )
-        proposed = map(lambda interaction: interaction.get_post(), activated)
+        proposed = map(lambda interaction: 
+            (
+                interaction.get_post(), 
+                self.interaction_memory.get_weight(interaction)
+            ), activated)
 
         return proposed
 
@@ -194,14 +193,15 @@ class ConstructiveAgent(Agent):
         or composite).
 
         The intended interaction is selected from the proposed interactions
-        based on the weight of the propositions and the values of the proposed
-        interactions.
+        based on the weight of the activated interactions and the values of the
+        proposed post interactions.
         """
         proposed = self.propose_interactions()
         proposed.sort(
-            key = lambda x: self.interaction_memory.get_proclivity(x), 
+            key = lambda x: x[1] * self.interaction_memory.get_valence(x[0]), 
             reverse = True
         )
+        proposed = map(lambda x: x[0], proposed)
         if len(proposed) > 0 and self.interaction_memory.get_proclivity(proposed[0]) > 0:
             return proposed[0]
         else:
@@ -214,10 +214,7 @@ class ConstructiveAgent(Agent):
         """
         Step 6 of the sequential system.
 
-        Update the context of the agent. The new context includes the enacted
-        interaction (e_d), the post-interaction of e_d if it exists, and the
-        interactions that were just learned or reinforced and that pass a 
-        certain weight ("stabilized" interactions).
+        Add all learned / reinforced interactions to the context.
 
         :param enacted_interaction: The interaction that was enacted (can be
                                     different from the intended interaction)
@@ -225,6 +222,14 @@ class ConstructiveAgent(Agent):
                                       learned or reinforced.
         """
         self.context = []
+
+        """
+        According to paper: 
+
+        Update the context of the agent. The new context includes the enacted
+        interaction (e_d), the post-interaction of e_d if it exists, and the
+        interactions that were just learned or reinforced and that pass a 
+        certain weight ("stabilized" interactions).
 
         for interaction_ in learned_or_reinforced:
             if self.interaction_memory.get_weight(interaction_) > 10:
@@ -234,6 +239,11 @@ class ConstructiveAgent(Agent):
             self.context.append(enacted_interaction.get_post())
 
         self.context.append(enacted_interaction)
+        """
+
+        self.context.append(enacted_interaction)
+        for interaction in learned_or_reinforced:
+            self.context.append(interaction.get_pre())
 
     def prepare_interaction(self):
         if not self.enacting_interaction:
@@ -245,9 +255,10 @@ class ConstructiveAgent(Agent):
             self.enacted_sequence = []
 
             self.intended_interaction = self.select_intended_interaction()
+
             self.enacting_interaction_sequence = self.intended_interaction.unwrap()
             print "-----------------"
-            print self.intended_interaction
+            print "Intending: ", self.intended_interaction
 
         # Enact a primitive interaction from the sequence we are currently
         # enacting.
@@ -274,9 +285,44 @@ class ConstructiveAgent(Agent):
             # Reconstruct enacted interaction from hierarchy of intended
             # interaction
             enacted = self.intended_interaction.reconstruct_from_hierarchy(self.enacted_sequence)
-
+            print "Enacted: ", enacted
             # Step 5: add new or reinforce existing composite interactions
             learned_or_reinforced = []
+            if isinstance(enacted, interaction.CompositeInteraction):
+                learned_or_reinforced.append(enacted)
+
+            if len(self.history) >= 1:
+                previous = self.history[-1]
+                # <interaction at t-1, enacted interaction>
+                t1enacted = interaction.CompositeInteraction(previous, enacted)
+                learned_or_reinforced.append(t1enacted)
+
+                if len(self.history) >= 2:
+                    penultimate = self.history[-2]
+                    # <interaction at t-2, interaction at t-1>
+                    t2t1 = interaction.CompositeInteraction(penultimate, previous)
+
+                    # <<interaction at t-2, interaction at t-1>, enacted interaction>
+                    t2t1_enacted = interaction.CompositeInteraction(t2t1, enacted)
+                    learned_or_reinforced.append(t2t1_enacted)
+
+                    # <interaction at t-2, <interaction at t-1, enacted interaction>>
+                    t2_t1enacted = interaction.CompositeInteraction(penultimate, t1enacted)
+                    learned_or_reinforced.append(t2_t1enacted)
+            for composite in learned_or_reinforced:
+                if composite not in self.interaction_memory.get_composite_interactions():
+                    self.interaction_memory.add_interaction(composite)
+                else:
+                    self.interaction_memory.increment_weight(composite)
+                    
+            # Keep history of last 100 actions performed
+            if len(self.history) > 100:
+                self.history.pop(0)
+            self.history.append(enacted)
+
+            """
+            According to the paper:
+
             for pre_interaction in self.context:
                 composite = interaction.CompositeInteraction(pre_interaction, enacted)
                 learned_or_reinforced.append(composite)
@@ -284,6 +330,7 @@ class ConstructiveAgent(Agent):
                     self.interaction_memory.add_interaction(composite)
                 else:
                     self.interaction_memory.increment_weight(composite)
+            """
 
             # Step 6: update context
             self.update_context(enacted, learned_or_reinforced)
