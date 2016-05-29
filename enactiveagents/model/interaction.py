@@ -58,6 +58,9 @@ class PrimitiveInteraction(Interaction):
     def __repr__(self):
         return "PrimitiveInteraction(name=%r)" % self.name
 
+    def __str__(self):
+        return "%s" % self.name
+
 class CompositeInteraction(Interaction):
     def __init__(self, pre, post):
         """
@@ -103,6 +106,9 @@ class CompositeInteraction(Interaction):
 
     def __repr__(self):
         return "CompositeInteraction(pre=%r,post=%r)" % (self.pre, self.post)
+
+    def __str__(self):
+        return "<%s, %s>" % (self.pre, self.post)
 
     def __hash__(self):
         return self.hash
