@@ -48,6 +48,8 @@ class Experiment(object):
             return model.structure.Structure()
         elif symbol == "a":
             return model.agent.ConstructiveAgent()
+        elif symbol == "h":
+            return model.agent.HomeostaticConstructiveAgent()
         else:
             return None
 
