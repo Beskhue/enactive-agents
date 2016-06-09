@@ -340,3 +340,25 @@ class ConstructiveAgent(Agent):
 
     def setup_interaction_memory(self):
         self.interaction_memory = interactionmemory.InteractionMemory()
+
+class HomeostaticConstructiveAgent(ConstructiveAgent):
+    """
+    A homeostatic agent is a constructive agent where valences of interactions
+    are a function of internal energy levels of the agent (these homeostatic
+    values are not directly observable by the agent).
+    """
+    def __init__(self):
+        super(HomeostaticConstructiveAgent, self).__init__()
+        self.homeostasis = {}
+
+    def set_homeostatic_value(self, homeostatic_property, value):
+        self.homeostasis[homeostatic_property] = value
+
+    def get_homeostatic_value(self, homeostatic_property):
+        return self.homeostasis[homeostatic_property]
+
+    def add_to_homeostatic_value(self, homeostatic_property, delta_value):
+        self.homeostasis[homeostatic_property] += delta_value
+
+    def setup_interaction_memory(self):
+        self.interaction_memory = interactionmemory.HomeostaticInteractionMemory(self)
