@@ -104,3 +104,32 @@ class InteractionMemory(object):
 
     def get_all_interactions(self):
         return self.primitive_interactions + self.composite_interactions
+
+class HomeostaticInteractionMemory(InteractionMemory):
+    """
+    A homeostatic interaction's valence is a function of the agent's internal
+    energy level. Thus, this interaction memory keeps track of the agent to be
+    able to compute the valence.
+    """
+    def __init__(self, agent):
+        super(HomeostaticInteractionMemory, self).__init__()
+        self.agent = agent
+
+    def get_valence(self, interaction_):
+        """
+        Get the valence of an interaction. If the interaction is a primative,
+        get its valence. If the interaction is composite, sum the valences
+        of its primitives. 
+
+        The valences are functions of the agent's internal energy levels.
+
+        :param interaction_: The interaction to get the valence of.
+        """
+        if isinstance(interaction_, interaction.PrimitiveInteraction):
+            return self.valences[interaction_](self.agent)
+        elif isinstance(interaction_, interaction.CompositeInteraction):
+            primitives = interaction_.unwrap()
+            valence = reduce(lambda x, y: x + self.valences[y](self.agent), primitives, 0)
+            return valence
+        else:
+            raise TypeError("Expected interaction_ to be either primitive or composite.")
