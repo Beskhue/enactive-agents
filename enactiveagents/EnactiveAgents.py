@@ -7,8 +7,10 @@ from appstate import AppState
 import settings
 import events
 from view import view
+from view import agentevents
 from controller import controller
 import experiment.basic
+import webserver
 
 class HeartBeat(events.EventListener):
     """
@@ -79,9 +81,16 @@ def main():
     main_view = view.View(surface)
     event_manager.register_listener(main_view)
 
+    # Initialize the website trace history view.
+    trace_view = agentevents.AgentEvents(settings.TRACE_FILE_PATH)
+    event_manager.register_listener(trace_view)
+
     # Initialize and register the controller.
     main_controller = controller.Controller()
     event_manager.register_listener(main_controller)
+
+    # Start the webserver.
+    webserver.start()
 
     # Start the heartbeat.
     heart_beat.run()
