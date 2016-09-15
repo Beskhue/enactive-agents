@@ -34,6 +34,30 @@ class QuitEvent(Event):
     def __init__(self):
         self.name = "Quit Event"
 
+class AgentPreparationEvent(Event):
+    """
+    Class representing an agent preparation event. This event holds the action
+    and valance of the action the agent prepared.
+    """
+
+    def __init__(self, agent, action, valence):
+        self.name = "Agent Preparation Event"
+        self.agent = agent
+        self.action = action
+        self.valence = valence
+
+class AgentEnactionEvent(Event):
+    """
+    Class representing an agent enaction event. This event holds the action and
+    valence of the action the agent enacted.
+    """
+
+    def __init__(self, agent, action, valence):
+        self.name = "Agent Enaction Event"
+        self.agent = agent
+        self.action = action
+        self.valence = valence
+
 class EventListener:
     """
     Class implementing a listener that can be notified of events.
