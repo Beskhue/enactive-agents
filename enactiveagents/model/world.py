@@ -145,13 +145,14 @@ class World(events.EventListener):
 
 
     def notify(self, event):
-        agents = []
-        for entity in self.entities:
-            if isinstance(entity, agent.Agent):
-                agents.append(entity)
-        shuffle(agents)
-        agents_data = self.prepare(agents)
-        self.enact(agents_data)
+        if isinstance(event, events.TickEvent):
+            agents = []
+            for entity in self.entities:
+                if isinstance(entity, agent.Agent):
+                    agents.append(entity)
+            shuffle(agents)
+            agents_data = self.prepare(agents)
+            self.enact(agents_data)
 
 
 
