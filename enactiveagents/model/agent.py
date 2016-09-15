@@ -8,6 +8,8 @@ import pygame
 import world
 import interaction
 import interactionmemory
+import events
+from appstate import AppState
 
 class Agent(world.Entity):
     """
@@ -129,9 +131,21 @@ class SimpleAgent(Agent):
     def prepare_interaction(self):
         anticipations = self.anticipate()
         experiment = self.select_experiment(anticipations)
+
+        # Post interaction preparation event
+        AppState.state.get_event_manager().post_event(events.AgentPreparationEvent(
+            self, 
+            experiment, 
+            self.interaction_memory.get_valence(experiment)))
         return experiment
 
     def enacted_interaction(self, interaction, data):
+        # Post enacted interaction event
+        AppState.state.get_event_manager().post_event(events.AgentEnactionEvent(
+            self, 
+            interaction, 
+            self.interaction_memory.get_valence(interaction)))
+
         if not self.enacted is None:
             self.learn_composite_interaction(self.enacted, interaction)
         self.enacted = interaction
@@ -266,6 +280,11 @@ class ConstructiveAgent(Agent):
         print "> ", intended_interaction
 
         # Step 4 of the sequential system, enact the interaction:
+        # Post interaction preparation event
+        AppState.state.get_event_manager().post_event(events.AgentPreparationEvent(
+            self, 
+            intended_interaction, 
+            self.interaction_memory.get_valence(intended_interaction)))
         return (intended_interaction, intended_interaction)
 
     def enacted_interaction(self, interaction_, data):
@@ -273,6 +292,12 @@ class ConstructiveAgent(Agent):
         intended_primitive_interaction = data
 
         self.enacted_sequence.append(interaction_)
+
+        # Post enacted interaction event
+        AppState.state.get_event_manager().post_event(events.AgentEnactionEvent(
+            self, 
+            interaction_, 
+            self.interaction_memory.get_valence(interaction_)))
 
         if (
             not interaction_ is intended_primitive_interaction
