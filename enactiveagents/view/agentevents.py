@@ -3,6 +3,7 @@ Prints a history of agent events to file.
 """
 
 import events
+import json
 
 class AgentEvents(events.EventListener):
     """
@@ -19,14 +20,31 @@ class AgentEvents(events.EventListener):
 
     def notify(self, event):
         if isinstance(event, events.AgentPreparationEvent):
-            if event.agent not in self.preparation_history:
-                self.preparation_history[event.agent] = []
+            if str(event.agent) not in self.preparation_history:
+                self.preparation_history[str(event.agent)] = []
 
-            self.preparation_history[event.agent].append(event.action)
+            self.preparation_history[str(event.agent)].append(str(event.action))
+
+            if len(self.preparation_history) > 20:
+                self.preparation_history.pop(0)
         elif isinstance(event, events.AgentEnactionEvent):
-            if event.agent not in self.enaction_history:
-                self.enaction_history[event.agent] = []
+            if str(event.agent) not in self.enaction_history:
+                self.enaction_history[str(event.agent)] = []
 
-            self.enaction_history[event.agent].append(event.action)
+            self.enaction_history[str(event.agent)].append(str(event.action))
+
+            if len(self.enaction_history) > 20:
+                self.enaction_history.pop(0)
         elif isinstance(event, events.TickEvent):
-            pass
+            self.write_to_file()
+
+    def write_to_file(self):
+        """
+        Write the history to the traces file.
+        """
+
+        d = dict()
+        d["preparation_history"] = self.preparation_history
+        d["enaction_history"] = self.enaction_history
+        with open(self.file_path,'w+') as f:
+            json.dump(d, f)
