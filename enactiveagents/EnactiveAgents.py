@@ -90,6 +90,7 @@ def main():
     event_manager.register_listener(main_controller)
 
     # Start the webserver.
+    webserver.trace_view = trace_view
     webserver.start()
 
     # Start the heartbeat.
