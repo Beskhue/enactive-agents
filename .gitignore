@@ -7,9 +7,6 @@
 EnactiveAgents.egg-info/
 dist/
 
-# Webserver
-webroot/data/*
-
 # Docs
 docs/_build
 docs/_static
