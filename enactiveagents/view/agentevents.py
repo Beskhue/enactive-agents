@@ -15,36 +15,31 @@ class AgentEvents(events.EventListener):
         :param file_path: The path of the file to output the history to.
         """
         self.file_path = file_path
-        self.preparation_history = dict()
-        self.enaction_history = dict()
+        self.history = {}
+
+    def create_if_not_exists(self, agent):
+        if str(agent) not in self.history:
+            self.history[str(agent)] = {"preparation": [], "enaction": []}
 
     def notify(self, event):
         if isinstance(event, events.AgentPreparationEvent):
-            if str(event.agent) not in self.preparation_history:
-                self.preparation_history[str(event.agent)] = []
+            self.create_if_not_exists(event.agent)
 
-            self.preparation_history[str(event.agent)].append(str(event.action))
+            self.history[str(event.agent)]["preparation"].append((str(event.action), event.valence))
 
-            if len(self.preparation_history) > 20:
-                self.preparation_history.pop(0)
+            if len(self.history[str(event.agent)]["preparation"]) > 20:
+                self.history[str(event.agent)]["preparation"].pop(0)
         elif isinstance(event, events.AgentEnactionEvent):
-            if str(event.agent) not in self.enaction_history:
-                self.enaction_history[str(event.agent)] = []
+            self.create_if_not_exists(event.agent)
 
-            self.enaction_history[str(event.agent)].append(str(event.action))
+            self.history[str(event.agent)]["enaction"].append((str(event.action), event.valence))
 
-            if len(self.enaction_history) > 20:
-                self.enaction_history.pop(0)
-        elif isinstance(event, events.TickEvent):
-            self.write_to_file()
+            if len(self.history[str(event.agent)]["enaction"]) > 20:
+                self.history[str(event.agent)]["enaction"].pop(0)
 
-    def write_to_file(self):
+    def write(self, fp):
         """
-        Write the history to the traces file.
+        Writes the view as json to a stream.
+        :param fp: a write()-supporting file-like object
         """
-
-        d = dict()
-        d["preparation_history"] = self.preparation_history
-        d["enaction_history"] = self.enaction_history
-        with open(self.file_path,'w+') as f:
-            json.dump(d, f)
+        return json.dump(self.history, fp)
