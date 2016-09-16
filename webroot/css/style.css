@@ -1,0 +1,76 @@
+html,body
+{
+	margin: 0px;
+	padding: 0px;
+}
+
+body
+{
+	color: #444444;
+	background-color: #f0f0f0;
+	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 18px;
+	line-height: 1.5;
+}
+
+a
+{
+	color: #219b8e;
+	text-decoration: none;
+}
+
+a:hover
+{
+	color: #0f3647;
+}
+
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a
+{
+	color: #6a6a6a;
+}
+
+h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover
+{
+	color: #000000;
+}
+
+.siteHeader
+{
+	display: block;
+	max-width: 640px;
+	padding-left: 20px;
+	padding-right: 20px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#page
+{
+	background-color: #ffffff;
+}
+
+#content
+{
+	display: block;
+	width: 900px;
+	padding-left: 20px;
+	padding-right: 20px;
+	margin-left: auto;
+	margin-right: auto;
+	padding-top: 1.5em;
+	padding-bottom: 1.5em;
+	font-size: 1em;
+}
+
+.module
+{
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 2em;
+    margin-bottom: 2em;
+}
+
+/* Module specific */
+.traces {
+    font-size: 1.6em;
+    font-family: "Lucida Console", Monaco, monospace;
+}
