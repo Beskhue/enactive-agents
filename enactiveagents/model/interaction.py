@@ -76,6 +76,15 @@ class PrimitivePerceptionInteraction(Interaction):
         self.interaction = interaction
         self.perception = perception
 
+    def unwrap(self):
+        """
+        Get the primitive interaction in the perception interaction as a 
+        singleton.
+        :return: The primitive interaction in the perception interaction as a 
+                 singleton.
+        """
+        return [self.get_primitive_interaction()]
+
     def get_primitive_interaction(self):
         return self.interaction
 
