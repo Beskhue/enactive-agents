@@ -41,6 +41,7 @@ class Interaction(object):
         """
         raise NotImplementedError("Should be implemented by child")
 
+
 class PrimitiveInteraction(Interaction):
     def __init__(self, name):
         super(PrimitiveInteraction, self).__init__(name)
@@ -57,6 +58,32 @@ class PrimitiveInteraction(Interaction):
 
     def __repr__(self):
         return "PrimitiveInteraction(name=%r)" % self.name
+
+    def __str__(self):
+        return "%s" % self.name
+
+class PrimitivePerceptionInteraction(Interaction):
+    """
+    A primitive perception interaction is a construct containing both a
+    primitive interaction and a perception.
+    """
+    def __init__(self, interaction, perception):
+        """
+        :param interaction: An interaction
+        :param perception: A perception (can be any perception object returned
+                           by an an agent).
+        """
+        self.interaction = interaction
+        self.perception = perception
+
+    def get_name(self):
+        return self.interaction.get_name() + ":" + self.perception
+
+    def reconstruct_from_hierarchy(self, sequence):
+        return sequence.pop(0)
+
+    def __repr__(self):
+        return "PrimitivePerceptionInteraction(name=%r)" % self.name
 
     def __str__(self):
         return "%s" % self.name
