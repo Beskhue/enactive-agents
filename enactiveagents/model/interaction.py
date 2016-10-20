@@ -95,10 +95,10 @@ class PrimitivePerceptionInteraction(Interaction):
         return sequence.pop(0)
 
     def __repr__(self):
-        return "PrimitivePerceptionInteraction(interaction=%r, perception=%r)" % (self.name, self.perception)
+        return "PrimitivePerceptionInteraction(interaction=%r, perception=%r)" % (self.interaction.name, self.perception)
 
     def __str__(self):
-        return "%s" % self.name
+        return "%s" % self.get_name()
 
 class CompositeInteraction(Interaction):
     def __init__(self, pre, post):
