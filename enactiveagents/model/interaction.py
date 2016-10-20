@@ -94,6 +94,12 @@ class PrimitivePerceptionInteraction(Interaction):
     def reconstruct_from_hierarchy(self, sequence):
         return sequence.pop(0)
 
+    def __eq__(self, other):
+        if isinstance(other, PrimitivePerceptionInteraction):
+            return self.interaction == other.interaction and self.perception == other.perception
+        else:
+            return False
+
     def __repr__(self):
         return "PrimitivePerceptionInteraction(interaction=%r, perception=%r)" % (self.interaction.name, self.perception)
 
