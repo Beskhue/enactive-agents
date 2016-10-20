@@ -77,13 +77,13 @@ class PrimitivePerceptionInteraction(Interaction):
         self.perception = perception
 
     def get_name(self):
-        return self.interaction.get_name() + ":" + self.perception
+        return self.interaction.get_name() + ":" + str(self.perception)
 
     def reconstruct_from_hierarchy(self, sequence):
         return sequence.pop(0)
 
     def __repr__(self):
-        return "PrimitivePerceptionInteraction(name=%r)" % self.name
+        return "PrimitivePerceptionInteraction(interaction=%r, perception=%r)" % (self.name, self.perception)
 
     def __str__(self):
         return "%s" % self.name
