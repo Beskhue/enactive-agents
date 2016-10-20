@@ -76,6 +76,9 @@ class PrimitivePerceptionInteraction(Interaction):
         self.interaction = interaction
         self.perception = perception
 
+    def get_primitive_interaction(self):
+        return self.interaction
+
     def get_name(self):
         return self.interaction.get_name() + ":" + str(self.perception)
 
