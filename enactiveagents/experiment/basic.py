@@ -40,7 +40,7 @@ class BasicExperiment(experiment.Experiment):
         # the agent attempts to enact the primitive interaction. 
         # The function can manipulate the world and the agents.
         # The return value is the actual enacted interaction (i.e., can be 
-        # different form the attempted interaction).
+        # different from the attempted interaction).
         def _step(world, agent, interaction):
             if world.can_step(agent):
                 agent.step()
