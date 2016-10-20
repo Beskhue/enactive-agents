@@ -65,6 +65,18 @@ class Agent(world.Entity):
         """
         raise NotImplementedError("Should be implemented by child.")
 
+    def get_perception(self, world):
+        if self.has_perception_handler():
+            return self.perception_handler.perceive(self, world)
+        else:
+            raise Exception("No perception handler has been set")
+
+    def set_perception_handler(self, perception_handler):
+        self.perception_handler = perception_handler
+
+    def has_perception_handler(self):
+        return hasattr(self, "perception_handler")
+
     def set_primitives(self, primitives):
         for primitive in primitives:
             self.interaction_memory.add_interaction(primitive)
