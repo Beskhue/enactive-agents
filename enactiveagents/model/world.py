@@ -129,17 +129,21 @@ class World(events.EventListener):
         :param agents_data: The agent and data mapping as generated in 
                             self.prepare.
         """
-        for agent, (interaction, data) in agents_data.iteritems():
+        for agent, (interaction_, data) in agents_data.iteritems():
             # Get enact logic
-            if interaction in self.enact_logic[agent]:
-                callback = self.enact_logic[agent][interaction]
+            if isinstance(interaction_, interaction.PrimitivePerceptionInteraction):
+                primitive_interaction = interaction_.get_primitive_interaction()
+            else:
+                primitive_interaction = interaction_
+            if primitive_interaction in self.enact_logic[agent]:
+                callback = self.enact_logic[agent][primitive_interaction]
                 
                 # Process logic and get actual enacted interaction
-                enacted_interaction = callback(self, agent, interaction)
+                enacted_interaction = callback(self, agent, primitive_interaction)
             else:
                 # There is no logic registered with this interaction,
                 # do nothing.
-                enacted_interaction = interaction
+                enacted_interaction = interaction_
             # Tell agent which interaction was enacted
             agent.enacted_interaction(enacted_interaction, data)
 
