@@ -113,9 +113,9 @@ class World(events.EventListener):
         agents_data = {}
         for agent in agents:
             val = agent.prepare_interaction()
-            if isinstance(val, interaction.PrimitiveInteraction):
+            if isinstance(val, interaction.PrimitiveInteraction) or isinstance(val, interaction.PrimitivePerceptionInteraction):
                 agents_data[agent] = (val, None)
-            elif isinstance(val, collections.Sequence) and len(val) == 2 and isinstance(val[0], interaction.PrimitiveInteraction):
+            elif isinstance(val, collections.Sequence) and len(val) == 2 and (isinstance(val[0], interaction.PrimitiveInteraction) or isinstance(val[0], interaction.PrimitivePerceptionInteraction)):
                 agents_data[agent] = (val[0], val[1])
             else:
                 raise ValueError("Expected the return value of prepare_interaction to be a primitive interaction or a sequence of an interaction and data.")
