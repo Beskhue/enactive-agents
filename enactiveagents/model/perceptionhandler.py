@@ -27,13 +27,18 @@ class EmptyPerceptionHandler(PerceptionHandler):
 class BasicPerceptionHandler(PerceptionHandler):
 
     def perceive(self, agent_, world_):
-        for delta in range(1, 10):
+        for delta in range(0, 10):
             pos = world.Position(agent_.get_position())
+
             pos.add(agent_.get_move_delta(delta))
 
             entities = world_.get_entities_at(pos)
-            if len(entities) > 0:
-                if isinstance(entities[0], structure.Wall):
+            for entity in entities:
+                if entity == agent_:
+                    continue
+                if isinstance(entity, structure.Wall):
                     return "w%s" % delta
+                elif isinstance(entity, structure.Block):
+                    return "b%s" % delta
 
         return ""
