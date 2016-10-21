@@ -293,7 +293,8 @@ class ConstructiveAgent(Agent):
             print "-----------------"
             # Exploration
             if random.random() <= 0.1:
-                self.intended_interaction = random.choice(self.interaction_memory.get_primitive_interactions())
+                # Choose a random primitive interaction (not a primitive perception interaction)
+                self.intended_interaction = random.choice(filter(lambda x: isinstance(x, interaction.PrimitiveInteraction), self.interaction_memory.get_primitive_interactions()))
                 print "EXPLORING"
             else:
                 self.intended_interaction = self.select_intended_interaction()
