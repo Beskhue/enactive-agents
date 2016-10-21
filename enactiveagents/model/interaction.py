@@ -81,6 +81,7 @@ class PrimitivePerceptionInteraction(Interaction):
         """
         Get the primitive interaction and perception in the perception 
         interaction as a singleton.
+
         :return: The primitive interaction and perception in the perception 
                  interaction as a singleton.
         """
