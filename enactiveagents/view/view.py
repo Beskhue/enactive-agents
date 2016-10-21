@@ -94,7 +94,7 @@ class Sprite(pygame.sprite.Sprite):
 
         # Create the surface (image) of the sprite
         self.surface = pygame.Surface([self.view.get_cell_width(), self.view.get_cell_height()])
-        self.surface.set_colorkey((255, 0, 0))
+        self.surface.set_colorkey((0, 0, 0))
 
         # Draw the shape onto the surface
         pygame.draw.polygon(
@@ -112,6 +112,8 @@ class Sprite(pygame.sprite.Sprite):
         """
         if isinstance(self.entity, model.agent.Agent):
             return [[.2, .25], [.2, .75], [.85, 0.5]]
+        elif isinstance(self.entity, model.structure.Block):
+            return [[0.35,0.35], [0.35,0.65], [0.65,0.65], [0.65,0.35], [0.35,0.35]]
         else:
             return [[0,0], [0,1], [1,1], [1,0], [0,0]]
 
