@@ -358,7 +358,7 @@ class BasicVisionExperiment(experiment.Experiment):
 
         # Set intrinsic motivation values.
         motivation = {}
-        motivation[step] = 1
+        motivation[step] = 25
         motivation[turn_right] = -2
         motivation[turn_left] = -2
         motivation[feel] = 0
