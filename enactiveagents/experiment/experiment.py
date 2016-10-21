@@ -2,6 +2,7 @@ import abc
 import model.world
 import model.structure
 import model.agent
+import model.perceptionhandler
 
 class Experiment(object):
     def parse_world(self, world_repr, mapper=None):
@@ -45,11 +46,15 @@ class Experiment(object):
         :rtype: model.world.Entity
         """
         if symbol == "w":
-            return model.structure.Structure()
+            return model.structure.Wall()
         elif symbol == "a":
             return model.agent.ConstructiveAgent()
         elif symbol == "h":
             return model.agent.HomeostaticConstructiveAgent()
+        elif symbol == "p":
+            a = model.agent.ConstructiveAgent()
+            a.set_perception_handler(model.perceptionhandler.BasicPerceptionHandler())
+            return a
         else:
             return None
 
