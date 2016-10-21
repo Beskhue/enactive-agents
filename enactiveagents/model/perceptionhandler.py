@@ -7,6 +7,9 @@ import world
 import structure
 
 class PerceptionHandler(object):
+    """
+    Abstract perception handler class.
+    """
 
     @abc.abstractmethod
     def perceive(self, agent, world):
@@ -20,11 +23,19 @@ class PerceptionHandler(object):
         raise NotImplementedError("Should be implemented by child")
 
 class EmptyPerceptionHandler(PerceptionHandler):
+    """
+    A trivial perception handler that never perceives anything.
+    """
 
     def perceive(self, agent, world):
         return ""
 
 class BasicPerceptionHandler(PerceptionHandler):
+    """
+    A perception handler that perceives walls and blocks up to a given distance.
+    The perception indicates the type of structure that is seen, as well as its
+    distance.
+    """
 
     def perceive(self, agent_, world_):
         for delta in range(0, 10):
