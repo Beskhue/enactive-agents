@@ -47,6 +47,8 @@ class Experiment(object):
         """
         if symbol == "w":
             return model.structure.Wall()
+        elif symbol == "b":
+            return model.structure.Block()
         elif symbol == "a":
             return model.agent.ConstructiveAgent()
         elif symbol == "h":
