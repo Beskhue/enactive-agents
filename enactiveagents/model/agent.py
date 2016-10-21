@@ -162,7 +162,7 @@ class SimpleAgent(Agent):
             interaction, 
             self.interaction_memory.get_valence(interaction)))
 
-        if not self.enacted is None:
+        if not self.enacted == None:
             self.learn_composite_interaction(self.enacted, interaction)
         self.enacted = interaction
 
@@ -328,7 +328,7 @@ class ConstructiveAgent(Agent):
             self.interaction_memory.get_valence(interaction_)))
 
         if (
-            not interaction_ is intended_primitive_interaction
+            not interaction_ == intended_primitive_interaction
             or
             self.enacting_interaction_step >= len(self.enacting_interaction_sequence)
             ):
