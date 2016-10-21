@@ -263,7 +263,7 @@ class ConstructiveAgent(Agent):
         """
         
         for interaction_ in learned_or_reinforced:
-            if self.interaction_memory.get_weight(interaction_) > 10:
+            if self.interaction_memory.get_weight(interaction_) > 3:
                 self.context.append(interaction_)
 
         if isinstance(enacted_interaction, interaction.CompositeInteraction):
