@@ -69,7 +69,7 @@ class View(events.EventListener):
         pygame.display.flip()
 
     def notify(self, event):
-        if isinstance(event, events.TickEvent):
+        if isinstance(event, events.DrawEvent):
             self.draw()
 
 

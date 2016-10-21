@@ -25,6 +25,14 @@ class TickEvent(Event):
     def __init__(self):
         self.name = "Tick Event"
 
+class DrawEvent(Event):
+    """
+    Class representing a game draw event. E.g., notifies views to update.
+    """
+    
+    def __init__(self):
+        self.name = "Draw Event"
+
 class QuitEvent(Event):
     """
     Class representing a quit event. When this event is sent, the simulation

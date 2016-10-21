@@ -26,8 +26,9 @@ class HeartBeat(events.EventListener):
 
         print("Starting heartbeat.")
         while not self.halt:
-            event = events.TickEvent()
-            AppState.get_state().get_event_manager().post_event(event)
+            AppState.get_state().get_event_manager().post_event(events.TickEvent())
+            AppState.get_state().get_event_manager().post_event(events.DrawEvent())
+
             AppState.get_state().get_clock().tick(settings.MAX_FPS)
 
     def notify(self, event):
