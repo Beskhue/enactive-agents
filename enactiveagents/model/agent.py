@@ -260,7 +260,8 @@ class ConstructiveAgent(Agent):
         interaction (e_d), the post-interaction of e_d if it exists, and the
         interactions that were just learned or reinforced and that pass a 
         certain weight ("stabilized" interactions).
-
+        """
+        
         for interaction_ in learned_or_reinforced:
             if self.interaction_memory.get_weight(interaction_) > 10:
                 self.context.append(interaction_)
@@ -269,11 +270,13 @@ class ConstructiveAgent(Agent):
             self.context.append(enacted_interaction.get_post())
 
         self.context.append(enacted_interaction)
+        
         """
-
         self.context.append(enacted_interaction)
         for interaction in learned_or_reinforced:
             self.context.append(interaction.get_pre())
+        """
+        
 
     def prepare_interaction(self):
         if not self.enacting_interaction:
@@ -284,10 +287,15 @@ class ConstructiveAgent(Agent):
             self.enacting_interaction_step = 0
             self.enacted_sequence = []
 
-            self.intended_interaction = self.select_intended_interaction()
+            print "-----------------"
+            # Exploration
+            if random.random() <= 0.1:
+                self.intended_interaction = random.choice(self.interaction_memory.get_primitive_interactions())
+                print "EXPLORING"
+            else:
+                self.intended_interaction = self.select_intended_interaction()
 
             self.enacting_interaction_sequence = self.intended_interaction.unwrap()
-            print "-----------------"
             print "Intending: ", self.intended_interaction
 
         # Enact a primitive interaction from the sequence we are currently
