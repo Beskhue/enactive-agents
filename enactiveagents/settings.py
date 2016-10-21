@@ -7,7 +7,7 @@ ROOT_DIR = os.path.normpath(os.path.join(os.path.dirname(os.path.realpath(__file
 
 CELL_WIDTH = 32
 CELL_HEIGHT = 32
-MAX_FPS = 2
+MAX_FPS = 25
 
 LISTEN_PORT = 8418
 
