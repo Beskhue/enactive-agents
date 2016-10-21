@@ -5,13 +5,13 @@ Module that holds classes that represent agents.
 import abc
 import random
 import pygame
-import world
+from world import Entity
 import interaction
 import interactionmemory
 import events
 from appstate import AppState
 
-class Agent(world.Entity):
+class Agent(Entity):
     """
     Class that represents an agent.
     """
