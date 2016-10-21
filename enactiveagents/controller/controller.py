@@ -36,8 +36,6 @@ class Controller(events.EventListener):
                     self._quit()
                     return
 
-                pygame.M
-
     def notify(self, event):
         if isinstance(event, events.TickEvent):
             self.process_input()
