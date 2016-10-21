@@ -164,15 +164,20 @@ class Position:
     
     x = 0
     y = 0
+    PRECISION = 5
 
     def __init__(self, position=None):
         if not position is None:
             if isinstance(position, Position):
-                self.x = position.x
-                self.y = position.y
+                self.x = Position.round(position.x)
+                self.y = Position.round(position.y)
             else:
-                self.x = position[0]
-                self.y = position[1]
+                self.x = Position.round(position[0])
+                self.y = Position.round(position[1])
+
+    @staticmethod
+    def round(n):
+        return round(n, Position.PRECISION)
 
     def get(self):
         return (self.x, self.y)
@@ -187,12 +192,12 @@ class Position:
         if not isinstance(position, Position):
             position = Position(position)
 
-        self.x = position.x
-        self.y = position.y
+        self.x = Position.round(position.x)
+        self.y = Position.round(position.y)
 
     def add(self, delta):
-        self.x += delta[0]
-        self.y += delta[1]
+        self.x = Position.round(self.x + delta[0])
+        self.y = Position.round(self.y + delta[1])
 
     def __eq__(self, other):
         if not isinstance(other, Position):
