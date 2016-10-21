@@ -75,15 +75,16 @@ class PrimitivePerceptionInteraction(Interaction):
         """
         self.interaction = interaction
         self.perception = perception
+        self.hash = hash((hash(self.interaction), hash(self.perception)))
 
     def unwrap(self):
         """
-        Get the primitive interaction in the perception interaction as a 
-        singleton.
-        :return: The primitive interaction in the perception interaction as a 
-                 singleton.
+        Get the primitive interaction and perception in the perception 
+        interaction as a singleton.
+        :return: The primitive interaction and perception in the perception 
+                 interaction as a singleton.
         """
-        return [self.get_primitive_interaction()]
+        return [self]
 
     def get_primitive_interaction(self):
         return self.interaction
@@ -105,6 +106,9 @@ class PrimitivePerceptionInteraction(Interaction):
 
     def __str__(self):
         return "%s" % self.get_name()
+
+    def __hash__(self):
+        return self.hash
 
 class CompositeInteraction(Interaction):
     def __init__(self, pre, post):
