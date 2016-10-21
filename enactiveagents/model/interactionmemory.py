@@ -23,7 +23,7 @@ class InteractionMemory(object):
         :param valence: The valence of the interaction, only used for primitive
                         interactions.
         """
-        if isinstance(interaction_, interaction.PrimitiveInteraction):
+        if isinstance(interaction_, interaction.PrimitiveInteraction) or isinstance(interaction_, interaction.PrimitivePerceptionInteraction):
             self.primitive_interactions.append(interaction_)
             self.valences[interaction_] = valence
         elif isinstance(interaction_, interaction.CompositeInteraction):
@@ -80,6 +80,8 @@ class InteractionMemory(object):
         """
         if isinstance(interaction_, interaction.PrimitiveInteraction):
             return self.valences[interaction_]
+        elif isinstance(interaction_, interaction.PrimitivePerceptionInteraction):
+            return self.valences[interaction_.get_primitive_interaction()]
         elif isinstance(interaction_, interaction.CompositeInteraction):
             primitives = interaction_.unwrap()
             valence = reduce(lambda x, y: x + self.valences[y], primitives, 0)

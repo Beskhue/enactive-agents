@@ -152,6 +152,10 @@ class SimpleAgent(Agent):
         return experiment
 
     def enacted_interaction(self, interaction, data):
+        # Learn interaction if it is not yet known
+        if interaction not in self.interaction_memory.get_primitive_interactions():
+            self.interaction_memory.add_interaction(interaction)
+
         # Post enacted interaction event
         AppState.state.get_event_manager().post_event(events.AgentEnactionEvent(
             self, 
@@ -304,6 +308,10 @@ class ConstructiveAgent(Agent):
         intended_primitive_interaction = data
 
         self.enacted_sequence.append(interaction_)
+
+        # Learn interaction if it is not yet known
+        if interaction_ not in self.interaction_memory.get_primitive_interactions():
+            self.interaction_memory.add_interaction(interaction_)
 
         # Post enacted interaction event
         AppState.state.get_event_manager().post_event(events.AgentEnactionEvent(
