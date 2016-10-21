@@ -272,6 +272,9 @@ class ConstructiveAgent(Agent):
         self.context.append(enacted_interaction)
         
         """
+        Alternative context method:
+        """
+        """
         self.context.append(enacted_interaction)
         for interaction in learned_or_reinforced:
             self.context.append(interaction.get_pre())
