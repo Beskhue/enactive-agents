@@ -14,7 +14,7 @@ class Controller(events.EventListener):
     def __init__(self):
         pass
 
-    def _quit(self):
+    def quit(self):
         """ 
         Gracefully quit the simulator.
         """
@@ -29,11 +29,11 @@ class Controller(events.EventListener):
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT: 
-                self._quit()
+                self.quit()
                 return
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    self._quit()
+                    self.quit()
                     return
 
     def notify(self, event):
