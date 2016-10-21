@@ -378,7 +378,7 @@ class BasicVisionExperiment(experiment.Experiment):
 class BasicVisionPushExperiment(experiment.Experiment):
     world_representation = [
         "wwwwwwwwwwwwwww",
-        "w..b..b.....bpw",
+        "w...........bpw",
         "wwwwwwwwwwwwwww"
         ]
 
