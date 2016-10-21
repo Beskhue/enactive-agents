@@ -235,13 +235,14 @@ class Entity(object):
         self.position.set(position)
 
     def set_rotation(self, rotation):
-        self.rotation = rotation
+        self.rotation = rotation % 360
 
     def add_position(self, positionDelta):
         self.position.add(positionDelta)
 
     def add_rotation(self, rotationDelta):
         self.rotation += rotationDelta
+        self.rotation = self.rotation % 360
 
     def at(self, position):
         """
