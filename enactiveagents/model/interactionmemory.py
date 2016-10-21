@@ -129,9 +129,11 @@ class HomeostaticInteractionMemory(InteractionMemory):
         """
         if isinstance(interaction_, interaction.PrimitiveInteraction):
             return self.valences[interaction_](self.agent)
+        elif isinstance(interaction_, interaction.PrimitivePerceptionInteraction):
+            return self.valences[interaction_.get_primitive_interaction()](self.agent)
         elif isinstance(interaction_, interaction.CompositeInteraction):
             primitives = interaction_.unwrap()
-            valence = reduce(lambda x, y: x + self.valences[y](self.agent), primitives, 0)
+            valence = reduce(lambda x, y: x + self.get_valence(y), primitives, 0)
             return valence
         else:
             raise TypeError("Expected interaction_ to be either primitive or composite.")
