@@ -70,7 +70,7 @@ def main():
     event_manager.register_listener(heart_beat)
 
     # Initialize and register the world.
-    basic_experiment = experiment.basic.BasicVisionExperiment()
+    basic_experiment = experiment.basic.BasicVisionPushExperiment()
     world = basic_experiment.get_world()
     event_manager.register_listener(world)
     AppState.get_state().set_world(world)
