@@ -16,7 +16,7 @@ EnactiveAgents is an implementation of the Enactivist Cognitive Architecture in 
 The implementation is set up to be *scriptable*, *adaptable* and *pluggable*:
    
 - Scriptable: experiments can easily be set up. The architecture and specific experiment logic are decoupled.
-- Adaptable: the architecture is implemented with the Model-View-Controller design pattern, and is highly object oriented. This makes adding or modifying functionality straightforward.
+- Adaptable: the architecture is implemented with the model-view-controller design pattern, and is highly object oriented. This makes adding or modifying functionality straightforward.
 - Pluggable: the implementation makes as few assumptions as possible about data formats, e.g. different types of agents can be interchanged.
 
 For the source code documentation head to the :ref:`sourcedoc` page.
@@ -28,6 +28,7 @@ Guide
 
    overview
    quickstart
+   usage
    faq
    
 
