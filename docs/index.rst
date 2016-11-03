@@ -24,8 +24,10 @@ For the source code documentation head to the :ref:`sourcedoc` page.
 Guide
 =====
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
+   Home <self>
+   Modules <modules>
    overview
    quickstart
    usage
