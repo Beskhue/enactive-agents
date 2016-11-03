@@ -8,6 +8,7 @@ The main setup change takes place in the in the interaction logic.
 Where before we defined the step logic as:
 
 ::
+
     def _step(world, agent, interaction):
         if world.can_step(agent):
             agent.step()
