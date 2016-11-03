@@ -49,7 +49,7 @@ Adding an agent is straightforward as well:
 Automatic world generation
 --------------------------
 Instead of defining worlds by hand, we can automate the process.
-For example, the :doc:`experiment.experiment` modules defines a ``Experiment`` class with a ``parse_world`` method.
+For example, the :doc:`experiment.experiment` modules defines an ``Experiment`` class with a ``parse_world`` method.
 This method takes as input a list of strings, and optionally a function to map characters in the strings to objects.
 To use it, we create a child of the ``Experiment`` class.
 With the default mapper, the above world could be automatically parsed from the semi-graphic representation:
