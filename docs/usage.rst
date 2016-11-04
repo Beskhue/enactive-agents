@@ -19,7 +19,7 @@ The view package contains modules to represent the model in various ways. For ex
 
 Controller
 ----------
-The controller package contains modules implementing the ways with which a user can interact with the experiment. Currently, it only impements a means to quit the experiment.
+The controller package contains modules implementing the ways with which a user can interact with the experiment. Currently, it only impements keyboard controls.
 
 Experiment
 ----------
@@ -31,3 +31,4 @@ Usage
 
     usage.experiments
     usage.vision
+    usage.controls
