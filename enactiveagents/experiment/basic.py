@@ -362,10 +362,105 @@ class BasicVisionExperiment(experiment.Experiment):
     def get_world(self):
         return self.world
 
+class BasicHomeostaticVisionExperiment(experiment.Experiment):
+    world_representation = [
+        "wwwwwwwwwwwwwww",
+        "w.............w",
+        "w.wwwwwww.....w",
+        "w.......wwwww.w",
+        "w.wwwww.......w",
+        "w.w.......w...w",
+        "w.w.wwwww.w...w",
+        "w.w.w...w.ww.ww",
+        "w.www.....w...w",
+        "w.....wwwww.h.w",
+        "wwwwwwwwwwwwwww"
+        ]
+
+    def __init__(self):
+        super(BasicHomeostaticVisionExperiment, self).__init__()
+
+        # Parse world
+        self.world = self.parse_world(self.world_representation)
+
+        # Set up primitives
+        step = model.interaction.PrimitiveInteraction("Step", "Succeed")
+        step_fail = model.interaction.PrimitiveInteraction("Step", "Fail")
+        turn_right = model.interaction.PrimitiveInteraction("Turn Right", "Succeed")
+        turn_left = model.interaction.PrimitiveInteraction("Turn Left", "Succeed")
+        feel = model.interaction.PrimitiveInteraction("Feel", "Succeed")
+        feel_fail = model.interaction.PrimitiveInteraction("Feel", "Fail")
+
+        # Define environment logic for primitives, these functions will be
+        # registered to the primitive interactions and will be called once
+        # the agent attempts to enact the primitive interaction. 
+        # The function can manipulate the world and the agents.
+        # The return value is the actual enacted interaction (i.e., can be 
+        # different form the attempted interaction).
+        def _step(world, agent, interaction):
+            if world.can_step(agent):
+                agent.step()
+                agent.add_to_homeostatic_value("energy", -0.1)
+                return model.interaction.PrimitivePerceptionInteraction(step, agent.get_perception(world))
+            else:
+                return model.interaction.PrimitivePerceptionInteraction(step_fail, agent.get_perception(world))
+
+        def _turn_right(world, agent, interaction):
+            agent.add_rotation(-90)
+            return model.interaction.PrimitivePerceptionInteraction(turn_right, agent.get_perception(world))
+        
+        def _turn_left(world, agent, interaction):
+            agent.add_rotation(90)
+            return model.interaction.PrimitivePerceptionInteraction(turn_left, agent.get_perception(world))
+
+        def _feel(world, agent, interaction):
+            if world.can_step(agent):
+                return model.interaction.PrimitivePerceptionInteraction(feel_fail, agent.get_perception(world))
+            else:
+                return model.interaction.PrimitivePerceptionInteraction(feel, agent.get_perception(world))
+
+        # Register the previously defined functions.
+        enact_logic = {}
+        enact_logic[step.get_name()] = _step
+        enact_logic[turn_right.get_name()] = _turn_right
+        enact_logic[turn_left.get_name()] = _turn_left
+        enact_logic[feel.get_name()] = _feel
+
+        # Set primitives known/enactable by the agents.
+        primitives = []
+        primitives.append(step)
+        primitives.append(step_fail)
+        primitives.append(turn_right)
+        primitives.append(turn_left)
+        primitives.append(feel)
+        primitives.append(feel_fail)
+
+        # Set intrinsic homeostatic motivation values.
+        motivation = {}
+        motivation[step] = lambda agent: agent.get_homeostatic_value("energy") * 0.1
+        motivation[step_fail] = lambda agent: -10
+        motivation[turn_right] = lambda agent: -2
+        motivation[turn_left] = lambda agent: -2
+        motivation[feel] = lambda agent: 0
+        motivation[feel_fail] = lambda agent: -1
+
+        for entity in self.world.get_entities():
+            if isinstance(entity, model.agent.Agent):
+                self.world.add_enact_logic(entity, enact_logic)
+                entity.set_primitives(primitives)
+                entity.set_motivation(motivation)
+                if isinstance(entity, model.agent.HomeostaticConstructiveAgent):
+                    entity.set_homeostatic_value("energy", 100)
+                    entity.set_perception_handler(model.perceptionhandler.BasicPerceptionHandler())
+
+
+    def get_world(self):
+        return self.world
+
 class BasicVisionPushExperiment(experiment.Experiment):
     world_representation = [
         "wwwwwwwwwwwwwww",
-        "w...........bpw",
+        "w............pw",
         "wwwwwwwwwwwwwww"
         ]
 
