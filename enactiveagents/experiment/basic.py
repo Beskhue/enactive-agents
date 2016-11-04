@@ -316,8 +316,6 @@ class BasicVisionExperiment(experiment.Experiment):
         step = model.interaction.PrimitiveInteraction("Step")
         turn_right = model.interaction.PrimitiveInteraction("Turn Right")
         turn_left = model.interaction.PrimitiveInteraction("Turn Left")
-        feel = model.interaction.PrimitiveInteraction("Feel")
-        no_feel = model.interaction.PrimitiveInteraction("No Feel")
         bump = model.interaction.PrimitiveInteraction("Bump")
 
         # Define environment logic for primitives, these functions will be
@@ -341,28 +339,18 @@ class BasicVisionExperiment(experiment.Experiment):
             agent.add_rotation(90)
             return model.interaction.PrimitivePerceptionInteraction(turn_left, agent.get_perception(world))
 
-        def _feel(world, agent, interaction):
-            if world.can_step(agent):
-                return model.interaction.PrimitivePerceptionInteraction(no_feel, agent.get_perception(world))
-            else:
-                return model.interaction.PrimitivePerceptionInteraction(feel, agent.get_perception(world))
-
         # Register the previously defined functions.
         enact_logic = {}
         enact_logic[step] = _step
         enact_logic[bump] = _step
         enact_logic[turn_right] = _turn_right
         enact_logic[turn_left] = _turn_left
-        enact_logic[feel] = _feel
-        enact_logic[no_feel] = _feel
 
         # Set primitives known/enactable by the agents.
         primitives = []
         primitives.append(step)
         primitives.append(turn_right)
         primitives.append(turn_left)
-        primitives.append(feel)
-        primitives.append(no_feel)
         primitives.append(bump)
 
         # Set intrinsic motivation values.
@@ -370,8 +358,6 @@ class BasicVisionExperiment(experiment.Experiment):
         motivation[step] = 25
         motivation[turn_right] = -2
         motivation[turn_left] = -2
-        motivation[feel] = 0
-        motivation[no_feel] = -1
         motivation[bump] = -10
 
         for entity in self.world.get_entities():
@@ -401,8 +387,6 @@ class BasicVisionPushExperiment(experiment.Experiment):
         step = model.interaction.PrimitiveInteraction("Step")
         turn_right = model.interaction.PrimitiveInteraction("Turn Right")
         turn_left = model.interaction.PrimitiveInteraction("Turn Left")
-        feel = model.interaction.PrimitiveInteraction("Feel")
-        no_feel = model.interaction.PrimitiveInteraction("No Feel")
         bump = model.interaction.PrimitiveInteraction("Bump")
         push = model.interaction.PrimitiveInteraction("Push")
         no_push = model.interaction.PrimitiveInteraction("No Push")
@@ -428,12 +412,6 @@ class BasicVisionPushExperiment(experiment.Experiment):
             agent.add_rotation(90)
             return model.interaction.PrimitivePerceptionInteraction(turn_left, agent.get_perception(world))
 
-        def _feel(world, agent, interaction):
-            if world.can_step(agent):
-                return model.interaction.PrimitivePerceptionInteraction(no_feel, agent.get_perception(world))
-            else:
-                return model.interaction.PrimitivePerceptionInteraction(feel, agent.get_perception(world))
-
         def _push(world, agent, interaction):
             if world.can_step(agent):
                 pos = agent.get_position()
@@ -450,8 +428,6 @@ class BasicVisionPushExperiment(experiment.Experiment):
         enact_logic[bump] = _step
         enact_logic[turn_right] = _turn_right
         enact_logic[turn_left] = _turn_left
-        enact_logic[feel] = _feel
-        enact_logic[no_feel] = _feel
         enact_logic[push] = _push
         enact_logic[no_push] = _push
 
@@ -460,8 +436,6 @@ class BasicVisionPushExperiment(experiment.Experiment):
         primitives.append(step)
         primitives.append(turn_right)
         primitives.append(turn_left)
-        primitives.append(feel)
-        primitives.append(no_feel)
         primitives.append(bump)
         primitives.append(push)
         primitives.append(no_push)
@@ -471,8 +445,6 @@ class BasicVisionPushExperiment(experiment.Experiment):
         motivation[step] = -1
         motivation[turn_right] = -2
         motivation[turn_left] = -2
-        motivation[feel] = 0
-        motivation[no_feel] = -1
         motivation[bump] = -10
         motivation[push] = 500
 
@@ -507,8 +479,6 @@ class BasicVisionCoexsistenceExperiment(experiment.Experiment):
         step = model.interaction.PrimitiveInteraction("Step")
         turn_right = model.interaction.PrimitiveInteraction("Turn Right")
         turn_left = model.interaction.PrimitiveInteraction("Turn Left")
-        feel = model.interaction.PrimitiveInteraction("Feel")
-        no_feel = model.interaction.PrimitiveInteraction("No Feel")
         bump = model.interaction.PrimitiveInteraction("Bump")
         cuddle = model.interaction.PrimitiveInteraction("Cuddle")
         no_cuddle = model.interaction.PrimitiveInteraction("No Cuddle")
@@ -533,14 +503,6 @@ class BasicVisionCoexsistenceExperiment(experiment.Experiment):
         def _turn_left(world, agent, interaction):
             agent.add_rotation(90)
             return model.interaction.PrimitivePerceptionInteraction(turn_left, agent.get_perception(world))
-
-        """
-        def _feel(world, agent, interaction):
-            if world.can_step(agent):
-                return model.interaction.PrimitivePerceptionInteraction(no_feel, agent.get_perception(world))
-            else:
-                return model.interaction.PrimitivePerceptionInteraction(feel, agent.get_perception(world))
-        """
 
         def _cuddle(world, agent, interaction):
             entities = world.get_entities_at(agent.get_position())
