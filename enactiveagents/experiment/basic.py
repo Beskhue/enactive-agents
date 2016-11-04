@@ -464,6 +464,7 @@ class BasicVisionPushExperiment(experiment.Experiment):
         primitives.append(no_feel)
         primitives.append(bump)
         primitives.append(push)
+        primitives.append(no_push)
 
         # Set intrinsic motivation values.
         motivation = {}
