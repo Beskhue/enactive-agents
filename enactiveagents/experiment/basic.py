@@ -65,9 +65,11 @@ class BasicExperiment(experiment.Experiment):
         # Register the previously defined functions.
         enact_logic = {}
         enact_logic[step] = _step
+        enact_logic[bump] = _step
         enact_logic[turn_right] = _turn_right
         enact_logic[turn_left] = _turn_left
         enact_logic[feel] = _feel
+        enact_logic[no_feel] = _feel
 
         # Set primitives known/enactable by the agents.
         primitives = []
@@ -157,9 +159,11 @@ class BasicHomeostaticExperiment(experiment.Experiment):
         # Register the previously defined functions.
         enact_logic = {}
         enact_logic[step] = _step
+        enact_logic[bump] = _step
         enact_logic[turn_right] = _turn_right
         enact_logic[turn_left] = _turn_left
         enact_logic[feel] = _feel
+        enact_logic[no_feel] = _feel
 
         # Set primitives known/enactable by the agents.
         primitives = []
@@ -255,10 +259,13 @@ class BasicCoexsistenceExperiment(experiment.Experiment):
         # Register the previously defined functions.
         enact_logic = {}
         enact_logic[step] = _step
+        enact_logic[bump] = _step
         enact_logic[turn_right] = _turn_right
         enact_logic[turn_left] = _turn_left
         enact_logic[feel] = _feel
+        enact_logic[no_feel] = _feel
         enact_logic[cuddle] = _cuddle
+        enact_logic[no_cuddle] = _cuddle
 
         # Set primitives known/enactable by the agents.
         primitives = []
@@ -343,9 +350,11 @@ class BasicVisionExperiment(experiment.Experiment):
         # Register the previously defined functions.
         enact_logic = {}
         enact_logic[step] = _step
+        enact_logic[bump] = _step
         enact_logic[turn_right] = _turn_right
         enact_logic[turn_left] = _turn_left
         enact_logic[feel] = _feel
+        enact_logic[no_feel] = _feel
 
         # Set primitives known/enactable by the agents.
         primitives = []
@@ -396,6 +405,7 @@ class BasicVisionPushExperiment(experiment.Experiment):
         no_feel = model.interaction.PrimitiveInteraction("No Feel")
         bump = model.interaction.PrimitiveInteraction("Bump")
         push = model.interaction.PrimitiveInteraction("Push")
+        no_push = model.interaction.PrimitiveInteraction("No Push")
 
         # Define environment logic for primitives, these functions will be
         # registered to the primitive interactions and will be called once
@@ -432,15 +442,18 @@ class BasicVisionPushExperiment(experiment.Experiment):
                     if isinstance(entity, model.structure.Block):
                         entity.position.add(agent.get_move_delta(1))
                         return model.interaction.PrimitivePerceptionInteraction(push, agent.get_perception(world))
-            return model.interaction.PrimitivePerceptionInteraction(bump, agent.get_perception(world))
+            return model.interaction.PrimitivePerceptionInteraction(no_push, agent.get_perception(world))
 
         # Register the previously defined functions.
         enact_logic = {}
         enact_logic[step] = _step
+        enact_logic[bump] = _step
         enact_logic[turn_right] = _turn_right
         enact_logic[turn_left] = _turn_left
         enact_logic[feel] = _feel
+        enact_logic[no_feel] = _feel
         enact_logic[push] = _push
+        enact_logic[no_push] = _push
 
         # Set primitives known/enactable by the agents.
         primitives = []
