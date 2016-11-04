@@ -135,8 +135,11 @@ class World(events.EventListener):
                 primitive_interaction = interaction_.get_primitive_interaction()
             else:
                 primitive_interaction = interaction_
-            if primitive_interaction in self.enact_logic[agent]:
-                callback = self.enact_logic[agent][primitive_interaction]
+
+            action = primitive_interaction.get_name()
+
+            if action in self.enact_logic[agent]:
+                callback = self.enact_logic[agent][action]
                 
                 # Process logic and get actual enacted interaction
                 enacted_interaction = callback(self, agent, primitive_interaction)

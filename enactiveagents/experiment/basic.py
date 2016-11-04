@@ -28,12 +28,12 @@ class BasicExperiment(experiment.Experiment):
         self.world = self.parse_world(self.world_representation)
 
         # Set up primitives
-        step = model.interaction.PrimitiveInteraction("Step")
-        turn_right = model.interaction.PrimitiveInteraction("Turn Right")
-        turn_left = model.interaction.PrimitiveInteraction("Turn Left")
-        feel = model.interaction.PrimitiveInteraction("Feel")
-        no_feel = model.interaction.PrimitiveInteraction("No Feel")
-        bump = model.interaction.PrimitiveInteraction("Bump")
+        step = model.interaction.PrimitiveInteraction("Step", "Succeed")
+        step_fail = model.interaction.PrimitiveInteraction("Step", "Fail")
+        turn_right = model.interaction.PrimitiveInteraction("Turn Right", "Succeed")
+        turn_left = model.interaction.PrimitiveInteraction("Turn Left", "Succeed")
+        feel = model.interaction.PrimitiveInteraction("Feel", "Succeed")
+        feel_fail = model.interaction.PrimitiveInteraction("Feel", "Fail")
 
         # Define environment logic for primitives, these functions will be
         # registered to the primitive interactions and will be called once
@@ -46,7 +46,7 @@ class BasicExperiment(experiment.Experiment):
                 agent.step()
                 return step
             else:
-                return bump
+                return step_fail
 
         def _turn_right(world, agent, interaction):
             agent.add_rotation(-90)
@@ -58,37 +58,35 @@ class BasicExperiment(experiment.Experiment):
 
         def _feel(world, agent, interaction):
             if world.can_step(agent):
-                return no_feel
+                return feel_fail
             else:
                 return feel
 
         # Register the previously defined functions.
         enact_logic = {}
-        enact_logic[step] = _step
-        enact_logic[bump] = _step
-        enact_logic[turn_right] = _turn_right
-        enact_logic[turn_left] = _turn_left
-        enact_logic[feel] = _feel
-        enact_logic[no_feel] = _feel
+        enact_logic[step.get_name()] = _step
+        enact_logic[turn_right.get_name()] = _turn_right
+        enact_logic[turn_left.get_name()] = _turn_left
+        enact_logic[feel.get_name()] = _feel
 
         # Set primitives known/enactable by the agents.
         primitives = []
         primitives.append(step)
+        primitives.append(step_fail)
         primitives.append(turn_right)
         primitives.append(turn_left)
         primitives.append(feel)
-        primitives.append(no_feel)
-        primitives.append(bump)
+        primitives.append(feel_fail)
 
         # Set intrinsic motivation values.
         motivation = {}
         motivation[step] = 1
+        motivation[step_fail] = -10
         motivation[turn_right] = -2
         motivation[turn_left] = -2
         motivation[feel] = 0
-        motivation[no_feel] = -1
-        motivation[bump] = -10
-
+        motivation[feel_fail] = -1
+        
         for entity in self.world.get_entities():
             if isinstance(entity, model.agent.Agent):
                 self.world.add_enact_logic(entity, enact_logic)
@@ -121,12 +119,12 @@ class BasicHomeostaticExperiment(experiment.Experiment):
         self.world = self.parse_world(self.world_representation)
 
         # Set up primitives
-        step = model.interaction.PrimitiveInteraction("Step")
-        turn_right = model.interaction.PrimitiveInteraction("Turn Right")
-        turn_left = model.interaction.PrimitiveInteraction("Turn Left")
-        feel = model.interaction.PrimitiveInteraction("Feel")
-        no_feel = model.interaction.PrimitiveInteraction("No Feel")
-        bump = model.interaction.PrimitiveInteraction("Bump")
+        step = model.interaction.PrimitiveInteraction("Step", "Succeed")
+        step_fail = model.interaction.PrimitiveInteraction("Step", "Fail")
+        turn_right = model.interaction.PrimitiveInteraction("Turn Right", "Succeed")
+        turn_left = model.interaction.PrimitiveInteraction("Turn Left", "Succeed")
+        feel = model.interaction.PrimitiveInteraction("Feel", "Succeed")
+        feel_fail = model.interaction.PrimitiveInteraction("Feel", "Fail")
 
         # Define environment logic for primitives, these functions will be
         # registered to the primitive interactions and will be called once
@@ -140,7 +138,7 @@ class BasicHomeostaticExperiment(experiment.Experiment):
                 agent.add_to_homeostatic_value("energy", -0.1)
                 return step
             else:
-                return bump
+                return step_fail
 
         def _turn_right(world, agent, interaction):
             agent.add_rotation(-90)
@@ -152,36 +150,34 @@ class BasicHomeostaticExperiment(experiment.Experiment):
 
         def _feel(world, agent, interaction):
             if world.can_step(agent):
-                return no_feel
+                return feel_fail
             else:
                 return feel
 
         # Register the previously defined functions.
         enact_logic = {}
-        enact_logic[step] = _step
-        enact_logic[bump] = _step
-        enact_logic[turn_right] = _turn_right
-        enact_logic[turn_left] = _turn_left
-        enact_logic[feel] = _feel
-        enact_logic[no_feel] = _feel
+        enact_logic[step.get_name()] = _step
+        enact_logic[turn_right.get_name()] = _turn_right
+        enact_logic[turn_left.get_name()] = _turn_left
+        enact_logic[feel.get_name()] = _feel
 
         # Set primitives known/enactable by the agents.
         primitives = []
         primitives.append(step)
+        primitives.append(step_fail)
         primitives.append(turn_right)
         primitives.append(turn_left)
         primitives.append(feel)
-        primitives.append(no_feel)
-        primitives.append(bump)
+        primitives.append(feel_fail)
 
         # Set intrinsic homeostatic motivation values.
         motivation = {}
         motivation[step] = lambda agent: agent.get_homeostatic_value("energy") * 0.1
+        motivation[step_fail] = lambda agent: -10
         motivation[turn_right] = lambda agent: -2
         motivation[turn_left] = lambda agent: -2
         motivation[feel] = lambda agent: 0
-        motivation[no_feel] = lambda agent: -1
-        motivation[bump] = lambda agent: -10
+        motivation[feel_fail] = lambda agent: -1
 
         for entity in self.world.get_entities():
             if isinstance(entity, model.agent.Agent):
@@ -212,14 +208,14 @@ class BasicCoexsistenceExperiment(experiment.Experiment):
         self.world = self.parse_world(self.world_representation)
 
         # Set up primitives
-        step = model.interaction.PrimitiveInteraction("Step")
-        turn_right = model.interaction.PrimitiveInteraction("Turn Right")
-        turn_left = model.interaction.PrimitiveInteraction("Turn Left")
-        feel = model.interaction.PrimitiveInteraction("Feel")
-        no_feel = model.interaction.PrimitiveInteraction("No Feel")
-        bump = model.interaction.PrimitiveInteraction("Bump")
-        cuddle = model.interaction.PrimitiveInteraction("Cuddle")
-        no_cuddle = model.interaction.PrimitiveInteraction("No Cuddle")
+        step = model.interaction.PrimitiveInteraction("Step", "Succeed")
+        step_fail = model.interaction.PrimitiveInteraction("Step", "Fail")
+        turn_right = model.interaction.PrimitiveInteraction("Turn Right", "Succeed")
+        turn_left = model.interaction.PrimitiveInteraction("Turn Left", "Succeed")
+        feel = model.interaction.PrimitiveInteraction("Feel", "Succeed")
+        feel_fail = model.interaction.PrimitiveInteraction("Feel", "Fail")
+        cuddle = model.interaction.PrimitiveInteraction("Cuddle", "Succeed")
+        cuddle_fail = model.interaction.PrimitiveInteraction("Cuddle", "Fail")
 
         # Define environment logic for primitives, these functions will be
         # registered to the primitive interactions and will be called once
@@ -232,7 +228,7 @@ class BasicCoexsistenceExperiment(experiment.Experiment):
                 agent.step()
                 return step
             else:
-                return bump
+                return step_fail
 
         def _turn_right(world, agent, interaction):
             agent.add_rotation(-90)
@@ -244,7 +240,7 @@ class BasicCoexsistenceExperiment(experiment.Experiment):
 
         def _feel(world, agent, interaction):
             if world.can_step(agent):
-                return no_feel
+                return feel_fail
             else:
                 return feel
 
@@ -254,40 +250,37 @@ class BasicCoexsistenceExperiment(experiment.Experiment):
                 if entity != agent and isinstance(entity, model.agent.Agent):
                     return cuddle
             
-            return no_cuddle
+            return cuddle_fail
 
         # Register the previously defined functions.
         enact_logic = {}
-        enact_logic[step] = _step
-        enact_logic[bump] = _step
-        enact_logic[turn_right] = _turn_right
-        enact_logic[turn_left] = _turn_left
-        enact_logic[feel] = _feel
-        enact_logic[no_feel] = _feel
-        enact_logic[cuddle] = _cuddle
-        enact_logic[no_cuddle] = _cuddle
+        enact_logic[step.get_name()] = _step
+        enact_logic[turn_right.get_name()] = _turn_right
+        enact_logic[turn_left.get_name()] = _turn_left
+        enact_logic[feel.get_name()] = _feel
+        enact_logic[cuddle.get_name()] = _cuddle
 
         # Set primitives known/enactable by the agents.
         primitives = []
         primitives.append(step)
+        primitives.append(step_fail)
         primitives.append(turn_right)
         primitives.append(turn_left)
         primitives.append(feel)
-        primitives.append(no_feel)
-        primitives.append(bump)
+        primitives.append(feel_fail)
         primitives.append(cuddle)
-        primitives.append(no_cuddle)
+        primitives.append(cuddle_fail)
 
         # Set intrinsic motivation values.
         motivation = {}
         motivation[step] = 1
+        motivation[step_fail] = -10
         motivation[turn_right] = -2
         motivation[turn_left] = -2
         motivation[feel] = 0
-        motivation[no_feel] = -1
-        motivation[bump] = -10
+        motivation[feel_fail] = -1
         motivation[cuddle] = 50
-        motivation[no_cuddle] = -1
+        motivation[cuddle_fail] = -1
 
         for entity in self.world.get_entities():
             if isinstance(entity, model.agent.Agent):
@@ -313,10 +306,10 @@ class BasicVisionExperiment(experiment.Experiment):
         self.world = self.parse_world(self.world_representation)
 
         # Set up primitives
-        step = model.interaction.PrimitiveInteraction("Step")
-        turn_right = model.interaction.PrimitiveInteraction("Turn Right")
-        turn_left = model.interaction.PrimitiveInteraction("Turn Left")
-        bump = model.interaction.PrimitiveInteraction("Bump")
+        step = model.interaction.PrimitiveInteraction("Step", "Succeed")
+        step_fail = model.interaction.PrimitiveInteraction("Step", "Fail")
+        turn_right = model.interaction.PrimitiveInteraction("Turn Right", "Succeed")
+        turn_left = model.interaction.PrimitiveInteraction("Turn Left", "Succeed")
 
         # Define environment logic for primitives, these functions will be
         # registered to the primitive interactions and will be called once
@@ -329,7 +322,7 @@ class BasicVisionExperiment(experiment.Experiment):
                 agent.step()
                 return model.interaction.PrimitivePerceptionInteraction(step, agent.get_perception(world))
             else:
-                return model.interaction.PrimitivePerceptionInteraction(bump, agent.get_perception(world))
+                return model.interaction.PrimitivePerceptionInteraction(step_fail, agent.get_perception(world))
 
         def _turn_right(world, agent, interaction):
             agent.add_rotation(-90)
@@ -341,24 +334,23 @@ class BasicVisionExperiment(experiment.Experiment):
 
         # Register the previously defined functions.
         enact_logic = {}
-        enact_logic[step] = _step
-        enact_logic[bump] = _step
-        enact_logic[turn_right] = _turn_right
-        enact_logic[turn_left] = _turn_left
+        enact_logic[step.get_name()] = _step
+        enact_logic[turn_right.get_name()] = _turn_right
+        enact_logic[turn_left.get_name()] = _turn_left
 
         # Set primitives known/enactable by the agents.
         primitives = []
         primitives.append(step)
+        primitives.append(step_fail)
         primitives.append(turn_right)
         primitives.append(turn_left)
-        primitives.append(bump)
 
         # Set intrinsic motivation values.
         motivation = {}
         motivation[step] = 25
+        motivation[step_fail] = -10
         motivation[turn_right] = -2
         motivation[turn_left] = -2
-        motivation[bump] = -10
 
         for entity in self.world.get_entities():
             if isinstance(entity, model.agent.Agent):
@@ -384,12 +376,12 @@ class BasicVisionPushExperiment(experiment.Experiment):
         self.world = self.parse_world(self.world_representation)
 
         # Set up primitives
-        step = model.interaction.PrimitiveInteraction("Step")
-        turn_right = model.interaction.PrimitiveInteraction("Turn Right")
-        turn_left = model.interaction.PrimitiveInteraction("Turn Left")
-        bump = model.interaction.PrimitiveInteraction("Bump")
-        push = model.interaction.PrimitiveInteraction("Push")
-        no_push = model.interaction.PrimitiveInteraction("No Push")
+        step = model.interaction.PrimitiveInteraction("Step", "Succeed")
+        step_fail = model.interaction.PrimitiveInteraction("Step", "Fail")
+        turn_right = model.interaction.PrimitiveInteraction("Turn Right", "Succeed")
+        turn_left = model.interaction.PrimitiveInteraction("Turn Left", "Succeed")
+        push = model.interaction.PrimitiveInteraction("Push", "Succeed")
+        push_fail = model.interaction.PrimitiveInteraction("Push", "Fail")
 
         # Define environment logic for primitives, these functions will be
         # registered to the primitive interactions and will be called once
@@ -402,7 +394,7 @@ class BasicVisionPushExperiment(experiment.Experiment):
                 agent.step()
                 return model.interaction.PrimitivePerceptionInteraction(step, agent.get_perception(world))
             else:
-                return model.interaction.PrimitivePerceptionInteraction(bump, agent.get_perception(world))
+                return model.interaction.PrimitivePerceptionInteraction(step_fail, agent.get_perception(world))
 
         def _turn_right(world, agent, interaction):
             agent.add_rotation(-90)
@@ -420,33 +412,32 @@ class BasicVisionPushExperiment(experiment.Experiment):
                     if isinstance(entity, model.structure.Block):
                         entity.position.add(agent.get_move_delta(1))
                         return model.interaction.PrimitivePerceptionInteraction(push, agent.get_perception(world))
-            return model.interaction.PrimitivePerceptionInteraction(no_push, agent.get_perception(world))
+            return model.interaction.PrimitivePerceptionInteraction(push_fail, agent.get_perception(world))
 
         # Register the previously defined functions.
         enact_logic = {}
-        enact_logic[step] = _step
-        enact_logic[bump] = _step
-        enact_logic[turn_right] = _turn_right
-        enact_logic[turn_left] = _turn_left
-        enact_logic[push] = _push
-        enact_logic[no_push] = _push
+        enact_logic[step.get_name()] = _step
+        enact_logic[turn_right.get_name()] = _turn_right
+        enact_logic[turn_left.get_name()] = _turn_left
+        enact_logic[push.get_name()] = _push
 
         # Set primitives known/enactable by the agents.
         primitives = []
         primitives.append(step)
+        primitives.append(step_fail)
         primitives.append(turn_right)
         primitives.append(turn_left)
-        primitives.append(bump)
         primitives.append(push)
-        primitives.append(no_push)
+        primitives.append(push_fail)
 
         # Set intrinsic motivation values.
         motivation = {}
         motivation[step] = -1
+        motivation[step_fail] = -10
         motivation[turn_right] = -2
         motivation[turn_left] = -2
-        motivation[bump] = -10
         motivation[push] = 500
+        motivation[push_fail] = -1
 
         for entity in self.world.get_entities():
             if isinstance(entity, model.agent.Agent):
@@ -476,12 +467,12 @@ class BasicVisionCoexsistenceExperiment(experiment.Experiment):
         self.world = self.parse_world(self.world_representation)
 
         # Set up primitives
-        step = model.interaction.PrimitiveInteraction("Step")
-        turn_right = model.interaction.PrimitiveInteraction("Turn Right")
-        turn_left = model.interaction.PrimitiveInteraction("Turn Left")
-        bump = model.interaction.PrimitiveInteraction("Bump")
-        cuddle = model.interaction.PrimitiveInteraction("Cuddle")
-        no_cuddle = model.interaction.PrimitiveInteraction("No Cuddle")
+        step = model.interaction.PrimitiveInteraction("Step", "Succeed")
+        step_fail = model.interaction.PrimitiveInteraction("Step", "Fail")
+        turn_right = model.interaction.PrimitiveInteraction("Turn Right", "Succeed")
+        turn_left = model.interaction.PrimitiveInteraction("Turn Left", "Succeed")
+        cuddle = model.interaction.PrimitiveInteraction("Cuddle", "Succeed")
+        cuddle_fail = model.interaction.PrimitiveInteraction("Cuddle", "Fail")
 
         # Define environment logic for primitives, these functions will be
         # registered to the primitive interactions and will be called once
@@ -494,7 +485,7 @@ class BasicVisionCoexsistenceExperiment(experiment.Experiment):
                 agent.step()
                 return model.interaction.PrimitivePerceptionInteraction(step, agent.get_perception(world))
             else:
-                return model.interaction.PrimitivePerceptionInteraction(bump, agent.get_perception(world))
+                return model.interaction.PrimitivePerceptionInteraction(step_fail, agent.get_perception(world))
 
         def _turn_right(world, agent, interaction):
             agent.add_rotation(-90)
@@ -510,34 +501,32 @@ class BasicVisionCoexsistenceExperiment(experiment.Experiment):
                 if entity != agent and isinstance(entity, model.agent.Agent):
                     return model.interaction.PrimitivePerceptionInteraction(cuddle, agent.get_perception(world))
             
-            return model.interaction.PrimitivePerceptionInteraction(no_cuddle, agent.get_perception(world))
+            return model.interaction.PrimitivePerceptionInteraction(cuddle_fail, agent.get_perception(world))
 
         # Register the previously defined functions.
         enact_logic = {}
-        enact_logic[step] = _step
-        enact_logic[bump] = _step
-        enact_logic[turn_right] = _turn_right
-        enact_logic[turn_left] = _turn_left
-        enact_logic[cuddle] = _cuddle
-        enact_logic[no_cuddle] = _cuddle
+        enact_logic[step.get_name()] = _step
+        enact_logic[turn_right.get_name()] = _turn_right
+        enact_logic[turn_left.get_name()] = _turn_left
+        enact_logic[cuddle.get_name()] = _cuddle
 
         # Set primitives known/enactable by the agents.
         primitives = []
         primitives.append(step)
+        primitives.append(step_fail)
         primitives.append(turn_right)
         primitives.append(turn_left)
-        primitives.append(bump)
         primitives.append(cuddle)
-        primitives.append(no_cuddle)
+        primitives.append(cuddle_fail)
 
         # Set intrinsic motivation values.
         motivation = {}
         motivation[step] = 1
+        motivation[step_fail] = 10
         motivation[turn_right] = -2
         motivation[turn_left] = -2
-        motivation[bump] = -10
         motivation[cuddle] = 50
-        motivation[no_cuddle] = -1
+        motivation[cuddle_fail] = -1
 
         for entity in self.world.get_entities():
             if isinstance(entity, model.agent.Agent):

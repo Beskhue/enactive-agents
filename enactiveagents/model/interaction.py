@@ -43,8 +43,9 @@ class Interaction(object):
 
 
 class PrimitiveInteraction(Interaction):
-    def __init__(self, name):
+    def __init__(self, name, result):
         super(PrimitiveInteraction, self).__init__(name)
+        self.result = result
 
     def unwrap(self):
         """
@@ -60,7 +61,7 @@ class PrimitiveInteraction(Interaction):
         return "PrimitiveInteraction(name=%r)" % self.name
 
     def __str__(self):
-        return "%s" % self.name
+        return "(%s, %s)" % (self.name, self.result)
 
 class PrimitivePerceptionInteraction(Interaction):
     """
@@ -91,7 +92,7 @@ class PrimitivePerceptionInteraction(Interaction):
         return self.interaction
 
     def get_name(self):
-        return self.interaction.get_name() + ":" + str(self.perception)
+        return str(self.interaction) + ":" + str(self.perception)
 
     def reconstruct_from_hierarchy(self, sequence):
         return sequence.pop(0)
