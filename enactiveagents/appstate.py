@@ -9,6 +9,8 @@ class AppState:
 
     state = None
 
+    running = True
+
     @staticmethod
     def get_state():
         """
@@ -41,3 +43,8 @@ class AppState:
     def get_world(self):
         return self.world
 
+    def toggle_pause(self):
+        self.running = not self.running
+
+    def is_running(self):
+        return self.running

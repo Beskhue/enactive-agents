@@ -35,7 +35,9 @@ class Controller(events.EventListener):
                 if event.key == pygame.K_ESCAPE:
                     self.quit()
                     return
+                elif event.key == pygame.K_SPACE:
+                    AppState.get_state().toggle_pause()
 
     def notify(self, event):
-        if isinstance(event, events.TickEvent):
+        if isinstance(event, events.ControlEvent):
             self.process_input()

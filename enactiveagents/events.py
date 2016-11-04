@@ -33,6 +33,14 @@ class DrawEvent(Event):
     def __init__(self):
         self.name = "Draw Event"
 
+class ControlEvent(Event):
+    """
+    Class representing a game control event. E.g., notifies the controller to update.
+    """
+
+    def __init__(self):
+        self.name = "Control Event"
+
 class QuitEvent(Event):
     """
     Class representing a quit event. When this event is sent, the simulation
