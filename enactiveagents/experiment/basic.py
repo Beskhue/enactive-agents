@@ -389,8 +389,8 @@ class BasicHomeostaticVisionExperiment(experiment.Experiment):
         step_fail = model.interaction.PrimitiveInteraction("Step", "Fail")
         turn_right = model.interaction.PrimitiveInteraction("Turn Right", "Succeed")
         turn_left = model.interaction.PrimitiveInteraction("Turn Left", "Succeed")
-        feel = model.interaction.PrimitiveInteraction("Feel", "Succeed")
-        feel_fail = model.interaction.PrimitiveInteraction("Feel", "Fail")
+        eat = model.interaction.PrimitiveInteraction("Eat", "Succeed")
+        eat_fail = model.interaction.PrimitiveInteraction("Eat", "Fail")
 
         # Define environment logic for primitives, these functions will be
         # registered to the primitive interactions and will be called once
@@ -414,18 +414,22 @@ class BasicHomeostaticVisionExperiment(experiment.Experiment):
             agent.add_rotation(90)
             return model.interaction.PrimitivePerceptionInteraction(turn_left, agent.get_perception(world))
 
-        def _feel(world, agent, interaction):
-            if world.can_step(agent):
-                return model.interaction.PrimitivePerceptionInteraction(feel_fail, agent.get_perception(world))
-            else:
-                return model.interaction.PrimitivePerceptionInteraction(feel, agent.get_perception(world))
+        def _eat(world, agent, interaction):
+            entities = world.get_entities_at(agent.get_position())
+            for entity in entities:
+                if isinstance(entity, model.structure.Food):
+                    world.remove_entity(entity)
+                    agent.add_to_homeostatic_value("energy", 10)
+                    return model.interaction.PrimitivePerceptionInteraction(eat, agent.get_perception(world))
+            
+            return model.interaction.PrimitivePerceptionInteraction(eat_fail, agent.get_perception(world))
 
         # Register the previously defined functions.
         enact_logic = {}
         enact_logic[step.get_name()] = _step
         enact_logic[turn_right.get_name()] = _turn_right
         enact_logic[turn_left.get_name()] = _turn_left
-        enact_logic[feel.get_name()] = _feel
+        enact_logic[eat.get_name()] = _eat
 
         # Set primitives known/enactable by the agents.
         primitives = []
@@ -433,8 +437,8 @@ class BasicHomeostaticVisionExperiment(experiment.Experiment):
         primitives.append(step_fail)
         primitives.append(turn_right)
         primitives.append(turn_left)
-        primitives.append(feel)
-        primitives.append(feel_fail)
+        primitives.append(eat)
+        primitives.append(eat_fail)
 
         # Set intrinsic homeostatic motivation values.
         motivation = {}
@@ -442,8 +446,8 @@ class BasicHomeostaticVisionExperiment(experiment.Experiment):
         motivation[step_fail] = lambda agent: -10
         motivation[turn_right] = lambda agent: -2
         motivation[turn_left] = lambda agent: -2
-        motivation[feel] = lambda agent: 0
-        motivation[feel_fail] = lambda agent: -1
+        motivation[eat] = lambda agent: 10 - agent.get_homeostatic_value("energy") * 0.1
+        motivation[eat_fail] = lambda agent: -20
 
         for entity in self.world.get_entities():
             if isinstance(entity, model.agent.Agent):
