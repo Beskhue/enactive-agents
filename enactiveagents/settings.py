@@ -21,4 +21,3 @@ ROOT_DIR = os.path.normpath(os.path.join(os.path.dirname(os.path.realpath(__file
 
 WEBROOT_DIR = os.path.join(ROOT_DIR, "webroot")
 WEBROOT_DATA_DIR  = os.path.join(WEBROOT_DIR, "data")
-TRACE_FILE_PATH = os.path.join(WEBROOT_DATA_DIR, "traces.json")

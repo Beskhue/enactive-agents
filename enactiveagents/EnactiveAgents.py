@@ -86,7 +86,7 @@ def main():
     event_manager.register_listener(main_view)
 
     # Initialize the website trace history view.
-    trace_view = agentevents.AgentEvents(settings.TRACE_FILE_PATH)
+    trace_view = agentevents.AgentEvents()
     event_manager.register_listener(trace_view)
 
     # Initialize and register the controller.

@@ -10,11 +10,7 @@ class AgentEvents(events.EventListener):
     View class
     """
 
-    def __init__(self, file_path):
-        """
-        :param file_path: The path of the file to output the history to.
-        """
-        self.file_path = file_path
+    def __init__(self):
         self.history = {}
 
     def create_if_not_exists(self, agent):
