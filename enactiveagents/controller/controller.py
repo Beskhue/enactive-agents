@@ -42,9 +42,10 @@ class Controller(events.EventListener):
                     return
                 elif event.key == pygame.K_SPACE:
                     AppState.get_state().toggle_pause()
-                elif self.experiment_controller:
-                    
-                    self.experiment_controller(event, pygame.mouse.get_pos())
+                    return
+            
+            if self.experiment_controller:     
+                self.experiment_controller(event, pygame.mouse.get_pos())
 
     def notify(self, event):
         if isinstance(event, events.ControlEvent):
