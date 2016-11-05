@@ -26,14 +26,18 @@ var doTraces = (function () {
                 for(var i = 0; i < agentHistory["enaction"].length; i++) {
                     var interactionValence = agentHistory["enaction"][i];
                     var interaction = interactionValence[0];
+                    if(interaction.interaction) {
+                        interaction = interaction.interaction
+                    }
                     var valence = interactionValence[1];
                     traces.append(" ");
-                    switch(interaction) {
-                        case "Bump":
-                            traces.append("&#x21DD;");
-                            break;
+                    switch(interaction.name) {
                         case "Step":
-                            traces.append("&#x2192;");
+                            if(interaction.result == "Succeed") {
+                                traces.append("&#x2192;");
+                            } else {
+                                traces.append("&#x21DD;");
+                            }
                             break;
                         case "Turn Left":
                             traces.append("&#x2B0F;");
@@ -41,12 +45,15 @@ var doTraces = (function () {
                         case "Turn Right":
                             traces.append("&#x21B4;");
                             break;
-                        case "No Feel":
-                            traces.append("&#x25A1;");
-                            break;
                         case "Feel":
-                            traces.append("&#x25A0;");
+                            if(interaction.result == "Succeed") {
+                                traces.append("&#x25A0;");
+                            } else {
+                                traces.append("&#x25A1;");
+                            }
                             break;
+                        default:
+                            traces.append("?");
                     }
                 }
                 
