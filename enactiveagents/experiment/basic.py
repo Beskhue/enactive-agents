@@ -365,17 +365,16 @@ class BasicVisionExperiment(experiment.Experiment):
 
 class BasicHomeostaticVisionExperiment(experiment.Experiment):
     world_representation = [
-        "wwwwwwwwwwwwwww",
-        "w.............w",
-        "w.wwwwwww.....w",
-        "w.......wwwww.w",
-        "w.wwwww.......w",
-        "w.w.......w...w",
-        "w.w.wwwww.w...w",
-        "w.w.w...w.ww.ww",
-        "w.www.....w...w",
-        "w.....wwwww.h.w",
-        "wwwwwwwwwwwwwww"
+        "wwwwwwww",
+        "w......w",
+        "w...w..w",
+        "w...w..w",
+        "w...w..w",
+        "w...w..w",
+        "w..ww..w",
+        "w..w...w",
+        "w.....hw",
+        "wwwwwwww",
         ]
 
     def __init__(self):
