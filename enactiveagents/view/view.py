@@ -134,7 +134,7 @@ class Sprite(pygame.sprite.Sprite):
         """
         if isinstance(self.entity, model.agent.Agent):
             return [[.2, .25], [.2, .75], [.85, 0.5]]
-        elif isinstance(self.entity, model.structure.Block):
+        elif isinstance(self.entity, model.structure.Block) or isinstance(self.entity, model.structure.Food):
             return [[0.35,0.35], [0.35,0.65], [0.65,0.65], [0.65,0.35], [0.35,0.35]]
         else:
             return [[0,0], [0,1], [1,1], [1,0], [0,0]]
