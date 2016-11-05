@@ -30,3 +30,13 @@ class Block(Structure):
 
     def collidable(self):
         return False
+
+class Food(Structure):
+    """
+    Class representing food.
+    """
+
+    color = (179, 122, 62, 255)
+
+    def collidable(self):
+        return False
