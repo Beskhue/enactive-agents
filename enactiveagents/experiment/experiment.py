@@ -72,11 +72,9 @@ class Experiment(object):
         """
         raise NotImplementedError("Should be implemented by child")
 
-    def get_controller(self):
-        if self.controller:
-            return self.controller
-        else:
-            def _controller(e, coords):
-                pass
+    def has_controller(self):
+        return self.controller != None
 
-            return _controller
+    def get_controller(self):
+          return self.controller
+        
