@@ -44,6 +44,15 @@ class View(events.EventListener):
         
         self.group.draw(self.surface)
 
+    def draw_mouse_highlight(self):
+        """
+        Draw an indication of where the mouse is on the canvas.
+        """
+        if pygame.mouse.get_focused():
+            cell = self.window_coords_to_world_coords(pygame.mouse.get_pos())
+            rect = (cell[0]*self.get_cell_width(), cell[1]*self.get_cell_height(), self.get_cell_width(), self.get_cell_height());
+            pygame.draw.rect(self.surface, (255,125,55,255), rect, 1);
+
     def get_cell_width(self):
         """
         Get the width of a cell on the canvas.
@@ -66,7 +75,10 @@ class View(events.EventListener):
         :param coords: Window pixel coords
         :return: World coordinates
         """
-        return (math.floor(coords[0] / self.get_cell_width()), math.floor(coords[1] / self.get_cell_height()))
+        if coords:
+            return (math.floor(coords[0] / self.get_cell_width()), math.floor(coords[1] / self.get_cell_height()))
+        else:
+            return None
 
     def draw(self):
         """
@@ -75,6 +87,7 @@ class View(events.EventListener):
         self.surface.fill([0,0,0])
         self.surface.convert()
         self.draw_entities()
+        self.draw_mouse_highlight()
         pygame.display.flip()
 
     def notify(self, event):

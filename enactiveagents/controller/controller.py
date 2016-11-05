@@ -45,7 +45,10 @@ class Controller(events.EventListener):
                     return
             
             if self.experiment_controller:     
-                self.experiment_controller(event, pygame.mouse.get_pos())
+                if pygame.mouse.get_focused():
+                    self.experiment_controller(event, pygame.mouse.get_pos())
+                else:
+                    self.experiment_controller(event, None)
 
     def notify(self, event):
         if isinstance(event, events.ControlEvent):
