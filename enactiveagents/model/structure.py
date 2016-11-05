@@ -36,7 +36,7 @@ class Food(Structure):
     Class representing food.
     """
 
-    color = (179, 122, 62, 255)
+    color = (62, 179, 122, 255)
 
     def collidable(self):
         return False
