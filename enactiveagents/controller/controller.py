@@ -11,6 +11,8 @@ class Controller(events.EventListener):
     Controller class.
     """
 
+    experiment_controller = None
+
     def __init__(self):
         pass
 
@@ -21,6 +23,9 @@ class Controller(events.EventListener):
 
         quitEvent = events.QuitEvent()
         AppState.get_state().get_event_manager().post_event(quitEvent)
+
+    def set_experiment_controller(self, experiment_controller):
+        self.experiment_controller = experiment_controller
 
     def process_input(self):
         """
@@ -37,6 +42,9 @@ class Controller(events.EventListener):
                     return
                 elif event.key == pygame.K_SPACE:
                     AppState.get_state().toggle_pause()
+                elif self.experiment_controller:
+                    
+                    self.experiment_controller(event, pygame.mouse.get_pos())
 
     def notify(self, event):
         if isinstance(event, events.ControlEvent):

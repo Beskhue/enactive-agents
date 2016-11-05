@@ -3,6 +3,7 @@ Main world view.
 """
 
 import abc
+import math
 import events
 import pygame
 import model
@@ -58,6 +59,14 @@ class View(events.EventListener):
         :rtype: int
         """
         return round(float(self.surface.get_height()) / AppState.get_state().get_world().get_height())
+
+    def window_coords_to_world_coords(self, coords):
+        """
+        Transform window pixel coordinates to world coordinates
+        :param coords: Window pixel coords
+        :return: World coordinates
+        """
+        return (math.floor(coords[0] / self.get_cell_width()), math.floor(coords[1] / self.get_cell_height()))
 
     def draw(self):
         """

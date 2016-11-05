@@ -5,6 +5,9 @@ import model.agent
 import model.perceptionhandler
 
 class Experiment(object):
+
+    controller = None
+
     def parse_world(self, world_repr, mapper=None):
         """
         Parse a representation of a world to a world.
@@ -68,3 +71,12 @@ class Experiment(object):
         :rtype: model.world.World
         """
         raise NotImplementedError("Should be implemented by child")
+
+    def get_controller(self):
+        if self.controller:
+            return self.controller
+        else:
+            def _controller(e, coords):
+                pass
+
+            return _controller

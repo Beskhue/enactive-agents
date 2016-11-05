@@ -93,6 +93,10 @@ def main():
     main_controller = controller.Controller()
     event_manager.register_listener(main_controller)
 
+    # Add the experiment controller to the controller
+    if experiment_.has_controller():
+        main_controller.set_experiment_controller(lambda e, coords: experiment_.get_controller()(e, main_view.window_coords_to_world_coords(coords)))
+
     # Start the webserver.
     webserver.trace_view = trace_view
     webserver.start()
