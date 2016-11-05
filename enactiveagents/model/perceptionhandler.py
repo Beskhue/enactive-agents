@@ -51,5 +51,7 @@ class BasicPerceptionHandler(PerceptionHandler):
                     return "w%s" % delta
                 elif isinstance(entity, structure.Block):
                     return "b%s" % delta
+                elif isinstance(entity, structure.Food):
+                    return "f%s" % delta
 
         return ""
