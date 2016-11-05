@@ -5,6 +5,7 @@ Module to build experiments (worlds, agents, etc.).
 import model.interaction
 import model.agent
 import experiment
+import pygame
 
 class BasicExperiment(experiment.Experiment):
     world_representation = [
@@ -456,6 +457,13 @@ class BasicHomeostaticVisionExperiment(experiment.Experiment):
 
     def get_world(self):
         return self.world
+
+    def controller(self, event, coords):
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_f:
+                food = model.structure.Food()
+                food.set_position(coords)
+                self.world.add_entity(food)
 
 class BasicVisionPushExperiment(experiment.Experiment):
     world_representation = [
