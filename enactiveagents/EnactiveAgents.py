@@ -73,7 +73,7 @@ def main():
     event_manager.register_listener(heart_beat)
 
     # Initialize and register the world.
-    experiment_ = experiment.basic.BasicVisionPushExperiment()
+    experiment_ = experiment.basic.BasicHomeostaticVisionExperiment()
     world = experiment_.get_world()
     event_manager.register_listener(world)
     AppState.get_state().set_world(world)
@@ -94,8 +94,7 @@ def main():
     event_manager.register_listener(main_controller)
 
     # Add the experiment controller to the controller
-    if experiment_.has_controller():
-        main_controller.set_experiment_controller(lambda e, coords: experiment_.get_controller()(e, main_view.window_coords_to_world_coords(coords)))
+    main_controller.set_experiment_controller(lambda e, coords: experiment_.controller(e, main_view.window_coords_to_world_coords(coords)))
 
     # Start the webserver.
     webserver.trace_view = trace_view

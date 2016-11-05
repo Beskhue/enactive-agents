@@ -72,9 +72,10 @@ class Experiment(object):
         """
         raise NotImplementedError("Should be implemented by child")
 
-    def has_controller(self):
-        return self.controller != None
-
-    def get_controller(self):
-          return self.controller
-        
+    def controller(self, event, coords):
+        """
+        Called to control the simulation.
+        :param event: The control event
+        :param coords: The world coordinates the mouse is currently at
+        """
+        pass
