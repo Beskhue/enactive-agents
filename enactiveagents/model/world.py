@@ -99,6 +99,9 @@ class World(events.EventListener):
     def add_entity(self, entity):
         self.entities.append(entity)
 
+    def remove_entity(self, entity):
+        self.entities.remove(entity)
+
     def prepare(self, agents):
         """
         Let all agents prepare their next interaction. Store the interaction
