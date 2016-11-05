@@ -57,6 +57,9 @@ class PrimitiveInteraction(Interaction):
     def reconstruct_from_hierarchy(self, sequence):
         return sequence.pop(0)
 
+    def to_json(self):
+        return {"name": self.name, "result": self.result}
+
     def __repr__(self):
         return "PrimitiveInteraction(name=%r)" % repr(self.name)
 
@@ -96,6 +99,9 @@ class PrimitivePerceptionInteraction(Interaction):
 
     def reconstruct_from_hierarchy(self, sequence):
         return sequence.pop(0)
+
+    def to_json(self):
+        return {"interaction": self.interaction, "perception": self.perception}
 
     def __eq__(self, other):
         if isinstance(other, PrimitivePerceptionInteraction):
