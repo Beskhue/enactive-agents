@@ -47,6 +47,13 @@ class PrimitiveInteraction(Interaction):
         super(PrimitiveInteraction, self).__init__(name)
         self.result = result
 
+    def get_result(self):
+        """
+        Get the result of the interaction this primitive represents.
+        :return: The resut of the interaction this primitive represents.
+        """
+        return self.result
+
     def unwrap(self):
         """
         Get the primitive interaction as a singleton.
