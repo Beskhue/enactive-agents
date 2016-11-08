@@ -15,6 +15,7 @@ class View(events.EventListener):
     """
 
     sprites = {}
+    agent_interaction = {}
 
     def __init__(self, surface):
         """
@@ -91,7 +92,9 @@ class View(events.EventListener):
         pygame.display.flip()
 
     def notify(self, event):
-        if isinstance(event, events.DrawEvent):
+        if isinstance(event, events.AgentEnactionEvent):
+            self.agent_interaction[event.agent] = event.action
+        elif isinstance(event, events.DrawEvent):
             self.draw()
 
 
@@ -104,16 +107,22 @@ class Sprite(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.entity = entity
         self.view = view
-        self.shape = self.get_shape()
 
         # Scale the sprite's shape
-        shape = []
+        self.shape = []
         for s in self.get_shape():
-            shape.append([
+            self.shape.append([
                 s[0] * self.view.get_cell_width(),
                 s[1] * self.view.get_cell_height()
             ])
 
+        self.color = self.get_color()
+        self.store_image()
+
+    def store_image(self):
+        """
+        The the image of the sprite on a surface.
+        """
         # Create the surface (image) of the sprite
         self.surface = pygame.Surface([self.view.get_cell_width(), self.view.get_cell_height()])
         self.surface.set_colorkey((0, 0, 0))
@@ -121,10 +130,36 @@ class Sprite(pygame.sprite.Sprite):
         # Draw the shape onto the surface
         pygame.draw.polygon(
             self.surface, 
-            self.entity.get_color(), 
-            shape,
+            self.color, 
+            self.shape,
             0)
 
+    def get_color(self):
+        """
+        Get the color the sprite should be. The color can change, e.g. depending
+        on the interaction an agent has just enacted.
+        :return: The color the sprite should be
+        """
+        color = self.entity.get_color()
+        if self.entity in self.view.agent_interaction:
+            interaction = self.view.agent_interaction[self.entity]
+            if isinstance(interaction, model.interaction.PrimitivePerceptionInteraction):
+                interaction = interaction.get_primitive_interaction()
+            if interaction.get_name() == "Step" and interaction.get_result() == "Fail":
+                color = (255,0,0,255)
+        return color
+
+    def get_surface(self):
+        """
+        Get the surface (image) of the sprite. Update the surface if the color
+        of the sprite has to change.
+        :return: The surface (image) of the sprite.
+        """
+        color = self.get_color()
+        if color != self.color:
+            self.color = color
+            self.store_image()
+        return self.surface
 
     def get_shape(self):
         """
@@ -138,7 +173,6 @@ class Sprite(pygame.sprite.Sprite):
             return [[0.35,0.35], [0.35,0.65], [0.65,0.65], [0.65,0.35], [0.35,0.35]]
         else:
             return [[0,0], [0,1], [1,1], [1,0], [0,0]]
-
 
     @property 
     def rect(self):
@@ -158,11 +192,12 @@ class Sprite(pygame.sprite.Sprite):
         """
         Get the image of the sprite.
         """
+        surface = self.get_surface()
         if self.entity.get_rotation() != 0:
-            surface = rot_center(self.surface, self.entity.get_rotation())
+            surface = rot_center(surface, self.entity.get_rotation())
             return surface
         else:
-            return self.surface
+            return surface
 
 def rot_center(image, angle):
     """
