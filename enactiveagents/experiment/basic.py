@@ -390,6 +390,8 @@ class BasicHomeostaticVisionExperiment(experiment.Experiment):
         turn_left = model.interaction.PrimitiveInteraction("Turn Left", "Succeed")
         eat = model.interaction.PrimitiveInteraction("Eat", "Succeed")
         eat_fail = model.interaction.PrimitiveInteraction("Eat", "Fail")
+        destroy = model.interaction.PrimitiveInteraction("Destroy", "Succeed")
+        destroy_fail = model.interaction.PrimitiveInteraction("Destroy", "Fail")
 
         # Define environment logic for primitives, these functions will be
         # registered to the primitive interactions and will be called once
@@ -423,12 +425,25 @@ class BasicHomeostaticVisionExperiment(experiment.Experiment):
             
             return model.interaction.PrimitivePerceptionInteraction(eat_fail, agent.get_perception(world))
 
+        def _destroy(world, agent, interaction):
+            entities = world.get_entities_at(agent.get_position())
+            for entity in entities:
+                if isinstance(entity, model.structure.Block):
+                    world.remove_entity(entity)
+                    food = model.structure.Food()
+                    food.set_position(entity.get_position())
+                    self.world.add_entity(food)
+                    return model.interaction.PrimitivePerceptionInteraction(destroy, agent.get_perception(world))
+            
+            return model.interaction.PrimitivePerceptionInteraction(destroy_fail, agent.get_perception(world))
+
         # Register the previously defined functions.
         enact_logic = {}
         enact_logic[step.get_name()] = _step
         enact_logic[turn_right.get_name()] = _turn_right
         enact_logic[turn_left.get_name()] = _turn_left
         enact_logic[eat.get_name()] = _eat
+        enact_logic[destroy.get_name()] = _destroy
 
         # Set primitives known/enactable by the agents.
         primitives = []
@@ -438,6 +453,8 @@ class BasicHomeostaticVisionExperiment(experiment.Experiment):
         primitives.append(turn_left)
         primitives.append(eat)
         primitives.append(eat_fail)
+        primitives.append(destroy)
+        primitives.append(destroy_fail)
 
         # Set intrinsic homeostatic motivation values.
         motivation = {}
@@ -447,6 +464,8 @@ class BasicHomeostaticVisionExperiment(experiment.Experiment):
         motivation[turn_left] = lambda agent: -2
         motivation[eat] = lambda agent: 10 - agent.get_homeostatic_value("energy") * 0.1
         motivation[eat_fail] = lambda agent: -20
+        motivation[destroy] = lambda agent: 30
+        motivation[destroy_fail] = lambda agent: -2
 
         for entity in self.world.get_entities():
             if isinstance(entity, model.agent.Agent):
@@ -467,6 +486,10 @@ class BasicHomeostaticVisionExperiment(experiment.Experiment):
                 food = model.structure.Food()
                 food.set_position(coords)
                 self.world.add_entity(food)
+            elif event.key == pygame.K_b:
+                block = model.structure.Block()
+                block.set_position(coords)
+                self.world.add_entity(block)
 
 class BasicVisionPushExperiment(experiment.Experiment):
     world_representation = [

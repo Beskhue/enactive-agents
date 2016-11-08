@@ -26,7 +26,7 @@ class Block(Structure):
     Class representing a block structure.
     """
 
-    color = (122, 179, 62, 255)
+    color = (179, 62, 179, 255)
 
     def collidable(self):
         return False
