@@ -68,7 +68,7 @@ class PrimitiveInteraction(Interaction):
         return {"name": self.name, "result": self.result}
 
     def __repr__(self):
-        return "PrimitiveInteraction(name=%r)" % self.name
+        return "PrimitiveInteraction(name=%r, result=%r)" % (self.name, self.result)
 
     def __str__(self):
         return "(%s, %s)" % (self.name, self.result)
