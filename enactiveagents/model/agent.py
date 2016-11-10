@@ -2,6 +2,7 @@
 Module that holds classes that represent agents.
 """
 
+import sys
 import abc
 import random
 import pygame
@@ -10,6 +11,7 @@ import interaction
 import interactionmemory
 import events
 from appstate import AppState
+import settings
 
 class Agent(Entity):
     """
@@ -419,3 +421,137 @@ class HomeostaticConstructiveAgent(ConstructiveAgent):
 
     def setup_interaction_memory(self):
         self.interaction_memory = interactionmemory.HomeostaticInteractionMemory(self)
+
+class HumanAgent(Agent):
+    """
+    An agent that is controlled by the user.
+    """
+    color = (146, 124, 3, 255)
+
+    def prepare_interaction(self):
+        chosen = None
+        self.color_old = self.color # Temporarily change color to indicate this agent has to be controlled
+        self.color = (255,255,0,255)
+
+        # Secondary pygame loop to process events until the user made a decision
+        while chosen == None:
+            if pygame.key.get_pressed()[pygame.K_LCTRL]:
+                # If left control is pressed, use the regular controller(s)
+                AppState.get_state().get_event_manager().post_event(events.ControlEvent())
+            else:
+                # If left control is not pressed, use this agent's controller
+                interaction = self.get_interaction_from_input()
+                if not interaction == None:
+                    self.color = self.color_old
+                    chosen = interaction
+
+            # Draw views
+            AppState.get_state().get_event_manager().post_event(events.DrawEvent())
+            # Pygame tick control
+            AppState.get_state().get_clock().tick(settings.MAX_FPS)
+
+        # Post interaction preparation event
+        AppState.state.get_event_manager().post_event(events.AgentPreparationEvent(
+            self, 
+            chosen, 
+            -1))
+
+        return chosen
+
+    def enacted_interaction(self, interaction, data):
+        # Post enacted interaction event
+        AppState.state.get_event_manager().post_event(events.AgentEnactionEvent(
+            self, 
+            interaction, 
+            -1))
+
+    def setup_interaction_memory(self):
+        self.interaction_memory = interactionmemory.InteractionMemory()
+
+    def get_interaction_from_input(self):
+        """
+        Get the interaction the agent should enact from user input
+        """
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    return self.find_interaction_by_name_and_result("Step")
+                elif event.key == pygame.K_LEFT:
+                    return self.find_interaction_by_name_and_result("Turn Left")
+                elif event.key == pygame.K_RIGHT:
+                    return self.find_interaction_by_name_and_result("Turn Right")
+                elif event.key == pygame.K_SLASH:
+                    return self.choose_from_list()
+
+    def find_interaction_by_name_and_result(self, name, result = "Succeed"):
+        interactions = self.interaction_memory.get_primitive_interactions()
+
+        for interaction in interactions:
+            if interaction.get_name() == name and interaction.get_result() == result:
+                return interaction
+
+        return None
+
+    def choose_from_list(self):
+        """
+        Method to choose interaction from a list of all interactions known by 
+        this agent.
+        """
+        interactions = self.interaction_memory.get_primitive_interactions()
+
+        print "Choose an interaction from the following list:"
+        n = 1
+        for interaction in interactions:
+            print "%s. %s" % (n, interaction)
+            n += 1
+        
+        choice = None
+
+        keydict = {
+            pygame.K_0: '0', 
+            pygame.K_1: '1', 
+            pygame.K_2: '2', 
+            pygame.K_3: '3', 
+            pygame.K_4: '4', 
+            pygame.K_5: '5', 
+            pygame.K_6: '6', 
+            pygame.K_7: '7', 
+            pygame.K_8: '8', 
+            pygame.K_9: '9'
+        }
+
+        # Get user input until we have a valid choice
+        while not isinstance(choice, int) or choice < 1 or choice > len(interactions):
+            print "Please choose the number of an interaction and press [enter]: ",
+            inputstring = ""
+            while True:
+                # Process pygame key events to get user input
+                event = pygame.event.poll()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        # Stop and process the input retrieved so far
+                        break
+                    elif event.key == pygame.K_BACKSPACE:
+                        # Remove one character
+                        if len(inputstring) > 0:
+                            inputstring = inputstring[:-1] # Delete one character from the input string
+                            sys.stdout.write('\b \b') # Delete one character from the console output
+                    elif event.key == pygame.K_ESCAPE:
+                        # Stop
+                        print ""
+                        return None
+                    try:
+                        key = keydict[event.key]
+                    except:
+                        key = ""
+                    inputstring += key
+                    sys.stdout.write(key)
+
+            try:
+                choice = int(inputstring)
+            except ValueError:
+                choice = None
+            print ""
+
+        return interactions[choice - 1]
+        
