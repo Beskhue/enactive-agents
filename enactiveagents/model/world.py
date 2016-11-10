@@ -288,7 +288,7 @@ class Entity(object):
         """
         self.position.add(self.get_move_delta(steps))
 
-    def get_move_delta(self, steps):
+    def get_move_delta(self, steps = 1):
         """
         Get the change in position if the agent were to move.
         :param steps: The number of steps the agent would move.
