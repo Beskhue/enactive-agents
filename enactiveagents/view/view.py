@@ -108,14 +108,6 @@ class Sprite(pygame.sprite.Sprite):
         self.entity = entity
         self.view = view
 
-        # Scale the sprite's shape
-        self.shape = []
-        for s in self.get_shape():
-            self.shape.append([
-                s[0] * self.view.get_cell_width(),
-                s[1] * self.view.get_cell_height()
-            ])
-
         self.color = self.get_color()
         self.store_image()
 
@@ -124,8 +116,16 @@ class Sprite(pygame.sprite.Sprite):
         The the image of the sprite on a surface.
         """
         # Create the surface (image) of the sprite
-        self.surface = pygame.Surface([self.view.get_cell_width(), self.view.get_cell_height()])
+        self.surface = pygame.Surface([self.entity.get_width() * self.view.get_cell_width(), self.entity.get_height() * self.view.get_cell_height()])
         self.surface.set_colorkey((0, 0, 0))
+
+        # Scale the sprite's shape
+        self.shape = []
+        for s in self.get_shape():
+            self.shape.append([
+                s[0] * self.view.get_cell_width(),
+                s[1] * self.view.get_cell_height()
+            ])
 
         # Draw the shape onto the surface
         pygame.draw.polygon(
@@ -170,7 +170,13 @@ class Sprite(pygame.sprite.Sprite):
         if isinstance(self.entity, model.agent.Agent):
             return [[.2, .25], [.2, .75], [.85, 0.5]]
         elif isinstance(self.entity, model.structure.Block) or isinstance(self.entity, model.structure.Food):
-            return [[0.35,0.35], [0.35,0.65], [0.65,0.65], [0.65,0.35], [0.35,0.35]]
+            return [
+                [0.35,0.35], 
+                [0.35, self.entity.get_height() - 1 + 0.65], 
+                [self.entity.get_width()- 1 + 0.65, self.entity.get_height() - 1 + 0.65], 
+                [self.entity.get_width() - 1 + 0.65, 0.35], 
+                [0.35,0.35]
+            ]
         else:
             return [[0,0], [0,1], [1,1], [1,0], [0,0]]
 
