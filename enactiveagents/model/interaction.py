@@ -68,7 +68,7 @@ class PrimitiveInteraction(Interaction):
         return {"name": self.name, "result": self.result}
 
     def __repr__(self):
-        return "PrimitiveInteraction(name=%r)" % repr(self.name)
+        return "PrimitiveInteraction(name=%r)" % self.name
 
     def __str__(self):
         return "(%s, %s)" % (self.name, self.result)
@@ -117,7 +117,7 @@ class PrimitivePerceptionInteraction(Interaction):
             return False
 
     def __repr__(self):
-        return "PrimitivePerceptionInteraction(interaction=%r, perception=%r)" % (repr(self.interaction.name), repr(self.perception))
+        return "PrimitivePerceptionInteraction(interaction=%r, perception=%r)" % (self.interaction, self.perception)
 
     def __str__(self):
         return "%s" % self.get_name()
@@ -169,7 +169,7 @@ class CompositeInteraction(Interaction):
         return not (self == other)
 
     def __repr__(self):
-        return "CompositeInteraction(pre=%r,post=%r)" % (repr(self.pre), repr(self.post))
+        return "CompositeInteraction(pre=%r,post=%r)" % (self.pre, self.post)
 
     def __str__(self):
         return "<%s, %s>" % (self.pre, self.post)
