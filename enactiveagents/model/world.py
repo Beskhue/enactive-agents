@@ -373,6 +373,11 @@ class Entity(object):
         raise NotImplementedError("Should be implemented in child")
 
 def collide(r1, r2):
+    """
+    Test if two rectangles collide
+    :param r1: The first rectangle
+    :param r2: The second rectangle
+    """
     return not (
         r2[0] >= r1[0]+r1[2] or # Left side of r2 is to the right of right side of r1
         r2[0]+r2[2] <= r1[0] or # Right side of r2 is to the left of left side of r1
@@ -381,6 +386,11 @@ def collide(r1, r2):
     )
 
 def inside(r, p):
+    """
+    Test if a point is inside a rectangle
+    :param r: The rectangle
+    :param p: The point
+    """
     return not (
         p.get_x() < r[0] or
         p.get_y() < r[1] or
