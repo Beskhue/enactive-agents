@@ -321,17 +321,17 @@ class BasicVisionExperiment(experiment.Experiment):
         def _step(world, agent, interaction):
             if world.can_step(agent):
                 agent.step()
-                return model.interaction.PrimitivePerceptionInteraction(step, agent.get_perception(world))
+                return step
             else:
-                return model.interaction.PrimitivePerceptionInteraction(step_fail, agent.get_perception(world))
+                return step_fail
 
         def _turn_right(world, agent, interaction):
             agent.add_rotation(-90)
-            return model.interaction.PrimitivePerceptionInteraction(turn_right, agent.get_perception(world))
+            return turn_right
         
         def _turn_left(world, agent, interaction):
             agent.add_rotation(90)
-            return model.interaction.PrimitivePerceptionInteraction(turn_left, agent.get_perception(world))
+            return turn_left
 
         # Register the previously defined functions.
         enact_logic = {}
@@ -403,17 +403,17 @@ class BasicHomeostaticVisionExperiment(experiment.Experiment):
             if world.can_step(agent):
                 agent.step()
                 agent.add_to_homeostatic_value("energy", -0.1)
-                return model.interaction.PrimitivePerceptionInteraction(step, agent.get_perception(world))
+                return step
             else:
-                return model.interaction.PrimitivePerceptionInteraction(step_fail, agent.get_perception(world))
+                return step_fail
 
         def _turn_right(world, agent, interaction):
             agent.add_rotation(-90)
-            return model.interaction.PrimitivePerceptionInteraction(turn_right, agent.get_perception(world))
+            return turn_right
         
         def _turn_left(world, agent, interaction):
             agent.add_rotation(90)
-            return model.interaction.PrimitivePerceptionInteraction(turn_left, agent.get_perception(world))
+            return turn_left
 
         def _eat(world, agent, interaction):
             entities = world.get_entities_at(agent.get_position())
@@ -421,9 +421,9 @@ class BasicHomeostaticVisionExperiment(experiment.Experiment):
                 if isinstance(entity, model.structure.Food):
                     world.remove_entity(entity)
                     agent.add_to_homeostatic_value("energy", 10)
-                    return model.interaction.PrimitivePerceptionInteraction(eat, agent.get_perception(world))
+                    return eat
             
-            return model.interaction.PrimitivePerceptionInteraction(eat_fail, agent.get_perception(world))
+            return eat_fail
 
         def _destroy(world, agent, interaction):
             entities = world.get_entities_at(agent.get_position())
@@ -433,9 +433,9 @@ class BasicHomeostaticVisionExperiment(experiment.Experiment):
                     food = model.structure.Food()
                     food.set_position(entity.get_position())
                     self.world.add_entity(food)
-                    return model.interaction.PrimitivePerceptionInteraction(destroy, agent.get_perception(world))
+                    return destroy
             
-            return model.interaction.PrimitivePerceptionInteraction(destroy_fail, agent.get_perception(world))
+            return destroy_fail
 
         # Register the previously defined functions.
         enact_logic = {}
@@ -521,17 +521,17 @@ class BasicVisionPushExperiment(experiment.Experiment):
         def _step(world, agent, interaction):
             if world.can_step(agent):
                 agent.step()
-                return model.interaction.PrimitivePerceptionInteraction(step, agent.get_perception(world))
+                return step
             else:
-                return model.interaction.PrimitivePerceptionInteraction(step_fail, agent.get_perception(world))
+                return step_fail
 
         def _turn_right(world, agent, interaction):
             agent.add_rotation(-90)
-            return model.interaction.PrimitivePerceptionInteraction(turn_right, agent.get_perception(world))
+            return turn_right
         
         def _turn_left(world, agent, interaction):
             agent.add_rotation(90)
-            return model.interaction.PrimitivePerceptionInteraction(turn_left, agent.get_perception(world))
+            return turn_left
 
         def _push(world, agent, interaction):
             if world.can_step(agent):
@@ -540,8 +540,8 @@ class BasicVisionPushExperiment(experiment.Experiment):
                 for entity in entities:
                     if isinstance(entity, model.structure.Block):
                         entity.position.add(agent.get_move_delta(1))
-                        return model.interaction.PrimitivePerceptionInteraction(push, agent.get_perception(world))
-            return model.interaction.PrimitivePerceptionInteraction(push_fail, agent.get_perception(world))
+                        return push
+            return push_fail
 
         # Register the previously defined functions.
         enact_logic = {}
@@ -612,25 +612,25 @@ class BasicVisionCoexsistenceExperiment(experiment.Experiment):
         def _step(world, agent, interaction):
             if world.can_step(agent):
                 agent.step()
-                return model.interaction.PrimitivePerceptionInteraction(step, agent.get_perception(world))
+                return step
             else:
-                return model.interaction.PrimitivePerceptionInteraction(step_fail, agent.get_perception(world))
+                return step_fail
 
         def _turn_right(world, agent, interaction):
             agent.add_rotation(-90)
-            return model.interaction.PrimitivePerceptionInteraction(turn_right, agent.get_perception(world))
+            return turn_right
         
         def _turn_left(world, agent, interaction):
             agent.add_rotation(90)
-            return model.interaction.PrimitivePerceptionInteraction(turn_left, agent.get_perception(world))
+            return turn_left
 
         def _cuddle(world, agent, interaction):
             entities = world.get_entities_at(agent.get_position())
             for entity in entities:
                 if entity != agent and isinstance(entity, model.agent.Agent):
-                    return model.interaction.PrimitivePerceptionInteraction(cuddle, agent.get_perception(world))
+                    return cuddle
             
-            return model.interaction.PrimitivePerceptionInteraction(cuddle_fail, agent.get_perception(world))
+            return cuddle_fail
 
         # Register the previously defined functions.
         enact_logic = {}
@@ -700,26 +700,26 @@ class BasicVisionCoexsistenceDestroyExperiment(experiment.Experiment):
         def _step(world, agent, interaction):
             if world.can_step(agent):
                 agent.step()
-                return model.interaction.PrimitivePerceptionInteraction(step, agent.get_perception(world))
+                return step
             else:
-                return model.interaction.PrimitivePerceptionInteraction(step_fail, agent.get_perception(world))
+                return step_fail
 
         def _turn_right(world, agent, interaction):
             agent.add_rotation(-90)
-            return model.interaction.PrimitivePerceptionInteraction(turn_right, agent.get_perception(world))
+            return turn_right
         
         def _turn_left(world, agent, interaction):
             agent.add_rotation(90)
-            return model.interaction.PrimitivePerceptionInteraction(turn_left, agent.get_perception(world))
+            return turn_left
 
         def _eat(world, agent, interaction):
             entities = world.get_entities_at(agent.get_position())
             for entity in entities:
                 if isinstance(entity, model.structure.Food):
                     world.remove_entity(entity)
-                    return model.interaction.PrimitivePerceptionInteraction(eat, agent.get_perception(world))
+                    return eat
             
-            return model.interaction.PrimitivePerceptionInteraction(eat_fail, agent.get_perception(world))
+            return eat_fail
 
         def _collaborative_destroy(world, agents_interactions):
             enacted = {}
