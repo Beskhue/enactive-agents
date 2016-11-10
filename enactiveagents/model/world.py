@@ -18,6 +18,7 @@ class World(events.EventListener):
 
     entities = []
     enact_logic = {}
+    complex_enact_logic = []
     width = 20
     height = 20
 
@@ -81,6 +82,33 @@ class World(events.EventListener):
         """
         self.enact_logic[agent] = callback_dict
 
+    def add_complex_enact_logic(self, callback):
+        """
+        Add a complex enact logic callback. The callback will be called
+        when all agents have prepared their interaction. The callback receives
+        an instance of the world and a mapping of all agents to their prepared
+        interactions.
+
+        The callback can handle on zero, one, or more agents present in the mapping.
+        Not all agents have to be handled by the callback. The callback should
+        manipulate the world state (e.g., move one or more agents) and it should
+        return a mapping of agents to primitive interactions the agents have
+        actually enacted for each agent the callback handled.
+
+        Multiple complex callbacks can be registered. The callbacks are processed
+        in a first-come first-out basis (i.e., callbacks registered first will
+        process interactions first).
+
+        :param callback: The callable to add
+        """
+        self.complex_enact_logic.append(callback)
+
+    def remove_complex_enact_logic(self, callback):
+        """
+        :param callback: The callable to remove
+        """
+        self.complex_enact_logic.remove(callback)
+
     def get_width(self):
         return self.width
 
@@ -132,12 +160,30 @@ class World(events.EventListener):
         :param agents_data: The agent and data mapping as generated in 
                             self.prepare.
         """
+
+        enacted = {}
+
+        # Get primitive interactions
         for agent, (interaction_, data) in agents_data.iteritems():
             # Get enact logic
             if isinstance(interaction_, interaction.PrimitivePerceptionInteraction):
                 primitive_interaction = interaction_.get_primitive_interaction()
             else:
                 primitive_interaction = interaction_
+
+            agents_data[agent] = (primitive_interaction, data)
+
+        # Execute complex interaction logic
+        for callback in self.complex_enact_logic:
+            agents_interactions = {agent: primitive_interaction for agent, (primitive_interaction, data) in agents_data.items()}
+            enacted_ = callback(self, agents_interactions)
+            enacted.update(enacted_)
+
+        # Execute interactions
+        for agent, (primitive_interaction, data) in agents_data.iteritems():
+            if agent in enacted:
+                # Agent has already been handled
+                continue
 
             action = primitive_interaction.get_name()
 
@@ -150,9 +196,13 @@ class World(events.EventListener):
                 # There is no logic registered with this interaction,
                 # do nothing.
                 enacted_interaction = interaction_
+            
             # Tell agent which interaction was enacted
-            agent.enacted_interaction(enacted_interaction, data)
+            enacted[agent] = enacted_interaction
 
+        # Notify agents of which interaction was enacted
+        for agent, (primitive_interaction, data) in agents_data.iteritems():
+            agent.enacted_interaction(enacted[agent], data)
 
     def notify(self, event):
         if isinstance(event, events.TickEvent):
