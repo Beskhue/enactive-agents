@@ -82,7 +82,7 @@ class World(events.EventListener):
         """
         self.enact_logic[agent] = callback_dict
 
-    def add_complex_enact_logic(self, callback):
+    def add_complex_enact_logic(self, callback, action = None):
         """
         Add a complex enact logic callback. The callback will be called
         when all agents have prepared their interaction. The callback receives
@@ -100,14 +100,19 @@ class World(events.EventListener):
         process interactions first).
 
         :param callback: The callable to add
+        :param action: Optional, if set the callback will only receive agents
+                       trying to enact the interaction with the given action
         """
-        self.complex_enact_logic.append(callback)
+        if action == None:
+            self.complex_enact_logic.append(callback)
+        else:
+            self.complex_enact_logic.append((callback, action))
 
     def remove_complex_enact_logic(self, callback):
         """
         :param callback: The callable to remove
         """
-        self.complex_enact_logic.remove(callback)
+        self.complex_enact_logic = [x for x in self.complex_enact_logic if not (x == callback or (isinstance(x, tuple) and x[0] == callback))]
 
     def get_width(self):
         return self.width
@@ -175,9 +180,18 @@ class World(events.EventListener):
 
         # Execute complex interaction logic
         for callback in self.complex_enact_logic:
-            agents_interactions = {agent: primitive_interaction for agent, (primitive_interaction, data) in agents_data.items()}
-            enacted_ = callback(self, agents_interactions)
-            enacted.update(enacted_)
+            if isinstance(callback, tuple):
+                (callback, action) = callback
+                # Get a mapping of agents to the intended primitive interactions, 
+                # and filter out all primitives that do not correspond to the given action
+                agents_interactions = {agent: primitive_interaction for agent, (primitive_interaction, data) in agents_data.items() if primitive_interaction.get_name() == action}
+            else:
+                # Get a mapping of agents to the intended primitive interactions
+                agents_interactions = {agent: primitive_interaction for agent, (primitive_interaction, data) in agents_data.items()}
+            
+            if len(agents_interactions) > 0:
+                enacted_ = callback(self, agents_interactions)
+                enacted.update(enacted_)
 
         # Execute interactions
         for agent, (primitive_interaction, data) in agents_data.iteritems():
