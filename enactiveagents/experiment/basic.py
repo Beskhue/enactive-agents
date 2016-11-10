@@ -651,7 +651,7 @@ class BasicVisionCoexsistenceExperiment(experiment.Experiment):
         # Set intrinsic motivation values.
         motivation = {}
         motivation[step] = 1
-        motivation[step_fail] = 10
+        motivation[step_fail] = -10
         motivation[turn_right] = -2
         motivation[turn_left] = -2
         motivation[cuddle] = 50
@@ -737,7 +737,7 @@ class BasicVisionCoexsistencePushExperiment(experiment.Experiment):
         # Set intrinsic motivation values.
         motivation = {}
         motivation[step] = 1
-        motivation[step_fail] = 10
+        motivation[step_fail] = -10
         motivation[turn_right] = -2
         motivation[turn_left] = -2
         motivation[collaborative_push] = 50
