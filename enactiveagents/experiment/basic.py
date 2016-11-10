@@ -666,3 +666,101 @@ class BasicVisionCoexsistenceExperiment(experiment.Experiment):
 
     def get_world(self):
         return self.world
+
+class BasicVisionCoexsistencePushExperiment(experiment.Experiment):
+    world_representation = [
+        "wwwwwwwwwwww",
+        "wp.........w",
+        "wp.........w",
+        "wwwwwwwwwwww"
+        ]
+
+    def __init__(self):
+        super(BasicVisionCoexsistencePushExperiment, self).__init__()
+
+        # Parse world
+        self.world = self.parse_world(self.world_representation)
+
+        # Set up primitives
+        step = model.interaction.PrimitiveInteraction("Step", "Succeed")
+        step_fail = model.interaction.PrimitiveInteraction("Step", "Fail")
+        turn_right = model.interaction.PrimitiveInteraction("Turn Right", "Succeed")
+        turn_left = model.interaction.PrimitiveInteraction("Turn Left", "Succeed")
+        collaborative_push = model.interaction.PrimitiveInteraction("Collaborative Push", "Succeed")
+        collaborative_push_fail = model.interaction.PrimitiveInteraction("Collaborative Push", "Fail")
+
+        # Define environment logic for primitives, these functions will be
+        # registered to the primitive interactions and will be called once
+        # the agent attempts to enact the primitive interaction. 
+        # The function can manipulate the world and the agents.
+        # The return value is the actual enacted interaction (i.e., can be 
+        # different form the attempted interaction).
+        def _step(world, agent, interaction):
+            if world.can_step(agent):
+                agent.step()
+                return model.interaction.PrimitivePerceptionInteraction(step, agent.get_perception(world))
+            else:
+                return model.interaction.PrimitivePerceptionInteraction(step_fail, agent.get_perception(world))
+
+        def _turn_right(world, agent, interaction):
+            agent.add_rotation(-90)
+            return model.interaction.PrimitivePerceptionInteraction(turn_right, agent.get_perception(world))
+        
+        def _turn_left(world, agent, interaction):
+            agent.add_rotation(90)
+            return model.interaction.PrimitivePerceptionInteraction(turn_left, agent.get_perception(world))
+
+        def _collaborative_push(world, agent, interaction):
+            entities = world.get_entities_at(agent.get_position())
+            for entity in entities:
+                if entity != agent and isinstance(entity, model.agent.Agent):
+                    return model.interaction.PrimitivePerceptionInteraction(collaborative_push, agent.get_perception(world))
+            
+            return model.interaction.PrimitivePerceptionInteraction(collaborative_push_fail, agent.get_perception(world))
+
+        # Register the previously defined functions.
+        enact_logic = {}
+        enact_logic[step.get_name()] = _step
+        enact_logic[turn_right.get_name()] = _turn_right
+        enact_logic[turn_left.get_name()] = _turn_left
+        enact_logic[collaborative_push.get_name()] = _collaborative_push
+
+        # Set primitives known/enactable by the agents.
+        primitives = []
+        primitives.append(step)
+        primitives.append(step_fail)
+        primitives.append(turn_right)
+        primitives.append(turn_left)
+        primitives.append(collaborative_push)
+        primitives.append(collaborative_push_fail)
+
+        # Set intrinsic motivation values.
+        motivation = {}
+        motivation[step] = 1
+        motivation[step_fail] = 10
+        motivation[turn_right] = -2
+        motivation[turn_left] = -2
+        motivation[collaborative_push] = 50
+        motivation[collaborative_push_fail] = -1
+
+        for entity in self.world.get_entities():
+            if isinstance(entity, model.agent.Agent):
+                self.world.add_enact_logic(entity, enact_logic)
+                entity.set_primitives(primitives)
+                entity.set_motivation(motivation)
+
+
+    def get_world(self):
+        return self.world
+
+    def controller(self, event, coords):
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_f:
+                food = model.structure.Food()
+                food.set_position(coords)
+                self.world.add_entity(food)
+            elif event.key == pygame.K_b:
+                block = model.structure.Block()
+                block.set_position(coords)
+                block.height = 2
+                self.world.add_entity(block)

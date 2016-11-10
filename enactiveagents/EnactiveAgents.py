@@ -75,7 +75,7 @@ def main():
     event_manager.register_listener(heart_beat)
 
     # Initialize and register the world.
-    experiment_ = experiment.basic.BasicHomeostaticVisionExperiment()
+    experiment_ = experiment.basic.BasicVisionCoexsistencePushExperiment()
     world = experiment_.get_world()
     event_manager.register_listener(world)
     AppState.get_state().set_world(world)
