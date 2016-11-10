@@ -374,9 +374,9 @@ class Entity(object):
 
 def collide(r1, r2):
     """
-    Test if two rectangles collide
-    :param r1: The first rectangle
-    :param r2: The second rectangle
+    Test if two rectangles collide.
+    :param r1: The first rectangle.
+    :param r2: The second rectangle.
     """
     return not (
         r2[0] >= r1[0]+r1[2] or # Left side of r2 is to the right of right side of r1
@@ -387,9 +387,9 @@ def collide(r1, r2):
 
 def inside(r, p):
     """
-    Test if a point is inside a rectangle
-    :param r: The rectangle
-    :param p: The point
+    Test if a point is inside a rectangle.
+    :param r: The rectangle.
+    :param p: The point.
     """
     return not (
         p.get_x() < r[0] or
