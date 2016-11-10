@@ -60,6 +60,10 @@ class Experiment(object):
             a = model.agent.ConstructiveAgent()
             a.set_perception_handler(model.perceptionhandler.BasicPerceptionHandler())
             return a
+        elif symbol == "u":
+            a = model.agent.HumanAgent()
+            a.set_perception_handler(model.perceptionhandler.BasicPerceptionHandler())
+            return a
         else:
             return None
 

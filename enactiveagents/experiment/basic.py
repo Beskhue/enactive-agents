@@ -667,7 +667,7 @@ class BasicVisionCoexsistenceExperiment(experiment.Experiment):
     def get_world(self):
         return self.world
 
-class BasicVisionCoexsistencePushExperiment(experiment.Experiment):
+class BasicVisionCoexsistenceDestroyExperiment(experiment.Experiment):
     world_representation = [
         "wwwwwwwwwwww",
         "wp.........w",
@@ -676,7 +676,7 @@ class BasicVisionCoexsistencePushExperiment(experiment.Experiment):
         ]
 
     def __init__(self):
-        super(BasicVisionCoexsistencePushExperiment, self).__init__()
+        super(BasicVisionCoexsistenceDestroyExperiment, self).__init__()
 
         # Parse world
         self.world = self.parse_world(self.world_representation)
@@ -686,8 +686,10 @@ class BasicVisionCoexsistencePushExperiment(experiment.Experiment):
         step_fail = model.interaction.PrimitiveInteraction("Step", "Fail")
         turn_right = model.interaction.PrimitiveInteraction("Turn Right", "Succeed")
         turn_left = model.interaction.PrimitiveInteraction("Turn Left", "Succeed")
-        collaborative_push = model.interaction.PrimitiveInteraction("Collaborative Push", "Succeed")
-        collaborative_push_fail = model.interaction.PrimitiveInteraction("Collaborative Push", "Fail")
+        eat = model.interaction.PrimitiveInteraction("Eat", "Succeed")
+        eat_fail = model.interaction.PrimitiveInteraction("Eat", "Fail")
+        collaborative_destroy = model.interaction.PrimitiveInteraction("Collaborative Destroy", "Succeed")
+        collaborative_destroy_fail = model.interaction.PrimitiveInteraction("Collaborative Destroy", "Fail")
 
         # Define environment logic for primitives, these functions will be
         # registered to the primitive interactions and will be called once
@@ -710,20 +712,62 @@ class BasicVisionCoexsistencePushExperiment(experiment.Experiment):
             agent.add_rotation(90)
             return model.interaction.PrimitivePerceptionInteraction(turn_left, agent.get_perception(world))
 
-        def _collaborative_push(world, agent, interaction):
+        def _eat(world, agent, interaction):
             entities = world.get_entities_at(agent.get_position())
             for entity in entities:
-                if entity != agent and isinstance(entity, model.agent.Agent):
-                    return model.interaction.PrimitivePerceptionInteraction(collaborative_push, agent.get_perception(world))
+                if isinstance(entity, model.structure.Food):
+                    world.remove_entity(entity)
+                    return model.interaction.PrimitivePerceptionInteraction(eat, agent.get_perception(world))
             
-            return model.interaction.PrimitivePerceptionInteraction(collaborative_push_fail, agent.get_perception(world))
+            return model.interaction.PrimitivePerceptionInteraction(eat_fail, agent.get_perception(world))
+
+        def _collaborative_destroy(world, agents_interactions):
+            enacted = {}
+
+            for agent_1, interaction_1 in agents_interactions.iteritems():
+                if agent_1 in enacted:
+                    continue
+                else:
+                    enacted[agent_1] = collaborative_destroy_fail # Set fail as default, we will now see whether it succeeded
+
+                    entities = world.get_entities_at(agent_1.get_position())
+                    for entity in entities:
+                        if isinstance(entity, model.structure.Block):
+                            # There is a block at agent 1's position, try to find a second agent attempting to destroy the same block:
+                            for agent_2, interaction_2 in agents_interactions.iteritems():
+                                if agent_1 == agent_2:
+                                    continue
+
+                                if agent_2.get_position() == agent_1.get_position():
+                                    # The agents are at the same position, so the action fails
+                                    continue
+
+                                if entity in world.get_entities_at(agent_2.get_position()):
+                                    # Agent 2 is enacting on the same block as agent 1, so the action succeeded
+                                    world.remove_entity(entity)
+                                    pos = entity.get_position()
+                                    pos_2 = (pos.get_x(), pos.get_y() + 1)
+
+                                    food_1 = model.structure.Food()
+                                    food_2 = model.structure.Food()
+                                    food_1.set_position(pos)
+                                    food_2.set_position(pos_2)
+
+                                    self.world.add_entity(food_1)
+                                    self.world.add_entity(food_2)
+                                        
+                                    enacted[agent_1] = collaborative_destroy
+                                    enacted[agent_2] = collaborative_destroy
+            return enacted
 
         # Register the previously defined functions.
         enact_logic = {}
         enact_logic[step.get_name()] = _step
         enact_logic[turn_right.get_name()] = _turn_right
         enact_logic[turn_left.get_name()] = _turn_left
-        enact_logic[collaborative_push.get_name()] = _collaborative_push
+        enact_logic[eat.get_name()] = _eat
+
+        self.world.add_complex_enact_logic(_collaborative_destroy, collaborative_destroy.get_name())
 
         # Set primitives known/enactable by the agents.
         primitives = []
@@ -731,17 +775,21 @@ class BasicVisionCoexsistencePushExperiment(experiment.Experiment):
         primitives.append(step_fail)
         primitives.append(turn_right)
         primitives.append(turn_left)
-        primitives.append(collaborative_push)
-        primitives.append(collaborative_push_fail)
+        primitives.append(eat)
+        primitives.append(eat_fail)
+        primitives.append(collaborative_destroy)
+        primitives.append(collaborative_destroy_fail)
 
         # Set intrinsic motivation values.
         motivation = {}
-        motivation[step] = 1
+        motivation[step] = -1
         motivation[step_fail] = -10
         motivation[turn_right] = -2
         motivation[turn_left] = -2
-        motivation[collaborative_push] = 50
-        motivation[collaborative_push_fail] = -1
+        motivation[eat] = 20
+        motivation[eat_fail] = -2
+        motivation[collaborative_destroy] = 50
+        motivation[collaborative_destroy_fail] = -1
 
         for entity in self.world.get_entities():
             if isinstance(entity, model.agent.Agent):
