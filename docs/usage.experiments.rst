@@ -177,3 +177,18 @@ For example:
             world.add_enact_logic(agent, enact_logic)
         
 Here, when an agent attempt to enact *step*, the function checks if the agent is able to take a step. If the agent can step, the agent steps and the function indicates *step* was enacted. Otherwise, the agent does nothing and the function indicates the agent enacted *bump*.
+
+Defining complex agent-world interaction logic
+----------------------------------------------
+The world-agent interaction logic described above is useful for simple interactions concering a single agent.
+However, sometimes more complex interactions are required.
+To do this, complex logic is registered to the world.
+
+Complex logic is similar to regular interaction logic described above.
+Complex logic is a function, and can manipulate the world.
+However, the logic is not stored per agent, and instead is used for all agents.
+Additionally, where interaction logic is called to process an interaction of a single agent, complex logic processes all agents at the same time.
+The complex logic evaluates the world state and the intended interactions, assigns the actual enacted interactions to the agents, and returns this to the world.
+Any piece of complex logic can process and assign actual enacted interaction to none, one, some, or all of the agents in the world.
+In other words, a piece of complex logic does not need to process the interactions for all agents.
+Any agents with interactions that are unprocessed, will first be given to additional registered complex logic if more logic is registered, and if still left unprocessed, will be handled as per usual with simple interaction logic.
