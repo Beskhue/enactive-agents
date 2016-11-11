@@ -216,8 +216,10 @@ class World(events.EventListener):
 
         # Notify agents of which interaction was enacted
         for agent, (primitive_interaction, data) in agents_data.iteritems():
-            if agent.has_perception_handler():
-                # The agent has a perception handler, so get and add the percept
+            if agent.has_perception_handler() and not isinstance(enacted[agent], interaction.PrimitivePerceptionInteraction):
+                # The agent has a perception handler, and the enacted 
+                # interaction is not yet a primitive perception interaction, so
+                # get and add the percept
                 agent.enacted_interaction(interaction.PrimitivePerceptionInteraction(enacted[agent], agent.get_perception(self)), data)
             else:
                 agent.enacted_interaction(enacted[agent], data)
