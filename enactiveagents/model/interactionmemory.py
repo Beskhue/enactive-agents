@@ -29,7 +29,7 @@ class InteractionMemory(object):
         elif isinstance(interaction_, interaction.CompositeInteraction):
             self.composite_interactions.append(interaction_)
         else:
-            raise TypeError("Expected interaction_ to be either primitive or composite.")
+            raise TypeError("Expected interaction_ to be either primitive, primitive perception, or composite.")
 
         self.weights[interaction_] = weight
 
