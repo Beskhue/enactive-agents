@@ -131,10 +131,10 @@ To define primitives, create instantiations of the PrimitiveInteraction class in
 
 ::
     
-    step = model.interaction.PrimitiveInteraction("Step")
-    bump = model.interaction.PrimitiveInteraction("Bump")
+    step = model.interaction.PrimitiveInteraction("Step", "Succeed")
+    step_fail = model.interaction.PrimitiveInteraction("Step", "Fail")
 
-The primitive interaction carries with it a name (here ``Step`` and ``Bump``).
+The primitive interaction carries with it a name (here ``Step``) and a result (here ``Succeed`` and ``Fail``).
 However, it does not carry any semantics indicating what the primitive represents.
 We need to define the interaction logic seperately.
 
@@ -158,8 +158,8 @@ For example:
             # define the world and agent(s)...
         
             # Define primitives
-            step = model.interaction.PrimitiveInteraction("Step")
-            bump = model.interaction.PrimitiveInteraction("Bump")
+            step = model.interaction.PrimitiveInteraction("Step", "Succeed")
+            step_fail = model.interaction.PrimitiveInteraction("Step", "Fail")
             
             # Define interaction logic for stepping
             def _step(world, agent, interaction):
@@ -167,16 +167,16 @@ For example:
                     agent.step()
                     return step
                 else:
-                    return bump
+                    return step_fail
             
             # Associate the step primitive with the step logic
             enact_logic = {}
-            enact_logic[step] = _step
+            enact_logic[step.get_name()] = _step
             
             # Associate the logic with an agent
             world.add_enact_logic(agent, enact_logic)
         
-Here, when an agent attempt to enact *step*, the function checks if the agent is able to take a step. If the agent can step, the agent steps and the function indicates *step* was enacted. Otherwise, the agent does nothing and the function indicates the agent enacted *bump*.
+Here, when an agent attempts to enact the action *step*, the function checks if the agent is able to take a step. If the agent can step, the agent steps and the function indicates *step* was enacted and succeeded. Otherwise, the agent does nothing and the function indicates the action failed.
 
 Defining complex agent-world interaction logic
 ----------------------------------------------
