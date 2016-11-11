@@ -3,6 +3,7 @@ Module that holds classes that represent agents.
 """
 
 import sys
+import string
 import abc
 import random
 import pygame
@@ -23,6 +24,7 @@ class Agent(Entity):
     def __init__(self):
         super(Agent, self).__init__()
         self.setup_interaction_memory()
+        self.name = 'Agent ' + ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(6))
 
     @abc.abstractmethod
     def prepare_interaction(self):
@@ -292,22 +294,22 @@ class ConstructiveAgent(Agent):
             self.enacting_interaction_step = 0
             self.enacted_sequence = []
 
-            print "-----------------"
+            print "%s - -----------------" % (self.name)
             # Exploration
             if random.random() <= 0.1:
                 # Choose a random primitive interaction (not a primitive perception interaction)
                 self.intended_interaction = random.choice(filter(lambda x: isinstance(x, interaction.PrimitiveInteraction), self.interaction_memory.get_primitive_interactions()))
-                print "EXPLORING"
+                print "%s - EXPLORING" % (self.name)
             else:
                 self.intended_interaction = self.select_intended_interaction()
 
             self.enacting_interaction_sequence = self.intended_interaction.unwrap()
-            print "Intending: ", self.intended_interaction
+            print "%s - Intending: %s" % (self.name, self.intended_interaction)
 
         # Enact a primitive interaction from the sequence we are currently
         # enacting.
         intended_interaction = self.enacting_interaction_sequence[self.enacting_interaction_step]
-        print "> ", intended_interaction
+        print "%s - > %s" % (self.name, intended_interaction)
 
         # Step 4 of the sequential system, enact the interaction:
         # Post interaction preparation event
@@ -344,7 +346,7 @@ class ConstructiveAgent(Agent):
             # Reconstruct enacted interaction from hierarchy of intended
             # interaction
             enacted = self.intended_interaction.reconstruct_from_hierarchy(self.enacted_sequence)
-            print "Enacted: ", enacted
+            print "%s - Enacted: %s" % (self.name, enacted)
             # Step 5: add new or reinforce existing composite interactions
             learned_or_reinforced = []
             if isinstance(enacted, interaction.CompositeInteraction):
