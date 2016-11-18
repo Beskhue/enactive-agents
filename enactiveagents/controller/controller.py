@@ -4,7 +4,7 @@ Main world controller.
 
 import os
 from time import strftime
-import pickle
+import cPickle
 from appstate import AppState
 import pygame
 import events
@@ -86,7 +86,7 @@ class Controller(events.EventListener):
             file_path = os.path.join(settings.AGENT_DIR, file_name)
 
             print " - Saving %s to %s" % (agent.get_name(), file_path)
-            pickle.dump(agent, open(file_path, "wb"))
+            cPickle.dump(agent, open(file_path, "wb"))
 
         print "Agents saved."
 
