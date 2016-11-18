@@ -4,6 +4,7 @@ Module that holds classes that represent an agent's perception handler.
 
 import abc
 import world
+import agent
 import structure
 
 class PerceptionHandler(object):
@@ -47,7 +48,9 @@ class BasicPerceptionHandler(PerceptionHandler):
             for entity in entities:
                 if entity == agent_:
                     continue
-                if isinstance(entity, structure.Wall):
+                if isinstance(entity, agent.Agent):
+                    return "a%s" % delta
+                elif isinstance(entity, structure.Wall):
                     return "w%s" % delta
                 elif isinstance(entity, structure.Block):
                     return "b%s" % delta
