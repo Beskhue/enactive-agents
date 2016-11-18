@@ -127,7 +127,18 @@ class World(events.EventListener):
         self.height = height
 
     def get_entities(self):
+        """
+        Get all entities (structures and agents) in the world
+        :return: All entities in the world
+        """
         return self.entities
+
+    def get_agents(self):
+        """
+        Get all agent entities in the world
+        :return: All agent entities in the world
+        """
+        return [entity for entity in self.entities if isinstance(entity, agent.Agent)]
 
     def add_entity(self, entity):
         self.entities.append(entity)
