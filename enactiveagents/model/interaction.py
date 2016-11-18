@@ -41,6 +41,9 @@ class Interaction(object):
         """
         raise NotImplementedError("Should be implemented by child")
 
+    def __ne__(self, other):
+        return not self == other
+
 
 class PrimitiveInteraction(Interaction):
     def __init__(self, name, result):
