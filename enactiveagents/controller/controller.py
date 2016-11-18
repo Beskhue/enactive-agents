@@ -58,7 +58,7 @@ class Controller(events.EventListener):
 
     def save_agent(self):
         """
-        Save an agent to a file.
+        Save all agents to files.
         """
         print "---"
         print "Press [enter] to write all agents to file, or [escape] to cancel."
