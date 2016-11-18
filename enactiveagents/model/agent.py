@@ -69,6 +69,13 @@ class Agent(Entity):
         """
         raise NotImplementedError("Should be implemented by child.")
 
+    def get_name(self):
+        """
+        Get this agent's name
+        :return: This agent's name
+        """ 
+        return self.name
+
     def get_perception(self, world):
         if self.has_perception_handler():
             return self.perception_handler.perceive(self, world)
