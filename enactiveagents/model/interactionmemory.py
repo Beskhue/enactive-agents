@@ -13,6 +13,7 @@ class InteractionMemory(object):
         self.composite_interactions = []
         self.valences = {}
         self.weights = {}
+        self.alternative_interactions = {}
 
     def add_interaction(self, interaction_, weight=1, valence=0):
         """
@@ -32,6 +33,39 @@ class InteractionMemory(object):
             raise TypeError("Expected interaction_ to be either primitive, primitive perception, or composite.")
 
         self.weights[interaction_] = weight
+
+    def add_alternative_interaction(self, interaction_, alternative_interaction):
+        """
+        Add an alternative interaction to an interaction in the interaction memory.
+
+        :param interaction_: The interaction to add an alternative to.
+        :param alternative_interaction: The alternative interaction to add to the interaction.
+        :return: True if the alternative was added, false if it was already registered to the interaction
+        """
+
+        # Create alternative interaction list for this interaction if it does not yet exist
+        if interaction_ not in self.alternative_interactions:
+            self.alternative_interactions[interaction_] = []
+
+        # Add the alternative interaction to the list of alternatives for this interaction
+        # if it is not yet in the list of alternatives for this interaction
+        if alternative_interaction not in self.alternative_interactions[interaction_]:
+            self.alternative_interactions[interaction_].append(alternative_interaction)
+            return True
+        else:
+            return False
+
+    def get_alternative_interactions(self, interaction_):
+        """
+        Get the alternative interactions for an interaction.
+
+        :param interaction_: The interaction to get the alternatives for.
+        :return: A list of alternative interactions registered to an interaction.
+        """
+        if interaction_ not in self.alternative_interactions:
+            return []
+        else:
+            return self.alternative_interactions[interaction_]
 
     def increment_weight(self, interaction):
         """
