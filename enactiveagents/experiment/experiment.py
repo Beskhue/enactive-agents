@@ -1,4 +1,7 @@
 import abc
+import os
+import cPickle
+import settings
 import model.world
 import model.structure
 import model.agent
@@ -83,3 +86,13 @@ class Experiment(object):
         :param coords: The world coordinates the mouse is currently at
         """
         pass
+
+    def load_agent(self, file_name):
+        """
+        Load an agent from file.
+        :param file_name: The name of the file to load the agent from (e.g., "20161118T035805 - Agent DZX26I.p").
+        :return: The loaded agent.
+        """
+        file_path = os.path.join(settings.AGENT_DIR, file_name)
+        a = cPickle.load(open(file_path, "rb"))
+        return a
