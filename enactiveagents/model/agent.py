@@ -507,7 +507,7 @@ class HumanAgent(Agent):
 
         # Secondary pygame loop to process events until the user made a decision
         while chosen == None:
-            if pygame.key.get_pressed()[pygame.K_LCTRL]:
+            if pygame.key.get_pressed()[pygame.K_LALT]:
                 # If left control is pressed, use the regular controller(s)
                 AppState.get_state().get_event_manager().post_event(events.ControlEvent())
             else:
