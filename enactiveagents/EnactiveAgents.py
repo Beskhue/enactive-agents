@@ -2,6 +2,7 @@
 Entry module of the application.
 """
 
+import sys
 import pygame
 from appstate import AppState
 import settings
@@ -26,7 +27,7 @@ class HeartBeat(events.EventListener):
 
         print("Starting heartbeat.")
         time_elapsed = 0
-        while not self.halt:
+        while True:
             AppState.get_state().get_event_manager().post_event(events.ControlEvent())
 
             if AppState.get_state().is_running() and time_elapsed >= settings.SIMULATION_STEP_TIME:
@@ -38,7 +39,7 @@ class HeartBeat(events.EventListener):
 
     def notify(self, event):
         if isinstance(event, events.QuitEvent):
-            self.halt = True
+            sys.exit()
 
 def init():
     """

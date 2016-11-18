@@ -475,7 +475,11 @@ class HumanAgent(Agent):
         Get the interaction the agent should enact from user input
         """
         for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
+            if event.type == pygame.QUIT: 
+                quitEvent = events.QuitEvent()
+                AppState.get_state().get_event_manager().post_event(quitEvent)
+                return
+            elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
                     return self.find_interaction_by_name_and_result("Step")
                 elif event.key == pygame.K_LEFT:
