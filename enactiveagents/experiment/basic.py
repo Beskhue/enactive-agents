@@ -223,6 +223,34 @@ class BasicVisionExperiment(experiment.Experiment):
     def get_world(self):
         return self.world
 
+class BasicVisionExperimentLoad(experiment.Experiment):
+    world_representation = [
+        "wwwwwwwwwwwwwww",
+        "w.............w",
+        "wwwwwwwwwwwwwww"
+        ]
+
+    def __init__(self):
+        super(BasicVisionExperimentLoad, self).__init__()
+
+        # Parse world
+        self.world = self.parse_world(self.world_representation)
+
+        # Load the agent. (Note: the file must exist. Create it by running 
+        # the BasicVisionExperiment for some time, and then saving the agent.)
+        a = self.load_agent("20161118T041955 - Agent 3T7U8G.p")
+        self.world.add_entity(a)
+
+        # Register the previously defined functions.
+        enact_logic = Elements.get_enact_logic()
+
+        for entity in self.world.get_entities():
+            if isinstance(entity, model.agent.Agent):
+                self.world.add_enact_logic(entity, enact_logic)
+
+    def get_world(self):
+        return self.world
+
 class BasicHomeostaticVisionExperiment(experiment.Experiment):
     world_representation = [
         "wwwwwwww",
