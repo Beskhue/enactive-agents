@@ -218,11 +218,21 @@ class ConstructiveAgent(Agent):
         """
         activated = self.activate_interactions()
 
-        proposed = map(lambda interaction: 
-            (
-                interaction.get_post(), 
-                self.interaction_memory.get_weight(interaction)
-            ), activated)
+        # Keep track of added post interactions with the highest (composite
+        # pre and post) interaction weight, so that we do not add duplicate
+        # post interactions
+        added = {}
+
+        for interaction_ in activated:
+            weight = self.interaction_memory.get_weight(interaction_)
+            if interaction_ in added:
+                if weight > added[interaction_]:
+                    added[interaction_] = weight
+            else:
+                added[interaction_] = weight
+
+        # Create the list of proposed interactions [(post interaction, weight)]
+        proposed = added.iteritems()
 
         return proposed
 
