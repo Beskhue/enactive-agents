@@ -2,9 +2,13 @@
 Main world controller.
 """
 
+import os
+from time import strftime
+import pickle
 from appstate import AppState
 import pygame
 import events
+import settings
 
 class Controller(events.EventListener):
     """
@@ -43,12 +47,50 @@ class Controller(events.EventListener):
                 elif event.key == pygame.K_SPACE:
                     AppState.get_state().toggle_pause()
                     return
+                elif event.key == pygame.K_s and pygame.key.get_pressed()[pygame.K_LCTRL]:
+                    self.save_agent()
             
-            if self.experiment_controller:     
+            if self.experiment_controller:
                 if pygame.mouse.get_focused():
                     self.experiment_controller(event, pygame.mouse.get_pos())
                 else:
                     self.experiment_controller(event, None)
+
+    def save_agent(self):
+        """
+        Save an agent to a file.
+        """
+        print "---"
+        print "Press [enter] to write all agents to file, or [escape] to cancel."
+
+        while True:
+             event = pygame.event.wait()
+             if event.type == pygame.KEYDOWN:
+                 if event.key == pygame.K_ESCAPE:
+                     print "Saving cancelled."
+                     print "---"
+                     return
+                 elif event.key == pygame.K_RETURN:
+                     break
+             
+        print "Saving agents to file..."
+
+        # Create output directory if it does not exist
+        if not os.path.exists(settings.AGENT_DIR):
+            os.makedirs(settings.AGENT_DIR)
+
+        # Pickle and save agents to file
+        agents = AppState.get_state().get_world().get_agents()
+        for agent in agents:
+            file_name = "%s - %s.p" % (strftime("%Y%m%dT%H%M%S"), agent.get_name())
+            file_path = os.path.join(settings.AGENT_DIR, file_name)
+
+            print " - Saving %s to %s" % (agent.get_name(), file_path)
+            pickle.dump(agent, open(file_path, "wb"))
+
+        print "Agents saved."
+
+        print "---"
 
     def notify(self, event):
         if isinstance(event, events.ControlEvent):
