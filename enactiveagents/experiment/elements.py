@@ -104,7 +104,7 @@ class Elements:
                 world.remove_entity(entity)
                 food = model.structure.Food()
                 food.set_position(entity.get_position())
-                self.world.add_entity(food)
+                world.add_entity(food)
                 return cls.destroy
             
         return cls.destroy_fail
