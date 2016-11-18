@@ -46,6 +46,7 @@ class PrimitiveInteraction(Interaction):
     def __init__(self, name, result):
         super(PrimitiveInteraction, self).__init__(name)
         self.result = result
+        self.hash = hash((hash(self.name), hash(self.result)))
 
     def get_result(self):
         """
@@ -66,6 +67,15 @@ class PrimitiveInteraction(Interaction):
 
     def to_json(self):
         return {"name": self.name, "result": self.result}
+
+    def __eq__(self, other):
+        if isinstance(other, PrimitiveInteraction):
+            return self.name == other.name and self.result == other.result
+        else:
+            return False
+
+    def __hash__(self):
+        return self.hash
 
     def __repr__(self):
         return "PrimitiveInteraction(name=%r, result=%r)" % (self.name, self.result)
