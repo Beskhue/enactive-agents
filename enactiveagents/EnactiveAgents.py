@@ -27,12 +27,16 @@ class HeartBeat(events.EventListener):
 
         print("Starting heartbeat.")
         time_elapsed = 0
+        t = 0
         while True:
+            
             AppState.get_state().get_event_manager().post_event(events.ControlEvent())
 
             if AppState.get_state().is_running() and time_elapsed >= settings.SIMULATION_STEP_TIME:
+                print "------- t = %s" % t
                 AppState.get_state().get_event_manager().post_event(events.TickEvent())
                 time_elapsed = 0
+                t += 1
             AppState.get_state().get_event_manager().post_event(events.DrawEvent())
 
             time_elapsed += AppState.get_state().get_clock().tick(settings.MAX_FPS)

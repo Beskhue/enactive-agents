@@ -294,7 +294,6 @@ class ConstructiveAgent(Agent):
             self.enacting_interaction_step = 0
             self.enacted_sequence = []
 
-            print "%s - -----------------" % (self.name)
             # Exploration
             if random.random() <= 0.1:
                 # Choose a random primitive interaction (not a primitive perception interaction)
@@ -458,6 +457,7 @@ class HumanAgent(Agent):
             chosen, 
             -1))
 
+        print "%s - > %s" % (self.name, chosen)
         return chosen
 
     def enacted_interaction(self, interaction, data):
@@ -466,6 +466,8 @@ class HumanAgent(Agent):
             self, 
             interaction, 
             -1))
+
+        print "%s - Enacted: %s" % (self.name, interaction)
 
     def setup_interaction_memory(self):
         self.interaction_memory = interactionmemory.InteractionMemory()
