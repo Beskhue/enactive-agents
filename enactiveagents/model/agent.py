@@ -226,6 +226,41 @@ class ConstructiveAgent(Agent):
 
         return proposed
 
+    def consider_alternative_interactions(self):
+        """
+        Add-on to the sequential system, between steps 2 and 3.
+
+        Proposed post-interactions are scrutinized by looking at alternative
+        interactions that have occurred when trying to activate that interaction.
+        If the alternative interaction itself is also proposed, the context
+        indicates the alternative is likely to occur. Thus, the agent
+        anticipates that the alternative might happen instead of the intended
+        interaction. The intended interaction's proclivity is temporarily
+        adjusted to reflect this.
+        """
+        proposed = self.propose_interactions()
+
+        proposed = map(lambda (proposed_interaction, weight):
+            (
+                proposed_interaction,
+                weight * self.interaction_memory.get_valence(proposed_interaction)
+            ), proposed)
+
+        n = 0
+
+        proposed_interactions = map(lambda (proposed_interaction, proclivity): proposed_interaction, proposed)
+
+        for (proposed_interaction, proclivity) in proposed:
+            for alternative in self.interaction_memory.get_alternative_interactions(proposed_interaction):
+                if alternative in proposed_interactions:
+                    print "%s - Anticipating alternative %s for %s" % (self.name, alternative, proposed_interaction)
+                    proclivity += self.interaction_memory.get_proclivity(alternative)
+            proposed[n] = (proposed_interaction, proclivity)
+            n += 1
+
+        return proposed
+
+
     def select_intended_interaction(self):
         """
         Step 3 of the sequential system.
@@ -237,15 +272,28 @@ class ConstructiveAgent(Agent):
         based on the weight of the activated interactions and the values of the
         proposed post interactions.
         """
+
+        proposed = self.consider_alternative_interactions()
+        proposed.sort(
+            key = lambda x: x[1],
+            reverse = True
+        )
+        proposed = map(lambda x: x[0], proposed)
+
+        """
+        Without alternatives:
         proposed = self.propose_interactions()
         proposed.sort(
             key = lambda x: x[1] * self.interaction_memory.get_valence(x[0]), 
             reverse = True
         )
         proposed = map(lambda x: x[0], proposed)
+        """
+
         if len(proposed) > 0 and self.interaction_memory.get_proclivity(proposed[0]) > 0:
             return proposed[0]
         else:
+            print "%s - Negative proclivity: exploring" % self.name
             # TODO: in Katja's implementation the activated interactions contain
             # some set of default interactions. The paper itself does not seem 
             # to mention how to deal with an empty activated set.
@@ -353,6 +401,12 @@ class ConstructiveAgent(Agent):
             # interaction
             enacted = self.intended_interaction.reconstruct_from_hierarchy(self.enacted_sequence)
             print "%s - Enacted: %s" % (self.name, enacted)
+
+            # Add the interaction as an alternative interaction if the intended interaction failed
+            if enacted != self.intended_interaction:
+                if self.interaction_memory.add_alternative_interaction(self.intended_interaction, enacted):
+                    print "%s - Interaction added as alternative" % self.name
+
             # Step 5: add new or reinforce existing composite interactions
             learned_or_reinforced = []
             if isinstance(enacted, interaction.CompositeInteraction):
