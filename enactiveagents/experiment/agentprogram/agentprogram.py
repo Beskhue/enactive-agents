@@ -1,6 +1,7 @@
 import abc
 import model.agent
 import appstate
+from utilities.pathfinding import Pathfinding
 
 class AgentProgram(object):
 
@@ -19,6 +20,26 @@ class AgentProgram(object):
             return food[0]
         else:
             return None
+
+    def get_direction_to_position(self, position):
+        """
+        Get the direction (left, right, backward, straight ahead) of a position
+        for this agent.
+        
+        :param position: The position to get the direction for.
+        :return: "a" for ahead, "l" for left, "r" for right, "b" for behind
+        """
+        pos_angle = self.agent.get_position().angle_to(position)
+        angle_to = abs(pos_angle - self.agent.get_rotation())
+
+        if angle_to <= 45 or angle_to >= 315:
+            return "a"
+        elif angle_to <= 135:
+            return "l"
+        elif angle_to <= 225:
+            return "r"
+        else:
+            return "b"
 
     @abc.abstractmethod
     def get_interaction(self, percept):
@@ -43,6 +64,19 @@ class TrivialAgentProgram(AgentProgram):
     def get_interaction(self, percept):
         interaction_memory = self.agent.interaction_memory
         return interaction_memory.get_primitive_interactions()[0]
+
+class SimpleEatingAndDestroyingAgent(AgentProgram):
+    """
+    An agent that wants to eat if there is food and attempts to break a block
+    if there is a block.
+    """
+    def get_interaction(self, percept):
+        food = self.get_nearest_food()
+        if food != None:
+            path = Pathfinding.find_path(self.world, self.agent.get_position(), food.get_position())
+
+        return None
+
 
 def create_programmable_agent(program_class, world):
     a = model.agent.ProgrammableAgent()
