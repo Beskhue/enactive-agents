@@ -554,22 +554,13 @@ class HumanAgent(Agent):
                 return
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
-                    return self.find_interaction_by_name_and_result("Step")
+                    return self.interaction_memory.find_interaction_by_name_and_result("Step")
                 elif event.key == pygame.K_LEFT:
-                    return self.find_interaction_by_name_and_result("Turn Left")
+                    return self.interaction_memory.find_interaction_by_name_and_result("Turn Left")
                 elif event.key == pygame.K_RIGHT:
-                    return self.find_interaction_by_name_and_result("Turn Right")
+                    return self.interaction_memory.find_interaction_by_name_and_result("Turn Right")
                 elif event.key == pygame.K_SLASH:
                     return self.choose_from_list()
-
-    def find_interaction_by_name_and_result(self, name, result = "Succeed"):
-        interactions = self.interaction_memory.get_primitive_interactions()
-
-        for interaction in interactions:
-            if interaction.get_name() == name and interaction.get_result() == result:
-                return interaction
-
-        return None
 
     def choose_from_list(self):
         """

@@ -141,6 +141,15 @@ class InteractionMemory(object):
     def get_all_interactions(self):
         return self.primitive_interactions + self.composite_interactions
 
+    def find_interaction_by_name_and_result(self, name, result = "Succeed"):
+        interactions = self.get_primitive_interactions()
+
+        for interaction_ in interactions:
+            if interaction_.get_name() == name and interaction_.get_result() == result:
+                return interaction_
+
+        return None
+
 class HomeostaticInteractionMemory(InteractionMemory):
     """
     A homeostatic interaction's valence is a function of the agent's internal
