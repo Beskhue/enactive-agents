@@ -634,3 +634,43 @@ class HumanAgent(Agent):
 
         return interactions[choice - 1]
         
+class ProgrammableAgent(Agent):
+    """
+    An agent that can be programmed (with prior knowledge) to interact
+    with the world.
+    """
+    color = (111, 3, 146, 255)
+
+    def __init__(self, program = None):
+        super(ProgrammableAgent, self).__init__()
+        self.program = program
+
+    def prepare_interaction(self):
+        if self.program == None:
+            raise Exception("No program has been set for the programmable agent")
+        else:
+            if self.has_perception_handler():
+                percept = self.get_perception()
+            else:
+                percept = None
+
+            interaction_ = self.program.get_interaction(AppState.get_state().get_world, self, percept)
+            return interaction_
+
+    def enacted_interaction(self, interaction, data):
+        # Post enacted interaction event
+        AppState.state.get_event_manager().post_event(events.AgentEnactionEvent(
+            self, 
+            interaction, 
+            -1))
+
+        print "%s - Enacted: %s" % (self.name, interaction)
+
+    def setup_interaction_memory(self):
+        self.interaction_memory = interactionmemory.InteractionMemory()
+
+    def set_program(self, program):
+        """
+        Set the programmable agent's program.
+        """
+        self.program = program
