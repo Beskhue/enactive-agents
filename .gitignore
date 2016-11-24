@@ -4,16 +4,16 @@
 *.pyproj
 
 # Build
-EnactiveAgents.egg-info/
-dist/
+/EnactiveAgents.egg-info/
+/dist/
 
 # Docs
-docs/_build
-docs/_static
-docs/_templates
-docs/make.bat
-docs/Makefile
+/docs/_build
+/docs/_static
+/docs/_templates
+/docs/make.bat
+/docs/Makefile
 
 # Output
-agents/
-renders/
+/agents/
+/renders/
