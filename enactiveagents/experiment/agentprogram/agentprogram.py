@@ -12,7 +12,10 @@ class AgentProgram(object):
         raise NotImplementedError("Should be implemented by child.")
 
 class TrivialAgentProgram(AgentProgram):
-
+    """
+    A trivial agent program that simply attempts to perform the first primitive
+    known by the agent.
+    """
     def get_interaction(self, world, agent, percept):
         interaction_memory = agent.interaction_memory
         return interaction_memory.get_primitive_interactions()[0]
