@@ -9,6 +9,7 @@ class Elements:
     step_fail = model.interaction.PrimitiveInteraction("Step", "Fail")
     turn_right = model.interaction.PrimitiveInteraction("Turn Right", "Succeed")
     turn_left = model.interaction.PrimitiveInteraction("Turn Left", "Succeed")
+    wait = model.interaction.PrimitiveInteraction("Wait", "Succeed")
     feel = model.interaction.PrimitiveInteraction("Feel", "Succeed")
     feel_fail = model.interaction.PrimitiveInteraction("Feel", "Fail")
     cuddle = model.interaction.PrimitiveInteraction("Cuddle", "Succeed")

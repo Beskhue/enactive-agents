@@ -39,6 +39,7 @@ class BasicExperiment(experiment.Experiment):
         primitives.append(Elements.step_fail)
         primitives.append(Elements.turn_right)
         primitives.append(Elements.turn_left)
+        primitives.append(Elements.wait)
         primitives.append(Elements.feel)
         primitives.append(Elements.feel_fail)
 
@@ -48,6 +49,7 @@ class BasicExperiment(experiment.Experiment):
         motivation[Elements.step_fail] = -10
         motivation[Elements.turn_right] = -2
         motivation[Elements.turn_left] = -2
+        motivation[Elements.wait] = -1
         motivation[Elements.feel] = 0
         motivation[Elements.feel_fail] = -1
         
@@ -109,6 +111,7 @@ class BasicHomeostaticExperiment(experiment.Experiment):
         primitives.append(Elements.step_fail)
         primitives.append(Elements.turn_right)
         primitives.append(Elements.turn_left)
+        primitives.append(Elements.wait)
         primitives.append(Elements.feel)
         primitives.append(Elements.feel_fail)
 
@@ -118,6 +121,7 @@ class BasicHomeostaticExperiment(experiment.Experiment):
         motivation[Elements.step_fail] = lambda agent: -10
         motivation[Elements.turn_right] = lambda agent: -2
         motivation[Elements.turn_left] = lambda agent: -2
+        motivation[Elements.wait] = lambda agent: -1
         motivation[Elements.feel] = lambda agent: 0
         motivation[Elements.feel_fail] = lambda agent: -1
 
@@ -158,6 +162,7 @@ class BasicCoexsistenceExperiment(experiment.Experiment):
         primitives.append(Elements.step_fail)
         primitives.append(Elements.turn_right)
         primitives.append(Elements.turn_left)
+        primitives.append(Elements.wait)
         primitives.append(Elements.feel)
         primitives.append(Elements.feel_fail)
         primitives.append(Elements.cuddle)
@@ -169,6 +174,7 @@ class BasicCoexsistenceExperiment(experiment.Experiment):
         motivation[Elements.step_fail] = -10
         motivation[Elements.turn_right] = -2
         motivation[Elements.turn_left] = -2
+        motivation[Elements.wait] = -1
         motivation[Elements.feel] = 0
         motivation[Elements.feel_fail] = -1
         motivation[Elements.cuddle] = 50
@@ -206,6 +212,7 @@ class BasicVisionExperiment(experiment.Experiment):
         primitives.append(Elements.step_fail)
         primitives.append(Elements.turn_right)
         primitives.append(Elements.turn_left)
+        primitives.append(Elements.wait)
 
         # Set intrinsic motivation values.
         motivation = {}
@@ -213,6 +220,7 @@ class BasicVisionExperiment(experiment.Experiment):
         motivation[Elements.step_fail] = -10
         motivation[Elements.turn_right] = -2
         motivation[Elements.turn_left] = -2
+        motivation[Elements.wait] = -1
 
         for entity in self.world.get_entities():
             if isinstance(entity, model.agent.Agent):
@@ -310,6 +318,7 @@ class BasicHomeostaticVisionExperiment(experiment.Experiment):
         primitives.append(Elements.step_fail)
         primitives.append(Elements.turn_right)
         primitives.append(Elements.turn_left)
+        primitives.append(Elements.wait)
         primitives.append(Elements.eat)
         primitives.append(Elements.eat_fail)
         primitives.append(Elements.destroy)
@@ -321,6 +330,7 @@ class BasicHomeostaticVisionExperiment(experiment.Experiment):
         motivation[Elements.step_fail] = lambda agent: -10
         motivation[Elements.turn_right] = lambda agent: -2
         motivation[Elements.turn_left] = lambda agent: -2
+        motivation[Elements.wait] = lambda agent: -1
         motivation[Elements.eat] = lambda agent: 10 - agent.get_homeostatic_value("energy") * 0.1
         motivation[Elements.eat_fail] = lambda agent: -20
         motivation[Elements.destroy] = lambda agent: 30
@@ -372,6 +382,7 @@ class BasicVisionPushExperiment(experiment.Experiment):
         primitives.append(Elements.step_fail)
         primitives.append(Elements.turn_right)
         primitives.append(Elements.turn_left)
+        primitives.append(Elements.wait)
         primitives.append(Elements.push)
         primitives.append(Elements.push_fail)
 
@@ -381,6 +392,7 @@ class BasicVisionPushExperiment(experiment.Experiment):
         motivation[Elements.step_fail] = -10
         motivation[Elements.turn_right] = -2
         motivation[Elements.turn_left] = -2
+        motivation[Elements.wait] = -1
         motivation[Elements.push] = 500
         motivation[Elements.push_fail] = -1
 
@@ -420,6 +432,7 @@ class BasicVisionCoexsistenceExperiment(experiment.Experiment):
         primitives.append(Elements.step_fail)
         primitives.append(Elements.turn_right)
         primitives.append(Elements.turn_left)
+        primitives.append(Elements.wait)
         primitives.append(Elements.cuddle)
         primitives.append(Elements.cuddle_fail)
 
@@ -429,6 +442,7 @@ class BasicVisionCoexsistenceExperiment(experiment.Experiment):
         motivation[Elements.step_fail] = -10
         motivation[Elements.turn_right] = -2
         motivation[Elements.turn_left] = -2
+        motivation[Elements.wait] = -1
         motivation[Elements.cuddle] = 50
         motivation[Elements.cuddle_fail] = -1
 
@@ -457,7 +471,7 @@ class BasicVisionCoexsistenceDestroyExperiment(experiment.Experiment):
         self.world = self.parse_world(self.world_representation)
 
         # Add programmed agent
-        a = agentprogram.agentprogram.create_programmable_agent(agentprogram.agentprogram.TrivialAgentProgram, self.world)
+        a = agentprogram.agentprogram.create_programmable_agent(agentprogram.agentprogram.SimpleEatingAndDestroyingAgent, self.world)
         a.set_position((1,2))
         self.world.add_entity(a)
 
@@ -515,6 +529,7 @@ class BasicVisionCoexsistenceDestroyExperiment(experiment.Experiment):
         primitives.append(Elements.step_fail)
         primitives.append(Elements.turn_right)
         primitives.append(Elements.turn_left)
+        primitives.append(Elements.wait)
         primitives.append(Elements.eat)
         primitives.append(Elements.eat_fail)
         primitives.append(collaborative_destroy)
@@ -526,6 +541,7 @@ class BasicVisionCoexsistenceDestroyExperiment(experiment.Experiment):
         motivation[Elements.step_fail] = -10
         motivation[Elements.turn_right] = -2
         motivation[Elements.turn_left] = -2
+        motivation[Elements.wait] = -1
         motivation[Elements.eat] = 20
         motivation[Elements.eat_fail] = -2
         motivation[collaborative_destroy] = 50
