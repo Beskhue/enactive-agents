@@ -55,6 +55,10 @@ class Controller(events.EventListener):
                     return
                 elif event.key == pygame.K_r:
                     AppState.get_state().toggle_saving_simulation_renders()
+                    if AppState.get_state().get_save_simulation_renders():
+                        print "Now saving simulation renders to file."
+                    else:
+                        print "No longer saving simulation renders to file."
                     return
             
             if self.experiment_controller:
