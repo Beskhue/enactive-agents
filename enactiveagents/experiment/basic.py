@@ -5,6 +5,7 @@ Module to build experiments (worlds, agents, etc.).
 import model.interaction
 import model.agent
 import experiment
+import agentprogram.agentprogram
 from elements import Elements
 import pygame
 
@@ -445,7 +446,7 @@ class BasicVisionCoexsistenceDestroyExperiment(experiment.Experiment):
     world_representation = [
         "wwwwwwwwwwww",
         "wp.........w",
-        "wp.........w",
+        "w..........w",
         "wwwwwwwwwwww"
         ]
 
@@ -454,6 +455,11 @@ class BasicVisionCoexsistenceDestroyExperiment(experiment.Experiment):
 
         # Parse world
         self.world = self.parse_world(self.world_representation)
+
+        # Add programmed agent
+        a = model.agent.ProgrammableAgent(agentprogram.agentprogram.TrivialAgentProgram())
+        a.set_position((1,2))
+        self.world.add_entity(a)
 
         # Set up primitives
         collaborative_destroy = model.interaction.PrimitiveInteraction("Collaborative Destroy", "Succeed")

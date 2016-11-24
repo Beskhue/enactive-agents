@@ -14,5 +14,5 @@ class AgentProgram(object):
 class TrivialAgentProgram(AgentProgram):
 
     def get_interaction(self, world, agent, percept):
-        interaction_memory = agent.get_interaction_memory()
-        return interaction_memory.get_primitives()[0]
+        interaction_memory = agent.interaction_memory
+        return interaction_memory.get_primitive_interactions()[0]
