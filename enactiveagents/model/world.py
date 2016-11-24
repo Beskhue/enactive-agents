@@ -302,6 +302,16 @@ class Position:
         """
         return (abs(self.get_x() - other.get_x()) + abs(self.get_y() - other.get_y()))
 
+    def angle_to(self, other):
+        """
+        Get the angle between this position and a given position.
+        """
+        delta = Position(other)
+        delta.add((-self.x, -self.y))
+
+        # Angle of delta with vector (1,0)
+        return math.degrees(math.acos(delta[0] * 1 / math.sqrt(delta[0]**2 + delta[1]**2)))
+
     def __eq__(self, other):
         if not isinstance(other, Position):
             other = Position(other)
