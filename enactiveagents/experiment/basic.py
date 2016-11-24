@@ -286,7 +286,7 @@ class BasicHomeostaticVisionExperiment(experiment.Experiment):
                 return Elements.step_fail
 
         def _eat(world, agent, interaction):
-            entities = world.get_entities_at(agent.get_position())
+            entities = world.get_entities_in_front(agent)
             for entity in entities:
                 if isinstance(entity, model.structure.Food):
                     world.remove_entity(entity)
@@ -468,7 +468,7 @@ class BasicVisionCoexsistenceDestroyExperiment(experiment.Experiment):
                 else:
                     enacted[agent_1] = collaborative_destroy_fail # Set fail as default, we will now see whether it succeeded
 
-                    entities = world.get_entities_at(agent_1.get_position())
+                    entities = world.get_entities_in_front(agent_1)
                     for entity in entities:
                         if isinstance(entity, model.structure.Block):
                             # There is a block at agent 1's position, try to find a second agent attempting to destroy the same block:
@@ -480,7 +480,7 @@ class BasicVisionCoexsistenceDestroyExperiment(experiment.Experiment):
                                     # The agents are at the same position, so the action fails
                                     continue
 
-                                if entity in world.get_entities_at(agent_2.get_position()):
+                                if entity in world.get_entities_in_front(agent_2):
                                     # Agent 2 is enacting on the same block as agent 1, so the action succeeded
                                     world.remove_entity(entity)
                                     pos = entity.get_position()

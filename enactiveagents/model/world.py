@@ -33,6 +33,14 @@ class World(events.EventListener):
 
         return entities
 
+    def get_entities_in_front(self, entity):
+        """
+        Get the entities that are in front of the given entity.
+        """
+        pos = Position(entity.get_position())
+        pos.add(entity.get_move_delta())
+        return self.get_entities_at(pos)
+
     def enact(self, agent, primitiveInteraction):
         """
         :param agent: The agent attempting to perform the primitive interaction.

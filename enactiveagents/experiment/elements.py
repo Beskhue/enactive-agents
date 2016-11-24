@@ -77,7 +77,7 @@ class Elements:
 
     @classmethod
     def _eat(cls, world, agent, interaction):
-        entities = world.get_entities_at(agent.get_position())
+        entities = world.get_entities_in_front(agent)
         for entity in entities:
             if isinstance(entity, model.structure.Food):
                 world.remove_entity(entity)
@@ -88,8 +88,7 @@ class Elements:
     @classmethod
     def _push(cls, world, agent, interaction):
         if world.can_step(agent):
-            pos = agent.get_position()
-            entities = world.get_entities_at(pos)
+            entities = world.get_entities_in_front(agent)
             for entity in entities:
                 if isinstance(entity, model.structure.Block):
                     entity.position.add(agent.get_move_delta(1))
@@ -98,7 +97,7 @@ class Elements:
 
     @classmethod
     def _destroy(cls, world, agent, interaction):
-        entities = world.get_entities_at(agent.get_position())
+        entities = world.get_entities_in_front(agent)
         for entity in entities:
             if isinstance(entity, model.structure.Block):
                 world.remove_entity(entity)
