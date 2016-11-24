@@ -10,6 +10,8 @@ class AppState:
     state = None
 
     running = True
+    save_simulation_renders = False
+    t = 0
 
     @staticmethod
     def get_state():
@@ -46,5 +48,20 @@ class AppState:
     def toggle_pause(self):
         self.running = not self.running
 
+    def toggle_saving_simulation_renders(self):
+        self.save_simulation_renders = not self.save_simulation_renders
+
     def is_running(self):
         return self.running
+
+    def get_save_simulation_renders(self):
+        return self.save_simulation_renders
+
+    def increment_t(self):
+        self.t += 1
+
+    def set_t(self, t):
+        self.t = t
+
+    def get_t(self):
+        return self.t

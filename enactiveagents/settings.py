@@ -3,6 +3,7 @@ Module to hold application settings.
 """
 
 import os 
+from time import strftime
 
 #: Width of cells in pixels
 CELL_WIDTH = 32
@@ -22,5 +23,7 @@ WEB_LISTEN_PORT = 8080
 ROOT_DIR = os.path.normpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
 AGENT_DIR = os.path.join(ROOT_DIR, "agents")
+SIMULATIONS_RENDERS_DIR = os.path.join(ROOT_DIR, "renders")
+SIMULATION_RENDERS_DIR = os.path.join(SIMULATIONS_RENDERS_DIR, strftime("%Y%m%dT%H%M%S"))
 WEBROOT_DIR = os.path.join(ROOT_DIR, "webroot")
 WEBROOT_DATA_DIR  = os.path.join(WEBROOT_DIR, "data")

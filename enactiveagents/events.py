@@ -30,8 +30,16 @@ class DrawEvent(Event):
     Class representing a game draw event. E.g., notifies views to update.
     """
     
-    def __init__(self):
+    def __init__(self, save_to_file = False):
+        """
+        Initialize the draw event.
+        :param save_to_file: Boolean indicating whether the render should be saved to file
+        """ 
         self.name = "Draw Event"
+        self.save_to_file = save_to_file
+
+    def get_save_to_file(self):
+        return self.save_to_file
 
 class ControlEvent(Event):
     """

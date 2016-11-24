@@ -3,11 +3,13 @@ Main world view.
 """
 
 import abc
+import os
 import math
 import events
 import pygame
 import model
 from appstate import AppState
+import settings
 
 class View(events.EventListener):
     """
@@ -16,6 +18,7 @@ class View(events.EventListener):
 
     sprites = {}
     agent_interaction = {}
+    created_renders_dir = False
 
     def __init__(self, surface):
         """
@@ -81,7 +84,7 @@ class View(events.EventListener):
         else:
             return None
 
-    def draw(self):
+    def draw(self, save_to_file):
         """
         Draw the world.
         """
@@ -91,11 +94,23 @@ class View(events.EventListener):
         self.draw_mouse_highlight()
         pygame.display.flip()
 
+        if save_to_file:
+            self.save_surface_to_file()
+
+    def save_surface_to_file(self):
+        # Create output directory if it does not exist
+        if not self.created_renders_dir and not os.path.exists(settings.SIMULATION_RENDERS_DIR):
+            os.makedirs(settings.SIMULATION_RENDERS_DIR)
+            self.created_renders_dir = True
+
+        path = os.path.join(settings.SIMULATION_RENDERS_DIR, "t%s.png" % AppState.get_state().get_t())
+        pygame.image.save(self.surface, path)
+
     def notify(self, event):
         if isinstance(event, events.AgentEnactionEvent):
             self.agent_interaction[event.agent] = event.action
         elif isinstance(event, events.DrawEvent):
-            self.draw()
+            self.draw(event.get_save_to_file())
 
 
 class Sprite(pygame.sprite.Sprite):

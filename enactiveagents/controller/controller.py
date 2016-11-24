@@ -49,8 +49,13 @@ class Controller(events.EventListener):
                     return
                 elif event.key == pygame.K_s and pygame.key.get_pressed()[pygame.K_LCTRL]:
                     self.save_agent()
+                    return
                 elif event.key == pygame.K_h:
                     self.help()
+                    return
+                elif event.key == pygame.K_r:
+                    AppState.get_state().toggle_saving_simulation_renders()
+                    return
             
             if self.experiment_controller:
                 if pygame.mouse.get_focused():
@@ -104,7 +109,8 @@ class Controller(events.EventListener):
         print " - [space]       - pause the simulation"
         print " - [control] + s - save the agents to file"
         print " - h             - show this help information"
-
+        print " - r             - toggle saving simulation renders to disk"
+        print ""
         print "Press any key to continue."
         while True:
              event = pygame.event.wait()
