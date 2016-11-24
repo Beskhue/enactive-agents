@@ -53,8 +53,8 @@ class BasicExperiment(experiment.Experiment):
         for entity in self.world.get_entities():
             if isinstance(entity, model.agent.Agent):
                 self.world.add_enact_logic(entity, enact_logic)
-                entity.set_primitives(primitives)
-                entity.set_motivation(motivation)
+                entity.add_primitives(primitives)
+                entity.add_motivations(motivation)
 
 
     def get_world(self):
@@ -123,8 +123,8 @@ class BasicHomeostaticExperiment(experiment.Experiment):
         for entity in self.world.get_entities():
             if isinstance(entity, model.agent.Agent):
                 self.world.add_enact_logic(entity, enact_logic)
-                entity.set_primitives(primitives)
-                entity.set_motivation(motivation)
+                entity.add_primitives(primitives)
+                entity.add_motivations(motivation)
                 if isinstance(entity, model.agent.HomeostaticConstructiveAgent):
                     entity.set_homeostatic_value("energy", 100)
 
@@ -176,8 +176,8 @@ class BasicCoexsistenceExperiment(experiment.Experiment):
         for entity in self.world.get_entities():
             if isinstance(entity, model.agent.Agent):
                 self.world.add_enact_logic(entity, enact_logic)
-                entity.set_primitives(primitives)
-                entity.set_motivation(motivation)
+                entity.add_primitives(primitives)
+                entity.add_motivations(motivation)
 
 
     def get_world(self):
@@ -216,8 +216,8 @@ class BasicVisionExperiment(experiment.Experiment):
         for entity in self.world.get_entities():
             if isinstance(entity, model.agent.Agent):
                 self.world.add_enact_logic(entity, enact_logic)
-                entity.set_primitives(primitives)
-                entity.set_motivation(motivation)
+                entity.add_primitives(primitives)
+                entity.add_motivations(motivation)
 
 
     def get_world(self):
@@ -328,8 +328,8 @@ class BasicHomeostaticVisionExperiment(experiment.Experiment):
         for entity in self.world.get_entities():
             if isinstance(entity, model.agent.Agent):
                 self.world.add_enact_logic(entity, enact_logic)
-                entity.set_primitives(primitives)
-                entity.set_motivation(motivation)
+                entity.add_primitives(primitives)
+                entity.add_motivations(motivation)
                 if isinstance(entity, model.agent.HomeostaticConstructiveAgent):
                     entity.set_homeostatic_value("energy", 100)
                     entity.set_perception_handler(model.perceptionhandler.BasicPerceptionHandler())
@@ -386,8 +386,8 @@ class BasicVisionPushExperiment(experiment.Experiment):
         for entity in self.world.get_entities():
             if isinstance(entity, model.agent.Agent):
                 self.world.add_enact_logic(entity, enact_logic)
-                entity.set_primitives(primitives)
-                entity.set_motivation(motivation)
+                entity.add_primitives(primitives)
+                entity.add_motivations(motivation)
 
 
     def get_world(self):
@@ -434,8 +434,8 @@ class BasicVisionCoexsistenceExperiment(experiment.Experiment):
         for entity in self.world.get_entities():
             if isinstance(entity, model.agent.Agent):
                 self.world.add_enact_logic(entity, enact_logic)
-                entity.set_primitives(primitives)
-                entity.set_motivation(motivation)
+                entity.add_primitives(primitives)
+                entity.add_motivations(motivation)
 
 
     def get_world(self):
@@ -528,8 +528,8 @@ class BasicVisionCoexsistenceDestroyExperiment(experiment.Experiment):
         for entity in self.world.get_entities():
             if isinstance(entity, model.agent.Agent):
                 self.world.add_enact_logic(entity, enact_logic)
-                entity.set_primitives(primitives)
-                entity.set_motivation(motivation)
+                entity.add_primitives(primitives)
+                entity.add_motivations(motivation)
 
 
     def get_world(self):

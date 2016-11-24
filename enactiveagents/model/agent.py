@@ -88,11 +88,11 @@ class Agent(Entity):
     def has_perception_handler(self):
         return hasattr(self, "perception_handler")
 
-    def set_primitives(self, primitives):
+    def add_primitives(self, primitives):
         for primitive in primitives:
             self.interaction_memory.add_interaction(primitive)
 
-    def set_motivation(self, motivation):
+    def add_motivations(self, motivation):
         for primitive, valence in motivation.iteritems():
             self.interaction_memory.set_valence(primitive, valence)
 
