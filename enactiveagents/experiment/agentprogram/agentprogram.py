@@ -8,8 +8,17 @@ class AgentProgram(object):
         self.world = world
         self.agent = agent
 
-    def get_nearest_food(self, world, agent):
-        pass
+    def get_nearest_food(self, agent):
+        food = []
+        for entity in self.world.get_entities():
+            if isinstance(entity, model.structure.Food):
+                food.append((self.agent.get_position().manhattan_distance_to(entity.get_position()), entity))
+
+        food.sort(reverse = True, key = lambda tuple: tuple[0])
+        if len(food) > 0:
+            return food[0]
+        else:
+            return None
 
     @abc.abstractmethod
     def get_interaction(self, percept):
@@ -34,7 +43,6 @@ class TrivialAgentProgram(AgentProgram):
     def get_interaction(self, percept):
         interaction_memory = self.agent.interaction_memory
         return interaction_memory.get_primitive_interactions()[0]
-
 
 def create_programmable_agent(program_class, world):
     a = model.agent.ProgrammableAgent()
