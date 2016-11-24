@@ -294,6 +294,14 @@ class Position:
         self.x = Position.round(self.x + delta[0])
         self.y = Position.round(self.y + delta[1])
 
+    def manhattan_distance_to(self, other):
+        """
+        Get the manhattan distance between this position and a given position.
+
+        :param other: The given position.
+        """
+        return (abs(self.get_x() - other.get_x()) + abs(self.get_y() - other.get_y()))
+
     def __eq__(self, other):
         if not isinstance(other, Position):
             other = Position(other)
