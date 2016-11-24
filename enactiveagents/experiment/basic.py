@@ -457,7 +457,7 @@ class BasicVisionCoexsistenceDestroyExperiment(experiment.Experiment):
         self.world = self.parse_world(self.world_representation)
 
         # Add programmed agent
-        a = model.agent.ProgrammableAgent(agentprogram.agentprogram.TrivialAgentProgram())
+        a = agentprogram.agentprogram.create_programmable_agent(agentprogram.agentprogram.TrivialAgentProgram, self.world)
         a.set_position((1,2))
         self.world.add_entity(a)
 

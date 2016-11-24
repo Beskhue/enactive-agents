@@ -654,7 +654,7 @@ class ProgrammableAgent(Agent):
             else:
                 percept = None
 
-            interaction_ = self.program.get_interaction(AppState.get_state().get_world, self, percept)
+            interaction_ = self.program.get_interaction(percept)
             return interaction_
 
     def enacted_interaction(self, interaction, data):
