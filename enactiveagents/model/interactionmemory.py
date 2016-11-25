@@ -98,6 +98,14 @@ class InteractionMemory(object):
         """
         return self.weights[interaction]
 
+    def get_total_weight(self):
+        """
+        Get the sum of weights of all known interactions.
+
+        :return: The sum of weights of all known interactions.
+        """
+        return self.weight_sum
+
     def set_valence(self, interaction_, valence):
         """
         Set the valence of an interaction to a specific value.
