@@ -9,7 +9,7 @@ class AgentProgram(object):
         self.world = world
         self.agent = agent
 
-    def get_nearest_food(self, agent):
+    def get_nearest_food(self):
         food = []
         for entity in self.world.get_entities():
             if isinstance(entity, model.structure.Food):
@@ -17,7 +17,7 @@ class AgentProgram(object):
 
         food.sort(reverse = True, key = lambda tuple: tuple[0])
         if len(food) > 0:
-            return food[0]
+            return food[0][1]
         else:
             return None
 
@@ -30,16 +30,16 @@ class AgentProgram(object):
         :return: "a" for ahead, "l" for left, "r" for right, "b" for behind
         """
         pos_angle = self.agent.get_position().angle_to(position)
-        angle_to = abs(pos_angle - self.agent.get_rotation())
+        angle_to = (pos_angle - self.agent.get_rotation()) % 360
 
         if angle_to <= 45 or angle_to >= 315:
             return "a"
         elif angle_to <= 135:
             return "l"
         elif angle_to <= 225:
-            return "r"
-        else:
             return "b"
+        else:
+            return "r"
 
     @abc.abstractmethod
     def get_interaction(self, percept):
@@ -71,11 +71,36 @@ class SimpleEatingAndDestroyingAgent(AgentProgram):
     if there is a block.
     """
     def get_interaction(self, percept):
+
+        # Eat if there is food in front 
+        for entity in self.world.get_entities_in_front(self.agent):
+            if isinstance(entity, model.structure.Food):
+                return self.agent.interaction_memory.find_interaction_by_name_and_result("Eat")
+
+        # If there is food, go to the nearest food
         food = self.get_nearest_food()
         if food != None:
-            path = Pathfinding.find_path(self.world, self.agent.get_position(), food.get_position())
+            path = Pathfinding.find_path(self.world, self.agent.get_position(), food.get_position(), tolerance = 1)
 
-        return None
+            path = path[0]
+            if len(path) == 0:
+                direction = self.get_direction_to_position(food.get_position())
+            else:
+                step = path[0]
+                direction = self.get_direction_to_position(step)
+
+            if direction ==  "a":
+                return self.agent.interaction_memory.find_interaction_by_name_and_result("Step")
+            elif direction == "l":
+                return self.agent.interaction_memory.find_interaction_by_name_and_result("Turn Left")
+            elif direction == "r":
+                return self.agent.interaction_memory.find_interaction_by_name_and_result("Turn Right")
+            elif direction == "b":
+                return self.agent.interaction_memory.find_interaction_by_name_and_result("Turn Left")
+
+
+        # We can't do anything of use
+        return self.agent.interaction_memory.find_interaction_by_name_and_result("Wait")
 
 
 def create_programmable_agent(program_class, world):
