@@ -22,7 +22,7 @@ class AgentProgram(object):
             if isinstance(entity, cls):
                 entity_of_cls.append((self.agent.get_position().manhattan_distance_to(entity.get_position()), entity))
 
-        entity_of_cls.sort(reverse = True, key = lambda tuple: tuple[0])
+        entity_of_cls.sort(key = lambda tuple: tuple[0])
         if len(entity_of_cls) > 0:
             return entity_of_cls[0][1]
         else:
