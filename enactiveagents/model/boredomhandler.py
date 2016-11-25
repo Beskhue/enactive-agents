@@ -3,6 +3,8 @@ Module that holds classes that represent an agent's boredom handler.
 """
 
 import abc
+import collections
+import math
 import model.interaction
 
 class BoredomHandler(object):
@@ -66,3 +68,65 @@ class WeightBoredomHandler(BoredomHandler):
             return unmodified_valence * modifier
         else:
             return unmodified_valence
+
+class RepetitiveBoredomHandler(BoredomHandler):
+    """
+    A boredom handler taking into the account the last few (primitive)
+    interactions enacted by the agent, and compares the similarity of those
+    with the proposed interaction. The more similar, the more the interaction
+    is penalized.
+    """
+    
+    HISTORY_CONSIDER_SIZE = 50
+
+    def count_interactions(self, interaction_sequence):
+        """
+        Count the interaction occurrences in a sequence.
+
+        :param interaction_sequence: The interaction sequence
+        :return: A Counter (dictionary) object mapping from interactions to
+                 their frequency in the sequence.
+        """
+        count = collections.Counter()
+        for interaction_ in interaction_sequence:
+            if isinstance(interaction_, model.interaction.PrimitivePerceptionInteraction):
+                interaction_ = interaction_.get_primitive_interaction()
+            
+            count[interaction_.get_name()] += 1
+
+        return count
+
+    def similarity(self, count1, count2):
+        """
+        Calculate the cosine similarity between two counts (Counter dictionaries, seen as vectors).
+
+        :param count1: The first interaction count
+        :param count2: The second interaction count
+        :return: The cosine similarity between the two counts
+        """
+
+        c1_dot_c2 = 0
+        c1_len_squared = 0
+        c2_len_squared = 0
+
+        for interaction_name in count1:
+            c1_dot_c2 += count1[interaction_name] * count2[interaction_name]
+            c1_len_squared += count1[interaction_name]**2
+
+        for interaction_name in count2:
+            c2_len_squared += count2[interaction_name]**2
+
+        if c1_len_squared == 0:
+            return -1
+        else:
+            return c1_dot_c2 / (math.sqrt(c1_len_squared) * math.sqrt(c2_len_squared))
+
+    def process_boredom(self, interaction_memory, interaction, unmodified_valence):
+        history = interaction_memory.get_interaction_history()[-self.HISTORY_CONSIDER_SIZE:]
+        history_count = self.count_interactions(history)
+        interaction_count = self.count_interactions(interaction.unwrap())
+
+        similarity = self.similarity(history_count, interaction_count)
+        modifier = 1 - similarity
+
+        return unmodified_valence * modifier
