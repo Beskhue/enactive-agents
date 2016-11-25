@@ -64,13 +64,17 @@ class Pathfinding(object):
         return path
 
     @staticmethod
-    def find_path(world, start, goal):
+    def find_path(world, start, goal, tolerance = 0):
         """
         Implements the A* algorithm to find a path from the start to the goal.
 
         :param world: The world
         :param start: The starting position
         :param goal: The goal position
+        :param tolerance: The heuristic tolerance distance (e.g., at a tolerance
+                          of 0 the path should go to the exact goal. At a tolerance
+                          of 1 the path should end within 1 cell distance to
+                          the goal)
         """
         priority_queue = Queue.PriorityQueue()
         priority_queue.put(start, 0)
@@ -84,8 +88,10 @@ class Pathfinding(object):
         while not priority_queue.empty():
             current = priority_queue.get()
 
-            if current == goal:
-                # The goal has been found, so stop searching
+            if current == goal or Pathfinding.heuristic(current, goal) <= tolerance:
+                # The goal has been found (or we're within tolerance distance),
+                # so stop searching
+                goal = current
                 break
 
             for neighbour in Pathfinding.get_neighbours(world, current):
