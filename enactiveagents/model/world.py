@@ -50,11 +50,12 @@ class World(events.EventListener):
         self.position_entity_map.clear()
 
         for entity in self.entities:
-            pos = entity.get_position()
-            if pos not in self.position_entity_map:
-                self.position_entity_map[pos] = []
+            positions = entity.get_spanning_positions()
+            for pos in positions:
+                if pos not in self.position_entity_map:
+                    self.position_entity_map[pos] = []
 
-            self.position_entity_map[pos].append(entity)
+                self.position_entity_map[pos].append(entity)
 
         self.position_entity_map_valid = True 
 
@@ -381,6 +382,35 @@ class Entity(object):
 
     def get_position(self):
         return self.position
+
+    def get_spanning_positions(self):
+        """
+        As an entity can be larger than 1x1, it might span multiple cells.
+        This method returns a list of all cells the entity spans over.
+        
+        :return: A list of all positions (cells) the entity spans over.
+        """
+
+        angle = math.radians(self.rotation)
+        sine = math.sin(angle)
+        cos = math.cos(angle)
+        #return (
+        #    steps * self.step_size * cos, 
+        #    -steps * self.step_size * sine
+        #)
+
+        positions = []
+
+        for dx in range(self.width):
+            for dy in range(self.height):
+                pos = Position(self.position)
+                pos.add((dx * sine + dy * cos, dx * cos + dy * sine))
+                positions.append(pos)
+
+        if self.height > 1:
+            1 + 1
+
+        return positions
 
     def get_rotation(self):
         return self.rotation
