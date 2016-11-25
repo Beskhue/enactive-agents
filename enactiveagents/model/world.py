@@ -253,7 +253,7 @@ class World(events.EventListener):
             else:
                 # There is no logic registered with this interaction,
                 # do nothing.
-                enacted_interaction = interaction_
+                enacted_interaction = primitive_interaction
             
             # Tell agent which interaction was enacted
             enacted[agent_] = enacted_interaction
