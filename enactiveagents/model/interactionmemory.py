@@ -14,6 +14,7 @@ class InteractionMemory(object):
         self.valences = {}
         self.weights = {}
         self.alternative_interactions = {}
+        self.weight_sum = 0
 
     def add_interaction(self, interaction_, weight=1, valence=0):
         """
@@ -33,6 +34,7 @@ class InteractionMemory(object):
             raise TypeError("Expected interaction_ to be either primitive, primitive perception, or composite.")
 
         self.weights[interaction_] = weight
+        self.weight_sum += weight
 
     def add_alternative_interaction(self, interaction_, alternative_interaction):
         """
@@ -74,6 +76,7 @@ class InteractionMemory(object):
         :param interaction: The interaction to increment the weight of.
         """
         self.weights[interaction] += 1
+        self.weight_sum += 1
 
     def set_weight(self, interaction, weight):
         """
@@ -82,6 +85,7 @@ class InteractionMemory(object):
         :param interaction: The interaction to set the weight of.
         :param weight: The value to set the interaction's weight to.
         """
+        self.weight_sum = self.weight_sum - self.weights[interaction] + weight
         self.weights[interaction] = weight
 
     def get_weight(self, interaction):
