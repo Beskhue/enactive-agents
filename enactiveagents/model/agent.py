@@ -299,6 +299,9 @@ class ConstructiveAgent(Agent):
 
         if len(proposed) > 0 and self.interaction_memory.get_proclivity(proposed[0]) > 0:
             return proposed[0]
+        elif len(proposed) == 0:
+            print "%s - No proposed interactions: exploring" % self.name
+            return random.choice(self.interaction_memory.get_primitive_interactions())
         else:
             print "%s - Negative proclivity: exploring" % self.name
             # TODO: in Katja's implementation the activated interactions contain
