@@ -21,17 +21,42 @@ class World(events.EventListener):
     complex_enact_logic = []
     width = 20
     height = 20
+    position_entity_map_valid = False
+    position_entity_map = {}
 
     def __init__(self):
         pass
 
     def get_entities_at(self, position):
-        entities = []
-        for entity in self.entities:
-            if entity.at(position):
-                entities.append(entity)
+        if self.position_entity_map_valid:
+            if position in self.position_entity_map:
+                return self.position_entity_map[position]
+            else:
+                return []
+        else:
+            entities = []
 
-        return entities
+            for entity in self.entities:
+                if entity.at(position):
+                    entities.append(entity)
+
+            return entities
+
+    def build_position_entity_map(self):
+        """
+        Builds the position-entity map. This is used for fast lookup of
+        entitiy positions.
+        """
+        self.position_entity_map.clear()
+
+        for entity in self.entities:
+            pos = entity.get_position()
+            if pos not in self.position_entity_map:
+                self.position_entity_map[pos] = []
+
+            self.position_entity_map[pos].append(entity)
+
+        self.position_entity_map_valid = True 
 
     def get_entities_in_front(self, entity):
         """
@@ -53,8 +78,8 @@ class World(events.EventListener):
         pass
 
     def collidable_entity_at(self, position):
-        for entity in self.entities:
-            if entity.collidable() and entity.at(position):
+        for entity in self.get_entities_at(position):
+            if entity.collidable():
                 return True
         return False
 
@@ -250,7 +275,15 @@ class World(events.EventListener):
                 if isinstance(entity, agent.Agent):
                     agents.append(entity)
             shuffle(agents)
+
+            # Build the position entity map to make entity_at lookup quick
+            self.build_position_entity_map()
             agents_data = self.prepare(agents)
+            
+            # Agents will now enact in (and mutate) the world, so invalidate
+            # the entity map
+            self.position_entity_map_valid = False
+
             self.enact(agents_data)
 
 
