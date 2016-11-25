@@ -37,7 +37,7 @@ class AgentProgram(object):
     def get_direction_to_position(self, position):
         """
         Get the direction (left, right, backward, straight ahead) of a position
-        for this agent.
+        relative to this agent.
         
         :param position: The position to get the direction for.
         :return: "a" for ahead, "l" for left, "r" for right, "b" for behind
