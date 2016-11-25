@@ -171,6 +171,7 @@ class SimpleAgent(Agent):
             self, 
             interaction, 
             self.interaction_memory.get_valence(interaction)))
+        self.interaction_memory.add_interaction_to_history(interaction)
 
         if not self.enacted == None:
             self.learn_composite_interaction(self.enacted, interaction)
@@ -394,6 +395,7 @@ class ConstructiveAgent(Agent):
             self, 
             interaction_, 
             self.interaction_memory.get_valence(interaction_)))
+        self.interaction_memory.add_interaction_to_history(interaction_)
 
         if (
             not interaction_ == intended_primitive_interaction
@@ -530,6 +532,7 @@ class HumanAgent(Agent):
             self, 
             interaction, 
             -1))
+        self.interaction_memory.add_interaction_to_history(interaction)
 
         print "%s - Enacted: %s" % (self.name, interaction)
 
@@ -644,6 +647,7 @@ class ProgrammableAgent(Agent):
             self, 
             interaction, 
             -1))
+        self.interaction_memory.add_interaction_to_history(interaction)
 
         print "%s - Enacted: %s" % (self.name, interaction)
 
