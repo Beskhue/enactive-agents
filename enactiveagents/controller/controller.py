@@ -198,6 +198,8 @@ class Controller(events.EventListener):
         print " - [escape]      - quit the simulation"
         print " - [space]       - pause the simulation"
         print " - [control] + s - save the agents to file"
+        print " - [control] + w - save the world to file"
+        print " - [control] + e - save the experiment to file"
         print " - h             - show this help information"
         print " - r             - toggle saving simulation renders to disk"
         print ""
