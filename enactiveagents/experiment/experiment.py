@@ -96,3 +96,20 @@ class Experiment(object):
         file_path = os.path.join(settings.AGENT_DIR, file_name)
         a = cPickle.load(open(file_path, "rb"))
         return a
+
+    def load_world(self, file_name):
+        """
+        Load a world from file.
+        :param file_name: The name of the file to load the world from (e.g., "20161118T035805.p").
+        :return: The loaded world.
+        """
+
+        try:
+            import dill
+        except ImportError:
+            print "ERROR: Module 'dill' is required to save worlds."
+            return None
+        else:       
+            file_path = os.path.join(settings.WORLD_DIR, file_name)
+            w = dill.load(open(file_path, "rb"))
+            return w
