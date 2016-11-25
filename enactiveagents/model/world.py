@@ -16,16 +16,15 @@ class World(events.EventListener):
     Class that represents the world.
     """
 
-    entities = []
-    enact_logic = {}
-    complex_enact_logic = []
-    width = 20
-    height = 20
-    position_entity_map_valid = False
-    position_entity_map = {}
-
+    
     def __init__(self):
-        pass
+        self.entities = []
+        self.enact_logic = {}
+        self.complex_enact_logic = []
+        self.width = 20
+        self.height = 20
+        self.position_entity_map = False
+        self.position_entity_map = {}
 
     def get_entities_at(self, position):
         if self.position_entity_map_valid:
