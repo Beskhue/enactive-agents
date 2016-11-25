@@ -9,7 +9,7 @@ class InteractionMemory(object):
     """
     Class to represent the interaction memory of an agent.
     """
-    def __init__(self, boredom_handler = model.boredomhandler.PassthroughBoredomHandler):
+    def __init__(self, boredom_handler = model.boredomhandler.WeightBoredomHandler):
         self.primitive_interactions = []
         self.composite_interactions = []
         self.valences = {}
@@ -96,7 +96,10 @@ class InteractionMemory(object):
 
         :param interaction: The interaction to get the weight of.
         """
-        return self.weights[interaction]
+        if interaction in self.weights:
+            return self.weights[interaction]
+        else:
+            return 0
 
     def get_total_weight(self):
         """
@@ -118,7 +121,7 @@ class InteractionMemory(object):
         else:
             raise TypeError("Expected interaction to be primitive.")
 
-    def get_valence(self, interaction_):
+    def get_valence(self, interaction_, process_boredom = True):
         """
         Get the valence of an interaction. If the interaction is a primative,
         get its valence. If the interaction is composite, sum the valences
@@ -132,11 +135,14 @@ class InteractionMemory(object):
             valence =  self.valences[interaction_.get_primitive_interaction()]
         elif isinstance(interaction_, interaction.CompositeInteraction):
             primitives = interaction_.unwrap()
-            valence = reduce(lambda x, y: x + self.get_valence(y), primitives, 0)
+            valence = reduce(lambda x, y: x + self.get_valence(y, process_boredom = False), primitives, 0)
         else:
             raise TypeError("Expected interaction_ to be either primitive or composite.")
 
-        return self.boredom_handler.process_boredom(self, interaction_, valence)
+        if process_boredom:
+            return self.boredom_handler.process_boredom(self, interaction_, valence)
+        else:
+            return valence
 
     def get_proclivity(self, interaction):
         """
