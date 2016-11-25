@@ -15,6 +15,7 @@
 /docs/Makefile
 
 # Output
-/agents/
-/renders/
-/worlds/
+/_agents/
+/_worlds/
+/_experiments/
+/_renders/
