@@ -45,6 +45,12 @@ class AppState:
     def get_world(self):
         return self.world
 
+    def set_experiment(self, experiment):
+        self.experiment = experiment
+
+    def get_experiment(self):
+        return self.experiment
+
     def toggle_pause(self):
         self.running = not self.running
 
