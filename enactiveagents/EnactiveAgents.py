@@ -85,6 +85,7 @@ def main():
     event_manager.register_listener(heart_beat)
 
     # Initialize and register the world.
+    #experiment_ = experiment.experiment.Experiment.load_experiment("20161126T003019.p")
     experiment_ = experiment.basic.BasicCoexsistenceExperiment()
     AppState.get_state().set_experiment(experiment_)
     world = experiment_.get_world()
