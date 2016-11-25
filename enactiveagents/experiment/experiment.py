@@ -110,9 +110,27 @@ class Experiment(object):
         try:
             import dill
         except ImportError:
-            print "ERROR: Module 'dill' is required to save worlds."
+            print "ERROR: Module 'dill' is required to load worlds."
             return None
         else:       
             file_path = os.path.join(settings.WORLD_DIR, file_name)
             w = dill.load(open(file_path, "rb"))
             return w
+
+    @staticmethod
+    def load_experiment(file_name):
+        """
+        Load an experiment from file.
+        :param file_name: The name of the file to load the experiment from (e.g., "20161118T035805.p").
+        :return: The loaded experiment.
+        """
+
+        try:
+            import dill
+        except ImportError:
+            print "ERROR: Module 'dill' is required to load experiments."
+            return None
+        else:       
+            file_path = os.path.join(settings.EXPERIMENT_DIR, file_name)
+            e = dill.load(open(file_path, "rb"))
+            return e
