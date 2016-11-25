@@ -130,3 +130,20 @@ class RepetitiveBoredomHandler(BoredomHandler):
         modifier = 1 - similarity
 
         return unmodified_valence * modifier
+
+class WeightRepetitiveBoredomHandler(BoredomHandler):
+    """
+    A boredom handler combining the weight boredom handler and repetitive
+    boredom handler by taking the average valence output of the two.
+    """
+
+    def __init__(self):
+        self.weightBoredomHandler = WeightBoredomHandler()
+        self.repetitiveBoredomHandler = RepetitiveBoredomHandler()
+
+    def process_boredom(self, interaction_memory, interaction, unmodified_valence):
+        return (
+            self.weightBoredomHandler.process_boredom(interaction_memory, interaction, unmodified_valence)
+            +
+            self.repetitiveBoredomHandler.process_boredom(interaction_memory, interaction, unmodified_valence)
+            ) / 2
