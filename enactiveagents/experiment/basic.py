@@ -260,6 +260,15 @@ class BasicVisionExperimentLoad(experiment.Experiment):
     def get_world(self):
         return self.world
 
+class BasicExperimentLoad(experiment.Experiment):
+    def __init__(self):
+        super(BasicExperimentLoad, self).__init__()
+
+        self.world = self.load_world("20161125T235314.p")
+
+    def get_world(self):
+        return self.world
+
 class BasicHomeostaticVisionExperiment(experiment.Experiment):
     world_representation = [
         "wwwwwwww",
