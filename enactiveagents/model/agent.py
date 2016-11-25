@@ -250,7 +250,7 @@ class ConstructiveAgent(Agent):
         proposed = map(lambda (proposed_interaction, weight):
             (
                 proposed_interaction,
-                weight * self.interaction_memory.get_valence(proposed_interaction)
+                weight * self.interaction_memory.get_valence(proposed_interaction, process_boredom = True)
             ), proposed)
 
         n = 0
@@ -291,7 +291,7 @@ class ConstructiveAgent(Agent):
         Without alternatives:
         proposed = self.propose_interactions()
         proposed.sort(
-            key = lambda x: x[1] * self.interaction_memory.get_valence(x[0]), 
+            key = lambda x: x[1] * self.interaction_memory.get_valence(x[0], process_boredom = True), 
             reverse = True
         )
         proposed = map(lambda x: x[0], proposed)
@@ -377,7 +377,7 @@ class ConstructiveAgent(Agent):
         AppState.state.get_event_manager().post_event(events.AgentPreparationEvent(
             self, 
             intended_interaction, 
-            self.interaction_memory.get_valence(intended_interaction)))
+            self.interaction_memory.get_valence(intended_interaction, process_boredom = True)))
         return (intended_interaction, intended_interaction)
 
     def enacted_interaction(self, interaction_, data):

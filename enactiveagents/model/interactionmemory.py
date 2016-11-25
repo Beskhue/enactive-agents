@@ -12,7 +12,7 @@ class InteractionMemory(object):
 
     INTERACTION_ENACTION_HISTORY_SIZE = 50
 
-    def __init__(self, boredom_handler = model.boredomhandler.WeightBoredomHandler):
+    def __init__(self, boredom_handler = model.boredomhandler.RepetitiveBoredomHandler):
         self.primitive_interactions = []
         self.composite_interactions = []
         self.valences = {}
@@ -147,7 +147,7 @@ class InteractionMemory(object):
         else:
             raise TypeError("Expected interaction to be primitive.")
 
-    def get_valence(self, interaction_, process_boredom = True):
+    def get_valence(self, interaction_, process_boredom = False):
         """
         Get the valence of an interaction. If the interaction is a primative,
         get its valence. If the interaction is composite, sum the valences
@@ -161,7 +161,7 @@ class InteractionMemory(object):
             valence =  self.valences[interaction_.get_primitive_interaction()]
         elif isinstance(interaction_, interaction.CompositeInteraction):
             primitives = interaction_.unwrap()
-            valence = reduce(lambda x, y: x + self.get_valence(y, process_boredom = False), primitives, 0)
+            valence = reduce(lambda x, y: x + self.get_valence(y), primitives, 0)
         else:
             raise TypeError("Expected interaction_ to be either primitive or composite.")
 
