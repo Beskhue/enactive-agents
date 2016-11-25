@@ -9,6 +9,22 @@ import agentprogram.agentprogram
 from elements import Elements
 import pygame
 
+class LoadWorldExperiment(experiment.Experiment):
+    """
+    Load a world to this experiment. Note: experiment control setup is not 
+    saved and loaded.
+    """
+    def __init__(self, world_file_name):
+        """
+        :param world_file_name: The file name of the world to load.
+        """
+        super(LoadWorldExperiment, self).__init__()
+
+        self.world = self.load_world(world_file_name)
+
+    def get_world(self):
+        return self.world
+
 class BasicExperiment(experiment.Experiment):
     world_representation = [
         "wwwwwwwwwwwwwww",
@@ -256,15 +272,6 @@ class BasicVisionExperimentLoad(experiment.Experiment):
         for entity in self.world.get_entities():
             if isinstance(entity, model.agent.Agent):
                 self.world.add_enact_logic(entity, enact_logic)
-
-    def get_world(self):
-        return self.world
-
-class BasicExperimentLoad(experiment.Experiment):
-    def __init__(self):
-        super(BasicExperimentLoad, self).__init__()
-
-        self.world = self.load_world("20161125T235314.p")
 
     def get_world(self):
         return self.world
