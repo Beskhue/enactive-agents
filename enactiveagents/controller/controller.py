@@ -53,6 +53,9 @@ class Controller(events.EventListener):
                 elif event.key == pygame.K_w and pygame.key.get_pressed()[pygame.K_LCTRL]:
                     self.save_world()
                     return
+                elif event.key == pygame.K_e and pygame.key.get_pressed()[pygame.K_LCTRL]:
+                    self.save_experiment()
+                    return
                 elif event.key == pygame.K_h:
                     self.help()
                     return
@@ -107,6 +110,46 @@ class Controller(events.EventListener):
             dill.dump(AppState.get_state().get_world(), open(file_path, "wb"))
 
             print "World saved."
+
+        print "---"
+
+    def save_experiment(self):
+        """
+        Save the experiment to file.
+        """
+
+        print "---"
+        print "Press [enter] to write the experiment to file, or [escape] to cancel."
+
+        while True:
+             event = pygame.event.wait()
+             if event.type == pygame.KEYDOWN:
+                 if event.key == pygame.K_ESCAPE:
+                     print "Saving cancelled."
+                     print "---"
+                     return
+                 elif event.key == pygame.K_RETURN:
+                     break
+        
+        try:
+            import dill
+        except ImportError:
+            print "ERROR: Module 'dill' is required to save experiments."
+        else:       
+            print "Saving the experiment to file..."
+
+            # Create output directory if it does not exist
+            if not os.path.exists(settings.EXPERIMENT_DIR):
+                os.makedirs(settings.EXPERIMENT_DIR)
+
+            # Pickle and save agents to file
+            file_name = "%s.p" % strftime("%Y%m%dT%H%M%S")
+            file_path = os.path.join(settings.EXPERIMENT_DIR, file_name)
+
+            print " - Saving experiment to %s" % file_path
+            dill.dump(AppState.get_state().get_experiment(), open(file_path, "wb"))
+
+            print "Experiment saved."
 
         print "---"
 
