@@ -3,18 +3,20 @@ Module that holds classes that represent an agent's memory of interactions.
 """
 
 import interaction
+import model.boredomhandler
 
 class InteractionMemory(object):
     """
     Class to represent the interaction memory of an agent.
     """
-    def __init__(self):
+    def __init__(self, boredom_handler = model.boredomhandler.PassthroughBoredomHandler):
         self.primitive_interactions = []
         self.composite_interactions = []
         self.valences = {}
         self.weights = {}
         self.alternative_interactions = {}
         self.weight_sum = 0
+        self.boredom_handler = boredom_handler()
 
     def add_interaction(self, interaction_, weight=1, valence=0):
         """
@@ -117,15 +119,16 @@ class InteractionMemory(object):
         :param interaction_: The interaction to get the valence of.
         """
         if isinstance(interaction_, interaction.PrimitiveInteraction):
-            return self.valences[interaction_]
+            valence = self.valences[interaction_]
         elif isinstance(interaction_, interaction.PrimitivePerceptionInteraction):
-            return self.valences[interaction_.get_primitive_interaction()]
+            valence =  self.valences[interaction_.get_primitive_interaction()]
         elif isinstance(interaction_, interaction.CompositeInteraction):
             primitives = interaction_.unwrap()
             valence = reduce(lambda x, y: x + self.get_valence(y), primitives, 0)
-            return valence
         else:
             raise TypeError("Expected interaction_ to be either primitive or composite.")
+
+        return self.boredom_handler.process_boredom(self, interaction_, valence)
 
     def get_proclivity(self, interaction):
         """
