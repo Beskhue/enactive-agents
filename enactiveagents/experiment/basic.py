@@ -22,9 +22,6 @@ class LoadWorldExperiment(experiment.Experiment):
 
         self.world = self.load_world(world_file_name)
 
-    def get_world(self):
-        return self.world
-
 class BasicExperiment(experiment.Experiment):
     world_representation = [
         "wwwwwwwwwwwwwww",
@@ -74,10 +71,6 @@ class BasicExperiment(experiment.Experiment):
                 self.world.add_enact_logic(entity, enact_logic)
                 entity.add_primitives(primitives)
                 entity.add_motivations(motivation)
-
-
-    def get_world(self):
-        return self.world
 
 class BasicHomeostaticExperiment(experiment.Experiment):
     world_representation = [
@@ -149,10 +142,6 @@ class BasicHomeostaticExperiment(experiment.Experiment):
                 if isinstance(entity, model.agent.HomeostaticConstructiveAgent):
                     entity.set_homeostatic_value("energy", 100)
 
-
-    def get_world(self):
-        return self.world
-
 class BasicCoexsistenceExperiment(experiment.Experiment):
     world_representation = [
         "wwwww",
@@ -202,10 +191,6 @@ class BasicCoexsistenceExperiment(experiment.Experiment):
                 entity.add_primitives(primitives)
                 entity.add_motivations(motivation)
 
-
-    def get_world(self):
-        return self.world
-
 class BasicVisionExperiment(experiment.Experiment):
     world_representation = [
         "wwwwwwwwwwwwwww",
@@ -244,10 +229,6 @@ class BasicVisionExperiment(experiment.Experiment):
                 entity.add_primitives(primitives)
                 entity.add_motivations(motivation)
 
-
-    def get_world(self):
-        return self.world
-
 class BasicVisionExperimentLoad(experiment.Experiment):
     world_representation = [
         "wwwwwwwwwwwwwww",
@@ -272,9 +253,6 @@ class BasicVisionExperimentLoad(experiment.Experiment):
         for entity in self.world.get_entities():
             if isinstance(entity, model.agent.Agent):
                 self.world.add_enact_logic(entity, enact_logic)
-
-    def get_world(self):
-        return self.world
 
 class BasicHomeostaticVisionExperiment(experiment.Experiment):
     world_representation = [
@@ -361,10 +339,6 @@ class BasicHomeostaticVisionExperiment(experiment.Experiment):
                     entity.set_homeostatic_value("energy", 100)
                     entity.set_perception_handler(model.perceptionhandler.BasicPerceptionHandler())
 
-
-    def get_world(self):
-        return self.world
-
     def controller(self, event, coords):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_f:
@@ -419,10 +393,6 @@ class BasicVisionPushExperiment(experiment.Experiment):
                 entity.add_motivations(motivation)
 
 
-    def get_world(self):
-        return self.world
-
-
 class BasicVisionCoexsistenceExperiment(experiment.Experiment):
     world_representation = [
         "wwwww",
@@ -467,10 +437,6 @@ class BasicVisionCoexsistenceExperiment(experiment.Experiment):
                 self.world.add_enact_logic(entity, enact_logic)
                 entity.add_primitives(primitives)
                 entity.add_motivations(motivation)
-
-
-    def get_world(self):
-        return self.world
 
 class BasicVisionCoexsistenceDestroyExperiment(experiment.Experiment):
     world_representation = [
@@ -568,10 +534,6 @@ class BasicVisionCoexsistenceDestroyExperiment(experiment.Experiment):
                 self.world.add_enact_logic(entity, enact_logic)
                 entity.add_primitives(primitives)
                 entity.add_motivations(motivation)
-
-
-    def get_world(self):
-        return self.world
 
     def controller(self, event, coords):
         if event.type == pygame.KEYDOWN:
