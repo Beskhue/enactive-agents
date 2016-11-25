@@ -23,6 +23,7 @@ WEB_LISTEN_PORT = 8080
 ROOT_DIR = os.path.normpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
 AGENT_DIR = os.path.join(ROOT_DIR, "agents")
+WORLD_DIR = os.path.join(ROOT_DIR, "worlds")
 SIMULATIONS_RENDERS_DIR = os.path.join(ROOT_DIR, "renders")
 SIMULATION_RENDERS_DIR = os.path.join(SIMULATIONS_RENDERS_DIR, strftime("%Y%m%dT%H%M%S"))
 WEBROOT_DIR = os.path.join(ROOT_DIR, "webroot")
