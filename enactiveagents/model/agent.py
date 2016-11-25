@@ -300,13 +300,13 @@ class ConstructiveAgent(Agent):
         if len(proposed) > 0 and self.interaction_memory.get_proclivity(proposed[0]) > 0:
             return proposed[0]
         elif len(proposed) == 0:
+            # TODO: in Katja's implementation the activated interactions contain
+            # some set of default interactions. The paper itself does not seem 
+            # to mention how to deal with an empty activated set.
             print "%s - No proposed interactions: exploring" % self.name
             return random.choice(self.interaction_memory.get_primitive_interactions())
         else:
             print "%s - Negative proclivity: exploring" % self.name
-            # TODO: in Katja's implementation the activated interactions contain
-            # some set of default interactions. The paper itself does not seem 
-            # to mention how to deal with an empty activated set.
             return random.choice(self.interaction_memory.get_primitive_interactions())
 
     def update_context(self, enacted_interaction, learned_or_reinforced):
