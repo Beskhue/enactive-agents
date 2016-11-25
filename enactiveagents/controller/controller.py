@@ -50,6 +50,9 @@ class Controller(events.EventListener):
                 elif event.key == pygame.K_s and pygame.key.get_pressed()[pygame.K_LCTRL]:
                     self.save_agent()
                     return
+                elif event.key == pygame.K_w and pygame.key.get_pressed()[pygame.K_LCTRL]:
+                    self.save_world()
+                    return
                 elif event.key == pygame.K_h:
                     self.help()
                     return
@@ -66,6 +69,46 @@ class Controller(events.EventListener):
                     self.experiment_controller(event, pygame.mouse.get_pos())
                 else:
                     self.experiment_controller(event, None)
+
+    def save_world(self):
+        """
+        Save the world to file.
+        """
+
+        print "---"
+        print "Press [enter] to write the world to file, or [escape] to cancel."
+
+        while True:
+             event = pygame.event.wait()
+             if event.type == pygame.KEYDOWN:
+                 if event.key == pygame.K_ESCAPE:
+                     print "Saving cancelled."
+                     print "---"
+                     return
+                 elif event.key == pygame.K_RETURN:
+                     break
+        
+        try:
+            import dill
+        except ImportError:
+            print "ERROR: Module 'dill' is required to save worlds."
+        else:       
+            print "Saving the world to file..."
+
+            # Create output directory if it does not exist
+            if not os.path.exists(settings.WORLD_DIR):
+                os.makedirs(settings.WORLD_DIR)
+
+            # Pickle and save agents to file
+            file_name = "%s.p" % strftime("%Y%m%dT%H%M%S")
+            file_path = os.path.join(settings.WORLD_DIR, file_name)
+
+            print " - Saving world to %s" % file_path
+            dill.dump(AppState.get_state().get_world(), open(file_path, "wb"))
+
+            print "World saved."
+
+        print "---"
 
     def save_agent(self):
         """
