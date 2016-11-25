@@ -98,12 +98,15 @@ class SimpleEatingAndDestroyingAgent(AgentProgram):
             to_entity = self.get_nearest_block()
 
         if to_entity != None:
+            # Get the path to the goal entity
             path = Pathfinding.find_path(self.world, self.agent.get_position(), to_entity.get_position(), tolerance = 1)
             path = path[0]
 
             if len(path) == 0:
+                # We do not need to step, but we need to turn
                 direction = self.get_direction_to_position(to_entity.get_position())
             else:
+                # We need to take a step (and potentially turn)
                 step = path[0]
                 direction = self.get_direction_to_position(step)
 
@@ -115,8 +118,6 @@ class SimpleEatingAndDestroyingAgent(AgentProgram):
                 return self.agent.interaction_memory.find_interaction_by_name_and_result("Turn Right")
             elif direction == "b":
                 return self.agent.interaction_memory.find_interaction_by_name_and_result("Turn Left")
-
-        
 
         # We can't do anything of use
         return self.agent.interaction_memory.find_interaction_by_name_and_result("Wait")
