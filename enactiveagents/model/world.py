@@ -310,7 +310,7 @@ class Position:
         delta.add((-self.x, -self.y))
 
         # Angle of delta with vector (1,0)
-        return math.degrees(math.acos(delta[0] * 1 / math.sqrt(delta[0]**2 + delta[1]**2)))
+        return math.degrees(math.acos(delta.get_x() / math.sqrt(delta.get_x()**2 + delta.get_y()**2)))
 
     def __hash__(self):
         return hash((hash(self.x),  hash(self.y)))
