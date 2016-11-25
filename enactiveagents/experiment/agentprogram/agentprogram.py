@@ -43,13 +43,13 @@ class AgentProgram(object):
         :return: "a" for ahead, "l" for left, "r" for right, "b" for behind
         """
         pos_angle = self.agent.get_position().angle_to(position)
-        angle_to = (pos_angle - self.agent.get_rotation()) % 360
+        angle_to = round((pos_angle - self.agent.get_rotation()) % 360)
 
-        if angle_to <= 45 or angle_to >= 315:
+        if angle_to < 50 or angle_to > 310:
             return "a"
-        elif angle_to <= 135:
+        elif angle_to < 140:
             return "l"
-        elif angle_to <= 225:
+        elif angle_to < 220:
             return "b"
         else:
             return "r"
