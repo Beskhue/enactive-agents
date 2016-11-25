@@ -62,12 +62,11 @@ class Agent(Entity):
         """ 
         raise NotImplementedError("Should be implemented by child.")
 
-    @abc.abstractmethod
     def setup_interaction_memory(self):
         """
         Setup the interaction memory of this agent.
         """
-        raise NotImplementedError("Should be implemented by child.")
+        self.interaction_memory = interactionmemory.InteractionMemory()
 
     def get_name(self):
         """
@@ -176,9 +175,6 @@ class SimpleAgent(Agent):
         if not self.enacted == None:
             self.learn_composite_interaction(self.enacted, interaction)
         self.enacted = interaction
-
-    def setup_interaction_memory(self):
-        self.interaction_memory = interactionmemory.InteractionMemory()
 
 class ConstructiveAgent(Agent):
     """
@@ -469,9 +465,6 @@ class ConstructiveAgent(Agent):
             # Not done
             pass
 
-    def setup_interaction_memory(self):
-        self.interaction_memory = interactionmemory.InteractionMemory()
-
 class HomeostaticConstructiveAgent(ConstructiveAgent):
     """
     A homeostatic agent is a constructive agent where valences of interactions
@@ -539,9 +532,6 @@ class HumanAgent(Agent):
             -1))
 
         print "%s - Enacted: %s" % (self.name, interaction)
-
-    def setup_interaction_memory(self):
-        self.interaction_memory = interactionmemory.InteractionMemory()
 
     def get_interaction_from_input(self):
         """
@@ -656,9 +646,6 @@ class ProgrammableAgent(Agent):
             -1))
 
         print "%s - Enacted: %s" % (self.name, interaction)
-
-    def setup_interaction_memory(self):
-        self.interaction_memory = interactionmemory.InteractionMemory()
 
     def set_program(self, program):
         """
