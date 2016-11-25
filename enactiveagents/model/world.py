@@ -391,24 +391,13 @@ class Entity(object):
         :return: A list of all positions (cells) the entity spans over.
         """
 
-        angle = math.radians(self.rotation)
-        sine = math.sin(angle)
-        cos = math.cos(angle)
-        #return (
-        #    steps * self.step_size * cos, 
-        #    -steps * self.step_size * sine
-        #)
-
         positions = []
 
         for dx in range(self.width):
             for dy in range(self.height):
                 pos = Position(self.position)
-                pos.add((dx * sine + dy * cos, dx * cos + dy * sine))
+                pos.add((dx, dy))
                 positions.append(pos)
-
-        if self.height > 1:
-            1 + 1
 
         return positions
 
