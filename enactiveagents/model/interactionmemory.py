@@ -9,6 +9,9 @@ class InteractionMemory(object):
     """
     Class to represent the interaction memory of an agent.
     """
+
+    INTERACTION_ENACTION_HISTORY_SIZE = 50
+
     def __init__(self, boredom_handler = model.boredomhandler.WeightBoredomHandler):
         self.primitive_interactions = []
         self.composite_interactions = []
@@ -17,6 +20,7 @@ class InteractionMemory(object):
         self.alternative_interactions = {}
         self.weight_sum = 0
         self.boredom_handler = boredom_handler()
+        self.interaction_enaction_history = []
 
     def add_interaction(self, interaction_, weight=1, valence=0):
         """
@@ -58,6 +62,28 @@ class InteractionMemory(object):
             return True
         else:
             return False
+
+    def add_interaction_to_history(self, interaction_):
+        """
+        Add an interaction to the interaction history.
+
+        :param interaction_: The interaction to add
+        """
+        if not isinstance(interaction_, interaction.PrimitiveInteraction) and not isinstance(interaction_, interaction.PrimitivePerceptionInteraction):
+            raise Exception("Expected a primitive interaction or primitive perception interaction")
+
+        if len(self.interaction_enaction_history) >= self.INTERACTION_ENACTION_HISTORY_SIZE:
+            self.interaction_enaction_history.pop(0)
+
+        self.interaction_enaction_history.append(interaction_)
+
+    def get_interaction_history(self):
+        """
+        Get the interaction history.
+
+        :return: The interaction history
+        """
+        return self.interaction_enaction_history
 
     def get_alternative_interactions(self, interaction_):
         """
