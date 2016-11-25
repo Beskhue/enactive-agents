@@ -9,17 +9,23 @@ class AgentProgram(object):
         self.world = world
         self.agent = agent
 
-    def get_nearest_food(self):
-        food = []
+    def get_nearest(self, cls):
+        entity_of_cls = []
         for entity in self.world.get_entities():
-            if isinstance(entity, model.structure.Food):
-                food.append((self.agent.get_position().manhattan_distance_to(entity.get_position()), entity))
+            if isinstance(entity, cls):
+                entity_of_cls.append((self.agent.get_position().manhattan_distance_to(entity.get_position()), entity))
 
-        food.sort(reverse = True, key = lambda tuple: tuple[0])
-        if len(food) > 0:
-            return food[0][1]
+        entity_of_cls.sort(reverse = True, key = lambda tuple: tuple[0])
+        if len(entity_of_cls) > 0:
+            return entity_of_cls[0][1]
         else:
             return None
+
+    def get_nearest_food(self):
+        return self.get_nearest(model.structure.Food)
+
+    def get_nearest_block(self):
+        return self.get_nearest(model.structure.Block)
 
     def get_direction_to_position(self, position):
         """
@@ -78,13 +84,25 @@ class SimpleEatingAndDestroyingAgent(AgentProgram):
                 return self.agent.interaction_memory.find_interaction_by_name_and_result("Eat")
 
         # If there is food, go to the nearest food
-        food = self.get_nearest_food()
-        if food != None:
-            path = Pathfinding.find_path(self.world, self.agent.get_position(), food.get_position(), tolerance = 1)
+        to_entity = self.get_nearest_food()
+        if to_entity == None:
+            # Destroy a block if there is a block in front
+            for entity in self.world.get_entities_in_front(self.agent):
+                if isinstance(entity, model.structure.Block):
+                    interaction = self.agent.interaction_memory.find_interaction_by_name_and_result("Destroy")
+                    if interaction == None:
+                        interaction = self.agent.interaction_memory.find_interaction_by_name_and_result("Collaborative Destroy")
+                    return interaction
 
+            # If there is a block, go to the nearest block
+            to_entity = self.get_nearest_block()
+
+        if to_entity != None:
+            path = Pathfinding.find_path(self.world, self.agent.get_position(), to_entity.get_position(), tolerance = 1)
             path = path[0]
+
             if len(path) == 0:
-                direction = self.get_direction_to_position(food.get_position())
+                direction = self.get_direction_to_position(to_entity.get_position())
             else:
                 step = path[0]
                 direction = self.get_direction_to_position(step)
@@ -98,6 +116,7 @@ class SimpleEatingAndDestroyingAgent(AgentProgram):
             elif direction == "b":
                 return self.agent.interaction_memory.find_interaction_by_name_and_result("Turn Left")
 
+        
 
         # We can't do anything of use
         return self.agent.interaction_memory.find_interaction_by_name_and_result("Wait")
