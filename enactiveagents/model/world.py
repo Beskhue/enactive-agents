@@ -213,14 +213,14 @@ class World(events.EventListener):
         enacted = {}
 
         # Get primitive interactions
-        for agent, (interaction_, data) in agents_data.iteritems():
+        for agent_, (interaction_, data) in agents_data.iteritems():
             # Get enact logic
             if isinstance(interaction_, interaction.PrimitivePerceptionInteraction):
                 primitive_interaction = interaction_.get_primitive_interaction()
             else:
                 primitive_interaction = interaction_
 
-            agents_data[agent] = (primitive_interaction, data)
+            agents_data[agent_] = (primitive_interaction, data)
 
         # Execute complex interaction logic
         for callback in self.complex_enact_logic:
@@ -238,35 +238,35 @@ class World(events.EventListener):
                 enacted.update(enacted_)
 
         # Execute interactions
-        for agent, (primitive_interaction, data) in agents_data.iteritems():
-            if agent in enacted:
+        for agent_, (primitive_interaction, data) in agents_data.iteritems():
+            if agent_ in enacted:
                 # Agent has already been handled
                 continue
 
             action = primitive_interaction.get_name()
 
-            if action in self.enact_logic[agent]:
-                callback = self.enact_logic[agent][action]
+            if action in self.enact_logic[agent_]:
+                callback = self.enact_logic[agent_][action]
                 
                 # Process logic and get actual enacted interaction
-                enacted_interaction = callback(self, agent, primitive_interaction)
+                enacted_interaction = callback(self, agent_, primitive_interaction)
             else:
                 # There is no logic registered with this interaction,
                 # do nothing.
                 enacted_interaction = interaction_
             
             # Tell agent which interaction was enacted
-            enacted[agent] = enacted_interaction
+            enacted[agent_] = enacted_interaction
 
         # Notify agents of which interaction was enacted
-        for agent, (primitive_interaction, data) in agents_data.iteritems():
-            if agent.has_perception_handler() and not isinstance(enacted[agent], interaction.PrimitivePerceptionInteraction):
+        for agent_, (primitive_interaction, data) in agents_data.iteritems():
+            if agent_.has_perception_handler() and not isinstance(enacted[agent_], interaction.PrimitivePerceptionInteraction):
                 # The agent has a perception handler, and the enacted 
                 # interaction is not yet a primitive perception interaction, so
                 # get and add the percept
-                agent.enacted_interaction(interaction.PrimitivePerceptionInteraction(enacted[agent], agent.get_perception(self)), data)
+                agent_.enacted_interaction(interaction.PrimitivePerceptionInteraction(enacted[agent_], agent_.get_perception(self)), data)
             else:
-                agent.enacted_interaction(enacted[agent], data)
+                agent_.enacted_interaction(enacted[agent_], data)
 
     def notify(self, event):
         if isinstance(event, events.TickEvent):
