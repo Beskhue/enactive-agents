@@ -62,11 +62,11 @@ class Experiment(object):
             return model.agent.HomeostaticConstructiveAgent()
         elif symbol == "p":
             a = model.agent.ConstructiveAgent()
-            a.set_perception_handler(model.perceptionhandler.BasicPerceptionHandler())
+            a.set_perception_handler(model.perceptionhandler.PersistentPerceptionHandler())
             return a
         elif symbol == "u":
             a = model.agent.HumanAgent()
-            a.set_perception_handler(model.perceptionhandler.BasicPerceptionHandler())
+            a.set_perception_handler(model.perceptionhandler.PersistentPerceptionHandler())
             return a
         else:
             return None

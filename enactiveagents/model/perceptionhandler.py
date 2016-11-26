@@ -58,3 +58,60 @@ class BasicPerceptionHandler(PerceptionHandler):
                     return "f%s" % delta
 
         return ""
+
+class PersistentPerceptionHandler(PerceptionHandler):
+    """
+    A perception handler that has a persistent perception. Perceives changes
+    in the line of sight: objects that appeared, got closer, further away, etc. 
+    """
+
+    def __init__(self):
+        self.previous_perception = None
+
+    def perceive(self, agent_, world_):
+
+        perception = None
+
+        for delta in range(0, 10):
+            pos = world.Position(agent_.get_position())
+
+            pos.add(agent_.get_move_delta(delta))
+
+            entities = world_.get_entities_at(pos)
+            for entity in entities:
+                if entity == agent_:
+                    continue
+                if isinstance(entity, agent.Agent):
+                    perception = ("agent", delta)
+                    break
+                elif isinstance(entity, structure.Wall):
+                    perception = ("wall", delta)
+                    break
+                elif isinstance(entity, structure.Block):
+                    perception = ("block", delta)
+                    break
+                elif isinstance(entity, structure.Food):
+                    perception = ("food", delta)
+                    break
+            
+            if perception != None:
+                break
+          
+        previous_perception = self.previous_perception
+        self.previous_perception = perception
+
+        if perception == None:
+            return ""  
+        elif perception[1] == 0:
+            return "%s on top" % perception[0]
+        elif perception[1] == 1:
+            return "%s in front" % perception[0]
+        elif previous_perception != None and perception[0] == previous_perception[0]:
+            if perception[1] < previous_perception[1]:
+                return "%s got closer" % perception[0]
+            elif perception[1] == previous_perception[1]:
+                return "%s unchanged" % perception[0]
+            else:
+                return "%s got further away" % perception[0]
+        else:
+            return "%s appeared" % perception[0]
