@@ -77,7 +77,7 @@ class RepetitiveBoredomHandler(BoredomHandler):
     is penalized.
     """
     
-    HISTORY_CONSIDER_SIZE = 50
+    HISTORY_CONSIDER_SIZE = 15
 
     def count_interactions(self, interaction_sequence):
         """
