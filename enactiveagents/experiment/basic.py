@@ -500,9 +500,10 @@ class BasicVisionCoexsistenceDestroyExperiment(experiment.Experiment):
                                     enacted[agent_2] = collaborative_destroy
             return enacted
 
-        # Register the previously defined functions.
+        # Register the basic encation logic.
         enact_logic = Elements.get_enact_logic()
 
+        # Register the complex enaction logic just defined.
         self.world.add_complex_enact_logic(_collaborative_destroy, collaborative_destroy.get_name())
 
         # Set primitives known/enactable by the agents.
@@ -529,6 +530,7 @@ class BasicVisionCoexsistenceDestroyExperiment(experiment.Experiment):
         motivation[collaborative_destroy] = 50
         motivation[collaborative_destroy_fail] = -1
 
+        # Add the logic to all agents present in the world.
         for entity in self.world.get_entities():
             if isinstance(entity, model.agent.Agent):
                 self.world.add_enact_logic(entity, enact_logic)
