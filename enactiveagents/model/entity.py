@@ -1,3 +1,8 @@
+"""
+Module holding the abstract entity class, the position class and some
+utility methods for collision checking.
+"""
+
 import abc
 import math
 
