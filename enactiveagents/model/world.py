@@ -65,17 +65,6 @@ class World(events.EventListener):
         pos.add(entity.get_move_delta())
         return self.get_entities_at(pos)
 
-    def enact(self, agent, primitiveInteraction):
-        """
-        :param agent: The agent attempting to perform the primitive interaction.
-        :type agent: Agent
-        :param primitiveInteraction: The primitive interaction that is being 
-                                     attempted to be performed.
-        :type primitiveInteraction: PrimitiveInteraction
-        :return: The primitiveInteraction that was actually enacted.
-        """
-        pass
-
     def collidable_entity_at(self, position):
         for entity in self.get_entities_at(position):
             if entity.collidable():
