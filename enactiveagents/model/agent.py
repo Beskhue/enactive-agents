@@ -7,14 +7,14 @@ import string
 import abc
 import random
 import pygame
-from world import Entity
+import entity
 import interaction
 import interactionmemory
 import events
 from appstate import AppState
 import settings
 
-class Agent(Entity):
+class Agent(entity.Entity):
     """
     Class that represents an agent.
     """
@@ -71,6 +71,7 @@ class Agent(Entity):
     def get_name(self):
         """
         Get this agent's name
+
         :return: This agent's name
         """ 
         return self.name
@@ -107,6 +108,7 @@ class SimpleAgent(Agent):
     def anticipate(self):
         """
         Anticipate the possible interactions based on the current context.
+        
         :return: A list of possible (primitive) interactions.
         """
         interactions = []

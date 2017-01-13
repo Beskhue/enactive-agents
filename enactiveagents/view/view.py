@@ -60,6 +60,7 @@ class View(events.EventListener):
     def get_cell_width(self):
         """
         Get the width of a cell on the canvas.
+
         :return: The width of a single cell on the canvas.
         :rtype: int
         """
@@ -68,6 +69,7 @@ class View(events.EventListener):
     def get_cell_height(self):
         """
         Get the height of a cell on the canvas.
+
         :return: The height of a single cell on the canvas.
         :rtype: int
         """
@@ -75,7 +77,8 @@ class View(events.EventListener):
 
     def window_coords_to_world_coords(self, coords):
         """
-        Transform window pixel coordinates to world coordinates
+        Transform window pixel coordinates to world coordinates.
+
         :param coords: Window pixel coords
         :return: World coordinates
         """
@@ -153,6 +156,7 @@ class Sprite(pygame.sprite.Sprite):
         """
         Get the color the sprite should be. The color can change, e.g. depending
         on the interaction an agent has just enacted.
+
         :return: The color the sprite should be
         """
         color = self.entity.get_color()
@@ -168,6 +172,7 @@ class Sprite(pygame.sprite.Sprite):
         """
         Get the surface (image) of the sprite. Update the surface if the color
         of the sprite has to change.
+
         :return: The surface (image) of the sprite.
         """
         color = self.get_color()
@@ -179,6 +184,7 @@ class Sprite(pygame.sprite.Sprite):
     def get_shape(self):
         """
         Get the shape of the sprite.
+
         :return: The shape of the sprite as a list of vertices.
         :rtype: list
         """

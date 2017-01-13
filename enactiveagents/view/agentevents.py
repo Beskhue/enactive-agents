@@ -37,6 +37,7 @@ class AgentEvents(events.EventListener):
     def write(self, fp):
         """
         Writes the view as json to a stream.
+
         :param fp: a write()-supporting file-like object
         """
         return json.dump(self.history, fp, cls = utilities.customjsonencoder.CustomJSONEncoder)

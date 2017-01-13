@@ -11,6 +11,7 @@ class Interaction(object):
     def get_name(self):
         """
         Get the name of this interaction.
+        
         :return: The name of this interaction.
         :rtype: basestring
         """
@@ -20,6 +21,7 @@ class Interaction(object):
     def unwrap(self):
         """
         Get the sequence of interactions represented by this interaction.
+        
         :return: The sequence of interactions represented by this itneraction.
         """
         raise NotImplementedError("Should be implemented by child")
@@ -54,6 +56,7 @@ class PrimitiveInteraction(Interaction):
     def get_result(self):
         """
         Get the result of the interaction this primitive represents.
+        
         :return: The resut of the interaction this primitive represents.
         """
         return self.result
@@ -61,6 +64,7 @@ class PrimitiveInteraction(Interaction):
     def unwrap(self):
         """
         Get the primitive interaction as a singleton.
+        
         :return: The primitive interaction as a singleton.
         """
         return [self]
@@ -160,6 +164,7 @@ class CompositeInteraction(Interaction):
     def unwrap(self):
         """
         Unwrap the composite interaction.
+        
         :return: A list of primitive interactions.
         """
         return self.pre.unwrap() + self.post.unwrap()

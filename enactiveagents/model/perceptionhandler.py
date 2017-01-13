@@ -3,7 +3,7 @@ Module that holds classes that represent an agent's perception handler.
 """
 
 import abc
-import world
+import entity
 import agent
 import structure
 
@@ -40,21 +40,21 @@ class BasicPerceptionHandler(PerceptionHandler):
 
     def perceive(self, agent_, world_):
         for delta in range(0, 10):
-            pos = world.Position(agent_.get_position())
+            pos = entity.Position(agent_.get_position())
 
             pos.add(agent_.get_move_delta(delta))
 
             entities = world_.get_entities_at(pos)
-            for entity in entities:
-                if entity == agent_:
+            for entity_ in entities:
+                if entity_ == agent_:
                     continue
-                if isinstance(entity, agent.Agent):
+                if isinstance(entity_, agent.Agent):
                     return "a%s" % delta
-                elif isinstance(entity, structure.Wall):
+                elif isinstance(entity_, structure.Wall):
                     return "w%s" % delta
-                elif isinstance(entity, structure.Block):
+                elif isinstance(entity_, structure.Block):
                     return "b%s" % delta
-                elif isinstance(entity, structure.Food):
+                elif isinstance(entity_, structure.Food):
                     return "f%s" % delta
 
         return ""
@@ -73,24 +73,24 @@ class PersistentPerceptionHandler(PerceptionHandler):
         perception = None
 
         for delta in range(0, 10):
-            pos = world.Position(agent_.get_position())
+            pos = entity.Position(agent_.get_position())
 
             pos.add(agent_.get_move_delta(delta))
 
             entities = world_.get_entities_at(pos)
-            for entity in entities:
-                if entity == agent_:
+            for entity_ in entities:
+                if entity_ == agent_:
                     continue
-                if isinstance(entity, agent.Agent):
+                if isinstance(entity_, agent.Agent):
                     perception = ("agent", delta)
                     break
-                elif isinstance(entity, structure.Wall):
+                elif isinstance(entity_, structure.Wall):
                     perception = ("wall", delta)
                     break
-                elif isinstance(entity, structure.Block):
+                elif isinstance(entity_, structure.Block):
                     perception = ("block", delta)
                     break
-                elif isinstance(entity, structure.Food):
+                elif isinstance(entity_, structure.Food):
                     perception = ("food", delta)
                     break
             

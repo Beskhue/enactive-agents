@@ -33,6 +33,7 @@ class DrawEvent(Event):
     def __init__(self, save_to_file = False):
         """
         Initialize the draw event.
+
         :param save_to_file: Boolean indicating whether the render should be saved to file
         """ 
         self.name = "Draw Event"
