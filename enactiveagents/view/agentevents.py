@@ -15,6 +15,11 @@ class AgentEvents(events.EventListener):
         self.history = {}
 
     def create_if_not_exists(self, agent):
+        """
+        Add the agent to the history if it does not yet exist in the history.
+
+        :param agent: The agent to add to the history
+        """
         if str(agent) not in self.history:
             self.history[str(agent)] = {"preparation": [], "enaction": []}
 

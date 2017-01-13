@@ -69,6 +69,7 @@ class Entity(object):
         """
         Test if this entity is at a certain position (i.e., the position is 
         inside the entity's rectangle).
+
         :param position: The position to check.
         :return: True if the position is inside the entity's rectangle.
         """
@@ -94,6 +95,7 @@ class Entity(object):
     def move(self, steps):
         """
         Move the entity a certain number of steps.
+
         :param steps: The number of steps to move the agent.
         """
         self.position.add(self.get_move_delta(steps))
@@ -101,7 +103,9 @@ class Entity(object):
     def get_move_delta(self, steps = 1):
         """
         Get the change in position if the agent were to move.
+
         :param steps: The number of steps the agent would move.
+        :return: The change in position
         """
         angle = math.radians(self.rotation)
         sine = math.sin(angle)
@@ -117,7 +121,10 @@ class Entity(object):
         Get whether this entity and the other entity or rect are intersecting.
         If other is a rect, it should be in the form of:
         [x, y, width, height]
+
         :param other: The entity or rect to check for collision with this entity.
+        :return: A boolean indicating whether this entitity is colliding with the
+                 other entitity or rectangle.
         """
         if not self.collidable():
             return false
@@ -151,6 +158,7 @@ class Entity(object):
     def get_color(self):
         """
         Get the color of the entity.
+
         :return: The color of the entity.
         :rtype: (int, int, int, int)
         """
@@ -162,6 +170,7 @@ class Entity(object):
     def set_color(self, color):
         """
         Set the color of the entity.
+
         :param color: The color to set the entity to.
         :type color: (int, int, int, int)
         """
@@ -177,6 +186,7 @@ class Entity(object):
     def collidable(self):
         """
         Return whether entities can collide with this object.
+
         :return: True if entities can collide with this object, false otherwise.
         :rtype: bool
         """
@@ -226,6 +236,7 @@ class Position:
         Get the manhattan distance between this position and a given position.
 
         :param other: The given position.
+        :return: The manhattan distance between this position and the given position.
         """
         return (abs(self.get_x() - other.get_x()) + abs(self.get_y() - other.get_y()))
 
@@ -257,8 +268,10 @@ class Position:
 def collide(r1, r2):
     """
     Test if two rectangles collide.
+
     :param r1: The first rectangle.
     :param r2: The second rectangle.
+    :return: A boolean indicating whether the rectangles are colliding.
     """
     return not (
         r2[0] >= r1[0]+r1[2] or # Left side of r2 is to the right of right side of r1
@@ -270,8 +283,10 @@ def collide(r1, r2):
 def inside(r, p):
     """
     Test if a point is inside a rectangle.
+
     :param r: The rectangle.
     :param p: The point.
+    :return: A boolean indicating whether the point is insiide the rectangle.
     """
     return not (
         p.get_x() < r[0] or

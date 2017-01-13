@@ -54,6 +54,14 @@ class Pathfinding(object):
 
     @staticmethod
     def reconstruct_path(backtrack, goal):
+        """
+        Reconstruct the path from the start to the goal, based on
+        the backtrack path created by the find_path method.
+
+        :param backtrack: The backtrack path (a list of positions)
+        :param goal: The goal position
+        :return: The path
+        """
         path = []
 
         current = goal

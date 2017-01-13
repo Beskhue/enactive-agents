@@ -26,6 +26,12 @@ class World(events.EventListener):
         self.position_entity_map = {}
 
     def get_entities_at(self, position):
+        """
+        Get the entities that are at a given position
+
+        :param position: The position for which to get all entities
+        :return: All entities at the given position
+        """
         if self.position_entity_map_valid:
             if position in self.position_entity_map:
                 return self.position_entity_map[position]
@@ -60,18 +66,32 @@ class World(events.EventListener):
     def get_entities_in_front(self, entity):
         """
         Get the entities that are in front of the given entity.
+
+        :param entity: The entity for which we should get the entities that are in front of it
         """
         pos = Position(entity.get_position())
         pos.add(entity.get_move_delta())
         return self.get_entities_at(pos)
 
     def collidable_entity_at(self, position):
+        """
+        Test whether there is a collidable entity at the given position.
+
+        :param position: The position to check for entities at
+        :return: A boolean indicating whether there is a collidable entitity at the given position
+        """
         for entity in self.get_entities_at(position):
             if entity.collidable():
                 return True
         return False
 
     def entity_rect_collision(self, rect):
+        """
+        Test whether an entitity collides with the given rectangle.
+
+        :param rect: The rectangle to check for whether there are entities colliding with it
+        :return: A boolean indicating whether there is a collidable entitity within the given rectangle
+        """
         for entity in self.entities:
             if entity.collidable() and entity.collide(rect):
                 return True
