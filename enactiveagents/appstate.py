@@ -55,6 +55,10 @@ class AppState:
         self.running = not self.running
 
     def toggle_saving_simulation_renders(self):
+        """
+        Toggle whether simulation renders should be saved on or off, depending on the
+        current setting.
+        """
         self.save_simulation_renders = not self.save_simulation_renders
 
     def is_running(self):
@@ -64,6 +68,9 @@ class AppState:
         return self.save_simulation_renders
 
     def increment_t(self):
+        """
+        Increment the simulation clock by one tick.
+        """
         self.t += 1
 
     def set_t(self, t):
