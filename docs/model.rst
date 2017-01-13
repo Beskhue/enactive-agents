@@ -12,6 +12,8 @@ Submodules
 .. toctree::
 
    model.agent
+   model.boredomhandler
+   model.entity
    model.interaction
    model.interactionmemory
    model.perceptionhandler

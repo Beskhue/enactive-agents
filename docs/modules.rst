@@ -12,5 +12,6 @@ enactiveagents
    model
    settings
    socketio
+   utilities
    view
    webserver
