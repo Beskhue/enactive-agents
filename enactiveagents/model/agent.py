@@ -96,6 +96,12 @@ class Agent(entity.Entity):
         for primitive, valence in motivation.iteritems():
             self.interaction_memory.set_valence(primitive, valence)
 
+    def get_interaction_memory(self):
+        return self.interaction_memory
+
+    def set_interaction_memory(self, interaction_memory):
+        self.interaction_memory = interaction_memory
+
     def collidable(self):
         return False
 
