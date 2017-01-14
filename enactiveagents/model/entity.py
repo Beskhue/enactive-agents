@@ -179,8 +179,14 @@ class Entity(object):
     def get_width(self):
         return self.width
 
+    def set_width(self, width):
+        self.width = width
+
     def get_height(self):
         return self.height
+
+    def set_height(self, height):
+        self.height = height
 
     @abc.abstractmethod
     def collidable(self):
