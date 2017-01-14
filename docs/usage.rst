@@ -34,3 +34,4 @@ Usage
     usage.vision
     usage.boredom
     usage.programmable
+    usage.custom_structures
