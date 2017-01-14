@@ -31,5 +31,6 @@ Usage
 
     usage.experiments
     usage.vision
+    usage.boredom
     usage.controls
     usage.programmable
