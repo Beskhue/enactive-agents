@@ -8,10 +8,7 @@
 EnactiveAgents documentation
 ============================
 
-EnactiveAgents is an implementation of the Enactivist Cognitive Architecture in Python.
-
-.. ATTENTION::
-   EnactiveAgents is currently in development and is unstable.
+EnactiveAgents is an implementation of the Enactivist Cognitive Architecture in Python. See *Georgeon, O. L., Marshall, J. B., & Manzotti, R. (2013). ECA: An enactivist cognitive architecture based on sensorimotor modeling. Biologically Inspired Cognitive Architectures, 6, 46-57* for a thorough description of the architecture.
    
 The implementation is set up to be *scriptable*, *adaptable* and *pluggable*:
    
