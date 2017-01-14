@@ -203,11 +203,11 @@ class HomeostaticInteractionMemory(InteractionMemory):
     energy level. Thus, this interaction memory keeps track of the agent to be
     able to compute the valence.
     """
-    def __init__(self, agent):
-        super(HomeostaticInteractionMemory, self).__init__()
+    def __init__(self, agent, boredom_handler = model.boredomhandler.RepetitiveBoredomHandler):
+        super(HomeostaticInteractionMemory, self).__init__(boredom_handler)
         self.agent = agent
 
-    def get_valence(self, interaction_):
+    def get_valence(self, interaction_, process_boredom = False):
         """
         Get the valence of an interaction. If the interaction is a primative,
         get its valence. If the interaction is composite, sum the valences
@@ -227,3 +227,8 @@ class HomeostaticInteractionMemory(InteractionMemory):
             return valence
         else:
             raise TypeError("Expected interaction_ to be either primitive or composite.")
+
+        if process_boredom:
+            return self.boredom_handler.process_boredom(self, interaction_, valence)
+        else:
+            return valence
