@@ -13,9 +13,9 @@ class AgentProgram(object):
         """
         Get the entity of a certain class that is nearest to the agent.
 
-        :param cls: The class the entity should be of
-
         NOTE: Uses heuristic (Manhattan) distance.
+
+        :param cls: The class the entity should be an instance of
         """
         entity_of_cls = []
         for entity in self.world.get_entities():

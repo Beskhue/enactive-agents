@@ -32,3 +32,4 @@ Usage
     usage.experiments
     usage.vision
     usage.controls
+    usage.programmable
