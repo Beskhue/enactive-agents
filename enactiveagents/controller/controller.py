@@ -157,8 +157,13 @@ class Controller(events.EventListener):
         """
         Save all agents to files.
         """
+        import json
+        import utilities.customjsonencoder
+
         print "---"
-        print "Press [enter] to write all agents to file, or [escape] to cancel."
+        print "Press [enter] to write all agents to a pickle file, [shift]+[enter] to write all agents to both a pickle and json file, or [escape] to cancel."
+
+        export_json = False
 
         while True:
              event = pygame.event.wait()
@@ -168,6 +173,8 @@ class Controller(events.EventListener):
                      print "---"
                      return
                  elif event.key == pygame.K_RETURN:
+                     if pygame.key.get_pressed()[pygame.K_LSHIFT] or pygame.key.get_pressed()[pygame.K_RSHIFT]:
+                         export_json = True
                      break
              
         print "Saving agents to file..."
@@ -179,6 +186,14 @@ class Controller(events.EventListener):
         # Pickle and save agents to file
         agents = AppState.get_state().get_world().get_agents()
         for agent in agents:
+            if export_json:
+                file_name = "%s - %s.json" % (strftime("%Y%m%dT%H%M%S"), agent.get_name())
+                file_path = os.path.join(settings.AGENT_DIR, file_name)
+
+                print " - Saving %s to %s" % (agent.get_name(), file_path)
+                with open(file_path, 'w') as f:
+                    json.dump(agent, f, cls=utilities.customjsonencoder.CustomJSONEncoder, indent=4, sort_keys=True)
+            
             file_name = "%s - %s.p" % (strftime("%Y%m%dT%H%M%S"), agent.get_name())
             file_path = os.path.join(settings.AGENT_DIR, file_name)
 
