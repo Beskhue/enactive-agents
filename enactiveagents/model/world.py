@@ -6,6 +6,8 @@ import abc
 import collections
 from random import shuffle
 import pygame
+
+import appstate
 import events
 import interaction
 import agent
@@ -24,6 +26,7 @@ class World(events.EventListener):
         self.height = 20
         self.position_entity_map = False
         self.position_entity_map = {}
+        self.mutate_callbacks = []
 
     def get_entities_at(self, position):
         """
@@ -155,6 +158,12 @@ class World(events.EventListener):
         """
         self.complex_enact_logic = [x for x in self.complex_enact_logic if not (x == callback or (isinstance(x, tuple) and x[0] == callback))]
 
+    def add_mutate_callback(self, callback):
+        """
+        Add a world mutate callback method, to be called before enaction in a tick.
+        """
+        self.mutate_callbacks.append(callback)
+
     def get_width(self):
         return self.width
 
@@ -181,6 +190,14 @@ class World(events.EventListener):
         """
         # import agent
         return [entity for entity in self.entities if isinstance(entity, agent.Agent)]
+
+    def get_entities_of_type(self, type):
+        """
+        Get all entities of a specific type in the world
+        :param type: The type of entities to get
+        :return: All agent entities of a specific type in the world
+        """
+        return [entity for entity in self.entities if isinstance(entity, type)]
 
     def add_entity(self, entity):
         self.entities.append(entity)
@@ -279,6 +296,11 @@ class World(events.EventListener):
 
     def notify(self, event):
         if isinstance(event, events.TickEvent):
+            # Call all mutate callbacks
+            t = appstate.AppState.get_state().get_t()
+            for mutate_callback in self.mutate_callbacks:
+                mutate_callback(self, t)
+
             agents = []
             for entity in self.entities:
                 if isinstance(entity, agent.Agent):
