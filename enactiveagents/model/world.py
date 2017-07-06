@@ -278,7 +278,6 @@ class World(events.EventListener):
                 agent_.enacted_interaction(enacted[agent_], data)
 
     def notify(self, event):
-        # import agent
         if isinstance(event, events.TickEvent):
             agents = []
             for entity in self.entities:
