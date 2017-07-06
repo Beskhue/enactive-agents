@@ -88,6 +88,22 @@ class World(events.EventListener):
                 return True
         return False
 
+    def get_free_positions(self):
+        """
+        Get all positions without any entities
+        :return: A list of positions without entities.
+        """
+
+        free = []
+
+        for x in range(self.width):
+            for y in range(self.height):
+                p = Position((x, y))
+                if len(self.get_entities_at(p)) == 0:
+                    free.append(p)
+
+        return free
+
     def entity_rect_collision(self, rect):
         """
         Test whether an entitity collides with the given rectangle.
@@ -299,7 +315,12 @@ class World(events.EventListener):
             # Call all mutate callbacks
             t = appstate.AppState.get_state().get_t()
             for mutate_callback in self.mutate_callbacks:
+                # Build the position entity map to make entity_at lookup quick
+                self.build_position_entity_map()
                 mutate_callback(self, t)
+
+            # Build the position entity map to make entity_at lookup quick
+            self.build_position_entity_map()
 
             agents = []
             for entity in self.entities:
@@ -307,8 +328,6 @@ class World(events.EventListener):
                     agents.append(entity)
             shuffle(agents)
 
-            # Build the position entity map to make entity_at lookup quick
-            self.build_position_entity_map()
             agents_data = self.prepare(agents)
             
             # Agents will now enact in (and mutate) the world, so invalidate
