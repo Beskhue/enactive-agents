@@ -197,6 +197,18 @@ class InteractionMemory(object):
 
         return None
 
+    def to_json(self):
+        return {
+            "primitive_interactions": [repr(i) for i in self.primitive_interactions],
+            "composite_interactions": [repr(i) for i in self.composite_interactions],
+            "valances": {repr(key): value for key, value in self.valences.items()},
+            "weights": {repr(key): value for key, value in self.weights.items()},
+            "alternative_interactions": {repr(key): [repr(v) for v in value] for key, value in self.alternative_interactions.items()},
+            "weight_sum": self.weight_sum,
+            "boredom_handler": repr(type(self.boredom_handler)),
+            "interaction_enaction_history": [repr(i) for i in self.interaction_enaction_history]
+        }
+
 class HomeostaticInteractionMemory(InteractionMemory):
     """
     A homeostatic interaction's valence is a function of the agent's internal
