@@ -2,12 +2,14 @@
 Module to build experiments (worlds, agents, etc.).
 """
 
+import random
+import pygame
+
 import model.interaction
 import model.agent
 import experiment
 import agentprogram.agentprogram
 from elements import Elements
-import pygame
 
 class LoadWorldExperiment(experiment.Experiment):
     """
@@ -349,6 +351,24 @@ class BasicHomeostaticVisionExperiment(experiment.Experiment):
                 block = model.structure.Block()
                 block.set_position(coords)
                 self.world.add_entity(block)
+
+
+class BasicRandomExperiment(BasicHomeostaticVisionExperiment):
+
+    def __init__(self):
+        super(BasicRandomExperiment, self).__init__()
+
+        def add_food(world, t):
+            if len(world.get_entities_of_type(model.structure.Food)) == 0:
+                # Add food
+                positions = world.get_free_positions()
+                p = random.choice(positions)
+
+                food = model.structure.Food()
+                food.set_position(p)
+                world.add_entity(food)
+
+        self.world.add_mutate_callback(add_food)
 
 class BasicVisionPushExperiment(experiment.Experiment):
     world_representation = [
