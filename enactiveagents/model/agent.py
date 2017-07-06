@@ -105,6 +105,12 @@ class Agent(entity.Entity):
     def collidable(self):
         return False
 
+    def to_json(self):
+        return {
+            'name': self.name,
+            'interaction_memory': self.interaction_memory
+        }
+
 class SimpleAgent(Agent):
     """
     An agent with a simple existence.
