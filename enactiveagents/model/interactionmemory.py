@@ -201,7 +201,7 @@ class InteractionMemory(object):
         return {
             "primitive_interactions": [repr(i) for i in self.primitive_interactions],
             "composite_interactions": [repr(i) for i in self.composite_interactions],
-            "valances": {repr(key): value for key, value in self.valences.items()},
+            "valences": {repr(key): value for key, value in self.valences.items()},
             "weights": {repr(key): value for key, value in self.weights.items()},
             "alternative_interactions": {repr(key): [repr(v) for v in value] for key, value in self.alternative_interactions.items()},
             "weight_sum": self.weight_sum,
