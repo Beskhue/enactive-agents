@@ -177,6 +177,9 @@ class CompositeInteraction(Interaction):
         else:
             return pre
 
+    def to_json(self):
+        return {"pre": self.pre, "post": self.post}
+
     def __eq__(self, other):
         if isinstance(other, CompositeInteraction):
             return self.pre == other.pre and self.post == other.post
