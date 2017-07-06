@@ -246,6 +246,8 @@ class HomeostaticInteractionMemory(InteractionMemory):
             return valence
 
     def to_json(self):
+        import dill
+
         d = super(HomeostaticInteractionMemory, self).to_json()
-        d['valences'] = {key: repr(value) for key, value in d['valences'].items()}
+        d['valences'] = {key: dill.source.getsource(value) for key, value in d['valences'].items()}
         return d
