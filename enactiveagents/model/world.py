@@ -52,7 +52,7 @@ class World(events.EventListener):
     def build_position_entity_map(self):
         """
         Builds the position-entity map. This is used for fast lookup of
-        entitiy positions.
+        entity positions.
         """
         self.position_entity_map.clear()
 
