@@ -86,7 +86,7 @@ def main():
 
     # Initialize and register the world.
     #experiment_ = experiment.experiment.Experiment.load_experiment("20161126T003019.p")
-    experiment_ = experiment.basic.BasicVisionExperiment()
+    experiment_ = experiment.basic.BasicRandomExperiment()
     AppState.get_state().set_experiment(experiment_)
     world = experiment_.get_world()
     event_manager.register_listener(world)
