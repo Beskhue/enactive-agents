@@ -101,8 +101,14 @@ class Experiment(object):
         :param file_name: The name of the file to load the agent from (e.g., "20161118T035805 - Agent DZX26I.p").
         :return: The loaded agent.
         """
+        try:
+            import dill
+        except ImportError:
+            print "ERROR: Module 'dill' is required to load agents."
+            return None
+
         file_path = os.path.join(settings.AGENT_DIR, file_name)
-        a = cPickle.load(open(file_path, "rb"))
+        a = dill.load(open(file_path, "rb"))
         return a
 
     def load_world(self, file_name):

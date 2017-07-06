@@ -159,6 +159,10 @@ class Controller(events.EventListener):
         """
         import json
         import utilities.customjsonencoder
+        try:
+            import dill
+        except ImportError:
+            print "ERROR: Module 'dill' is required to save agents."
 
         print "---"
         print "Press [enter] to write all agents to a pickle file, [shift]+[enter] to write all agents to both a pickle and json file, or [escape] to cancel."
@@ -198,7 +202,7 @@ class Controller(events.EventListener):
             file_path = os.path.join(settings.AGENT_DIR, file_name)
 
             print " - Saving %s to %s" % (agent.get_name(), file_path)
-            cPickle.dump(agent, open(file_path, "wb"))
+            dill.dump(agent, open(file_path, "wb"))
 
         print "Agents saved."
 
