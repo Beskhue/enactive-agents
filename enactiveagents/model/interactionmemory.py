@@ -244,3 +244,8 @@ class HomeostaticInteractionMemory(InteractionMemory):
             return self.boredom_handler.process_boredom(self, interaction_, valence)
         else:
             return valence
+
+    def to_json(self):
+        d = super(HomeostaticInteractionMemory, self).to_json()
+        d['valences'] = {key: repr(value) for key, value in d['valences'].items()}
+        return d
