@@ -119,7 +119,7 @@ def main():
 
     experiments = []
     experiments.append(experiment.basic.BasicRandomExperiment())
-    experiments.append(experiment.experiment.Experiment.load_experiment("20161126T003019.p"))
+    experiments.append(experiment.basic.BasicVisionExperiment())
 
     for experiment_ in experiments:
         run_experiment(experiment_)
