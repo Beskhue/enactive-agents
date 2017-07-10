@@ -125,7 +125,7 @@ def run_experiment(experiment_, render = True, interactive = True):
         main_controller.set_experiment_controller(lambda e, coords: experiment_.controller(e, main_view.window_coords_to_world_coords(coords)))
 
     # Start the webserver.
-    webserver.trace_view = trace_view
+    webserver.register({'traces': trace_view})
     webserver.start()
 
     # Start the heartbeat.

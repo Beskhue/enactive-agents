@@ -8,6 +8,8 @@ import SocketServer
 import threading
 import settings
 
+json_views = {}
+
 def start():
     """
     Start a thread to launch the webserver.
@@ -29,12 +31,19 @@ def _start():
     httpd = SocketServer.TCPServer(("", settings.WEB_LISTEN_PORT), handler)
     httpd.serve_forever()
 
+def register(d):
+    """
+    Register json views.
+    """
+    global json_views
+    json_views = {"/data/%s.json" % k: v for k, v in d.items()}
+
 class RequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     def do_GET(self):
-        if self.path == "/data/traces.json":
+        if self.path in json_views:
             self.send_response(200)
             self.send_header('Content-type', 'text/json')
             self.end_headers()
-            trace_view.write(self.wfile)
+            json_views[self.path].write(self.wfile)
         else:
             SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
