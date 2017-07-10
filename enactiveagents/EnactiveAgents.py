@@ -18,9 +18,12 @@ class HeartBeat(events.EventListener):
     Class implementing the heartbeat of the application.
     """
 
-    def run(self):
+    def run(self, slow = True):
         """
         Process PyGame events until halt is true.
+
+        :param slow: whether the simulation should be slowed for
+                     visible ticks and renders.
         """
 
         self.halt = False
@@ -32,8 +35,8 @@ class HeartBeat(events.EventListener):
             AppState.get_state().get_event_manager().post_event(events.ControlEvent())
 
             ticked = False
-
-            if AppState.get_state().is_running() and time_elapsed >= settings.SIMULATION_STEP_TIME:
+            
+            if not slow or (AppState.get_state().is_running() and time_elapsed >= settings.SIMULATION_STEP_TIME):
                 print "------- t = %s" % AppState.get_state().get_t()
                 AppState.get_state().get_event_manager().post_event(events.TickEvent())
                 time_elapsed = 0
@@ -41,7 +44,8 @@ class HeartBeat(events.EventListener):
 
             AppState.get_state().get_event_manager().post_event(events.DrawEvent(ticked and AppState.get_state().get_save_simulation_renders()))
 
-            time_elapsed += AppState.get_state().get_clock().tick(settings.MAX_FPS)
+            if slow:
+                time_elapsed += AppState.get_state().get_clock().tick(settings.MAX_FPS)
 
             if ticked:
                 AppState.get_state().increment_t()
@@ -72,13 +76,16 @@ def init():
 
     return surface
 
-def run_experiment(experiment_):
+def run_experiment(experiment_, render = True, interactive = True):
     """
     Run an experiment until it halts. Simulates the world defined 
     by the experiment and handles control events.
     
     :param experiment_: An object of type Experiment.
     """
+
+    if interactive:
+        assert render, "render must be true if interactive mode is set"
 
     # Initialize the event manager.
     event_manager = events.EventManager()
@@ -97,9 +104,10 @@ def run_experiment(experiment_):
     # Initialize pygame.
     surface = init()
 
-    # Initialize and register the view.
-    main_view = view.View(surface)
-    event_manager.register_listener(main_view)
+    if render:
+        # Initialize and register the view.
+        main_view = view.View(surface)
+        event_manager.register_listener(main_view)
 
     # Initialize the website trace history view.
     trace_view = agentevents.AgentEvents()
@@ -109,15 +117,16 @@ def run_experiment(experiment_):
     main_controller = controller.Controller()
     event_manager.register_listener(main_controller)
 
-    # Add the experiment controller to the controller
-    main_controller.set_experiment_controller(lambda e, coords: experiment_.controller(e, main_view.window_coords_to_world_coords(coords)))
+    if interactive:
+        # Add the experiment controller to the controller
+        main_controller.set_experiment_controller(lambda e, coords: experiment_.controller(e, main_view.window_coords_to_world_coords(coords)))
 
     # Start the webserver.
     webserver.trace_view = trace_view
     webserver.start()
 
     # Start the heartbeat.
-    heart_beat.run()
+    heart_beat.run(slow = not render)
 
 def main():
     """
@@ -129,7 +138,7 @@ def main():
     experiments.append(experiment.basic.BasicVisionExperiment())
 
     for experiment_ in experiments:
-        run_experiment(experiment_)
+        run_experiment(experiment_, render = False, interactive = False)
 
 if __name__ == '__main__':
     """
