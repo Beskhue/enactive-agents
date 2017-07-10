@@ -14,8 +14,6 @@ MAX_FPS = 60
 #: Time per simulation step in miliseconds (a lower step time results in a faster simulation, 0 = equal to draw speed)
 SIMULATION_STEP_TIME = 50
 
-LISTEN_PORT = 8418
-
 #: Port at which the internal web-server listens
 WEB_LISTEN_PORT = 8080
 
