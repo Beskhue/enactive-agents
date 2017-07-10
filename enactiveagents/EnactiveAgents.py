@@ -73,6 +73,13 @@ def init():
     return surface
 
 def run_experiment(experiment_):
+    """
+    Run an experiment until it halts. Simulates the world defined 
+    by the experiment and handles control events.
+    
+    :param experiment_: An object of type Experiment.
+    """
+
     # Initialize the event manager.
     event_manager = events.EventManager()
     AppState.get_state().set_event_manager(event_manager)
