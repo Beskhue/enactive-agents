@@ -107,6 +107,15 @@ class Experiment(object):
         """
         return False
 
+    def calculate_metrics(self):
+        """
+        Called after earch tick of the simulation.
+        Should return a dictionary of named metrics.
+
+        :return: A dictionary of named metrics.
+        """
+        return {}
+
     def load_agent(self, file_name):
         """
         Load an agent from file.

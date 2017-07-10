@@ -2,7 +2,11 @@
 Entry module of the application.
 """
 
+import os 
 import sys
+from time import strftime
+import json
+
 import pygame
 from appstate import AppState
 import settings
@@ -18,7 +22,7 @@ class HeartBeat(events.EventListener):
     Class implementing the heartbeat of the application.
     """
 
-    def run(self, slow = True, halt_fun = lambda _: False):
+    def run(self, slow = True, halt_fun = None, metrics_fun = None):
         """
         Process PyGame events until halt is true.
 
@@ -26,12 +30,14 @@ class HeartBeat(events.EventListener):
                      visible ticks and renders.
         """
 
+        self.metrics = []
+
         self.halt = False
 
         print("Starting heartbeat.")
         time_elapsed = 0
         while not self.halt:
-            if halt_fun(AppState.get_state().get_t()):
+            if callable(halt_fun) and halt_fun(AppState.get_state().get_t()):
                 self.halt = True
                 continue
 
@@ -45,6 +51,9 @@ class HeartBeat(events.EventListener):
                 AppState.get_state().get_event_manager().post_event(events.TickEvent())
                 time_elapsed = 0
                 ticked = True
+
+                if callable(metrics_fun):
+                    self.metrics.append(metrics_fun())
 
             AppState.get_state().get_event_manager().post_event(events.DrawEvent(ticked and AppState.get_state().get_save_simulation_renders()))
 
@@ -137,8 +146,17 @@ def run_experiment(experiment_, render = True, interactive = True, console_outpu
     webserver.start()
 
     # Start the heartbeat.
-    heart_beat.run(slow = render, halt_fun = experiment_.halt)
+    heart_beat.run(slow = render, halt_fun = experiment_.halt, metrics_fun = experiment_.calculate_metrics)
 
+    if len(heart_beat.metrics) > 0:
+        # Store experiment results
+        if not os.path.isdir(settings.RESULTS_DIR):
+            os.makedirs(settings.RESULTS_DIR)
+
+        file_path = os.path.join(settings.RESULTS_DIR, "%s - %s.json" % (strftime("%Y%m%dT%H%M%S"), experiment_.__class__.__name__))
+        with open(file_path, 'w') as f:
+            json.dump(heart_beat.metrics, f, indent=4, sort_keys=True)
+    
 def main():
     """
     Main function of the application.

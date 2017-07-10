@@ -23,6 +23,7 @@ ROOT_DIR = os.path.normpath(os.path.join(os.path.dirname(os.path.realpath(__file
 AGENT_DIR = os.path.join(ROOT_DIR, "_agents")
 WORLD_DIR = os.path.join(ROOT_DIR, "_worlds")
 EXPERIMENT_DIR = os.path.join(ROOT_DIR, "_experiments")
+RESULTS_DIR = os.path.join(ROOT_DIR, "_results", strftime("%Y%m%dT%H%M%S"))
 SIMULATIONS_RENDERS_DIR = os.path.join(ROOT_DIR, "_renders")
 SIMULATION_RENDERS_DIR = os.path.join(SIMULATIONS_RENDERS_DIR, strftime("%Y%m%dT%H%M%S"))
 WEBROOT_DIR = os.path.join(ROOT_DIR, "webroot")
