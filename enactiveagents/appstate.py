@@ -27,6 +27,13 @@ class AppState:
 
         return AppState.state
 
+    def reset(self):
+        self.state = None
+
+        self.running = True
+        self.save_simulation_renders = False
+        self.t = 0
+
     def set_event_manager(self, event_manager):
         self.event_manager = event_manager
 

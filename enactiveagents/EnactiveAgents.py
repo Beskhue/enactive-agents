@@ -87,6 +87,9 @@ def run_experiment(experiment_, render = True, interactive = True):
     if interactive:
         assert render, "render must be true if interactive mode is set"
 
+    # Reset the app state
+    AppState.get_state().reset()
+
     # Initialize the event manager.
     event_manager = events.EventManager()
     AppState.get_state().set_event_manager(event_manager)
