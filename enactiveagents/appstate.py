@@ -2,6 +2,8 @@
 Module implementing a global application state.
 """
 
+import logging
+
 class AppState:
     """
     Class to hold the application state.
@@ -33,6 +35,23 @@ class AppState:
         self.running = True
         self.save_simulation_renders = False
         self.t = 0
+
+        self.logger = logging.getLogger('enactive-agents')
+        self.logger.setLevel(logging.DEBUG)
+
+    def enable_console_logger(self):
+        ## create console handler and set level to debug
+        ch = logging.StreamHandler()
+        ch.setLevel(logging.DEBUG)
+
+        ## create formatter
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+        ## add formatter to ch
+        ch.setFormatter(formatter)
+
+        ## add ch to logger
+        self.logger.addHandler(ch)
 
     def set_event_manager(self, event_manager):
         self.event_manager = event_manager
@@ -85,3 +104,6 @@ class AppState:
 
     def get_t(self):
         return self.t
+
+    def get_logger(self):
+        return self.logger

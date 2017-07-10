@@ -274,7 +274,7 @@ class ConstructiveAgent(Agent):
         for (proposed_interaction, proclivity) in proposed:
             for alternative in self.interaction_memory.get_alternative_interactions(proposed_interaction):
                 if alternative in proposed_interactions:
-                    print "%s - Anticipating alternative %s for %s" % (self.name, alternative, proposed_interaction)
+                    AppState.get_state().get_logger().info("%s - Anticipating alternative %s for %s" % (self.name, alternative, proposed_interaction))
                     proclivity += self.interaction_memory.get_proclivity(alternative)
             proposed[n] = (proposed_interaction, proclivity)
             n += 1
@@ -317,10 +317,10 @@ class ConstructiveAgent(Agent):
             # TODO: in Katja's implementation the activated interactions contain
             # some set of default interactions. The paper itself does not seem 
             # to mention how to deal with an empty activated set.
-            print "%s - No proposed interactions: exploring" % self.name
+            AppState.get_state().get_logger().info("%s - No proposed interactions: exploring" % self.name)
             return random.choice(self.interaction_memory.get_primitive_interactions())
         else:
-            print "%s - Negative proclivity: exploring" % self.name
+            AppState.get_state().get_logger().info("%s - Negative proclivity: exploring" % self.name)
             return random.choice(self.interaction_memory.get_primitive_interactions())
 
     def update_context(self, enacted_interaction, learned_or_reinforced):
@@ -377,17 +377,17 @@ class ConstructiveAgent(Agent):
             if random.random() <= 0.1:
                 # Choose a random primitive interaction (not a primitive perception interaction)
                 self.intended_interaction = random.choice(filter(lambda x: isinstance(x, interaction.PrimitiveInteraction), self.interaction_memory.get_primitive_interactions()))
-                print "%s - EXPLORING" % (self.name)
+                AppState.get_state().get_logger().info("%s - EXPLORING" % (self.name))
             else:
                 self.intended_interaction = self.select_intended_interaction()
 
             self.enacting_interaction_sequence = self.intended_interaction.unwrap()
-            print "%s - Intending: %s" % (self.name, self.intended_interaction)
+            AppState.get_state().get_logger().info("%s - Intending: %s" % (self.name, self.intended_interaction))
 
         # Enact a primitive interaction from the sequence we are currently
         # enacting.
         intended_interaction = self.enacting_interaction_sequence[self.enacting_interaction_step]
-        print "%s - > %s" % (self.name, intended_interaction)
+        AppState.get_state().get_logger().info("%s - > %s" % (self.name, intended_interaction))
 
         # Step 4 of the sequential system, enact the interaction:
         # Post interaction preparation event
@@ -425,12 +425,12 @@ class ConstructiveAgent(Agent):
             # Reconstruct enacted interaction from hierarchy of intended
             # interaction
             enacted = self.intended_interaction.reconstruct_from_hierarchy(self.enacted_sequence)
-            print "%s - Enacted: %s" % (self.name, enacted)
+            AppState.get_state().get_logger().info("%s - Enacted: %s" % (self.name, enacted))
 
             # Add the interaction as an alternative interaction if the intended interaction failed
             if enacted != self.intended_interaction:
                 if self.interaction_memory.add_alternative_interaction(self.intended_interaction, enacted):
-                    print "%s - Interaction added as alternative" % self.name
+                    AppState.get_state().get_logger().info("%s - Interaction added as alternative" % self.name)
 
             # Step 5: add new or reinforce existing composite interactions
             learned_or_reinforced = []
@@ -540,7 +540,7 @@ class HumanAgent(Agent):
             chosen, 
             -1))
 
-        print "%s - > %s" % (self.name, chosen)
+        AppState.get_state().get_logger().info("%s - > %s" % (self.name, chosen))
         return chosen
 
     def enacted_interaction(self, interaction, data):
@@ -551,7 +551,7 @@ class HumanAgent(Agent):
             -1))
         self.interaction_memory.add_interaction_to_history(interaction)
 
-        print "%s - Enacted: %s" % (self.name, interaction)
+        AppState.get_state().get_logger().info("%s - Enacted: %s" % (self.name, interaction))
 
     def get_interaction_from_input(self):
         """
@@ -666,7 +666,7 @@ class ProgrammableAgent(Agent):
             -1))
         self.interaction_memory.add_interaction_to_history(interaction)
 
-        print "%s - Enacted: %s" % (self.name, interaction)
+        AppState.get_state().get_logger().info("%s - Enacted: %s" % (self.name, interaction))
 
     def set_program(self, program):
         """

@@ -40,7 +40,7 @@ class HeartBeat(events.EventListener):
             ticked = False
             
             if not slow or (AppState.get_state().is_running() and time_elapsed >= settings.SIMULATION_STEP_TIME):
-                print "------- t = %s" % AppState.get_state().get_t()
+                AppState.get_state().get_logger().info("------- t = %s" % AppState.get_state().get_t())
 
                 AppState.get_state().get_event_manager().post_event(events.TickEvent())
                 time_elapsed = 0
@@ -80,7 +80,7 @@ def init():
 
     return surface
 
-def run_experiment(experiment_, render = True, interactive = True):
+def run_experiment(experiment_, render = True, interactive = True, console_output = True):
     """
     Run an experiment until it halts. Simulates the world defined 
     by the experiment and handles control events.
@@ -128,6 +128,10 @@ def run_experiment(experiment_, render = True, interactive = True):
         # Add the experiment controller to the controller
         main_controller.set_experiment_controller(lambda e, coords: experiment_.controller(e, main_view.window_coords_to_world_coords(coords)))
 
+    if console_output:
+        # Enable console logger
+        AppState.get_state().enable_console_logger()
+
     # Start the webserver.
     webserver.register({'traces': trace_view})
     webserver.start()
@@ -145,7 +149,7 @@ def main():
     experiments.append(experiment.basic.BasicVisionExperiment())
 
     for experiment_ in experiments:
-        run_experiment(experiment_, render = False, interactive = False)
+        run_experiment(experiment_, render = False, interactive = False, console_output = True)
 
 if __name__ == '__main__':
     """
