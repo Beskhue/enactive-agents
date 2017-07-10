@@ -72,10 +72,7 @@ def init():
 
     return surface
 
-def main():
-    """
-    Main function of the application.
-    """
+def run_experiment(experiment_):
     # Initialize the event manager.
     event_manager = events.EventManager()
     AppState.get_state().set_event_manager(event_manager)
@@ -85,8 +82,6 @@ def main():
     event_manager.register_listener(heart_beat)
 
     # Initialize and register the world.
-    #experiment_ = experiment.experiment.Experiment.load_experiment("20161126T003019.p")
-    experiment_ = experiment.basic.BasicRandomExperiment()
     AppState.get_state().set_experiment(experiment_)
     world = experiment_.get_world()
     event_manager.register_listener(world)
@@ -116,6 +111,18 @@ def main():
 
     # Start the heartbeat.
     heart_beat.run()
+
+def main():
+    """
+    Main function of the application.
+    """
+
+    experiments = []
+    experiments.append(experiment.basic.BasicRandomExperiment())
+    experiments.append(experiment.experiment.Experiment.load_experiment("20161126T003019.p"))
+
+    for experiment_ in experiments:
+        run_experiment(experiment_)
 
 if __name__ == '__main__':
     """
