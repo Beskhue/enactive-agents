@@ -27,7 +27,7 @@ class HeartBeat(events.EventListener):
 
         print("Starting heartbeat.")
         time_elapsed = 0
-        while True:
+        while not self.halt:
 
             AppState.get_state().get_event_manager().post_event(events.ControlEvent())
 
@@ -48,7 +48,7 @@ class HeartBeat(events.EventListener):
 
     def notify(self, event):
         if isinstance(event, events.QuitEvent):
-            sys.exit()
+            self.halt = True
 
 def init():
     """
