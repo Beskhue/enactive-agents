@@ -133,7 +133,7 @@ def run_experiment(experiment_, render = True, interactive = True):
     webserver.start()
 
     # Start the heartbeat.
-    heart_beat.run(slow = not render, halt_fun = experiment_.halt)
+    heart_beat.run(slow = render, halt_fun = experiment_.halt)
 
 def main():
     """
