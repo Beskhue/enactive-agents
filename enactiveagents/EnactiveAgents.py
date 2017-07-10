@@ -18,7 +18,7 @@ class HeartBeat(events.EventListener):
     Class implementing the heartbeat of the application.
     """
 
-    def run(self, slow = True):
+    def run(self, slow = True, halt_fun = lambda _: False):
         """
         Process PyGame events until halt is true.
 
@@ -31,6 +31,9 @@ class HeartBeat(events.EventListener):
         print("Starting heartbeat.")
         time_elapsed = 0
         while not self.halt:
+            if halt_fun(AppState.get_state().get_t()):
+                self.halt = True
+                continue
 
             AppState.get_state().get_event_manager().post_event(events.ControlEvent())
 
@@ -38,6 +41,7 @@ class HeartBeat(events.EventListener):
             
             if not slow or (AppState.get_state().is_running() and time_elapsed >= settings.SIMULATION_STEP_TIME):
                 print "------- t = %s" % AppState.get_state().get_t()
+
                 AppState.get_state().get_event_manager().post_event(events.TickEvent())
                 time_elapsed = 0
                 ticked = True
@@ -129,7 +133,7 @@ def run_experiment(experiment_, render = True, interactive = True):
     webserver.start()
 
     # Start the heartbeat.
-    heart_beat.run(slow = not render)
+    heart_beat.run(slow = not render, halt_fun = experiment_.halt)
 
 def main():
     """

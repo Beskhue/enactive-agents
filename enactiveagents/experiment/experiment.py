@@ -94,6 +94,19 @@ class Experiment(object):
         """
         pass
 
+    def halt(self, t):
+        """
+        Called before each tick of the simulation.
+        Should return a boolean indicating whether the simulation
+        should be halted.
+
+        :param t: The current simulation time (first tick is 0, 
+                  the second tick 1, etc.)
+        :return: A boolean indicating whether the simulation should
+                 be halted.
+        """
+        return False
+
     def load_agent(self, file_name):
         """
         Load an agent from file.
