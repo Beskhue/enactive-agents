@@ -28,6 +28,12 @@ class HeartBeat(events.EventListener):
 
         :param slow: whether the simulation should be slowed for
                      visible ticks and renders.
+        :param halt_fun: A callable taking as input the current
+                         simulation time in ticks, and returning
+                         a boolean indicating whether the simulation
+                         should halt.
+        :param metrics_fun: A callable returning a dictionary of named
+                            metrics.
         """
 
         self.metrics = []
@@ -95,6 +101,15 @@ def run_experiment(experiment_, render = True, interactive = True, console_outpu
     by the experiment and handles control events.
     
     :param experiment_: An object of type Experiment.
+    :param render: A boolean indicating whether the simulation is
+                   to be rendered to the screen.
+    :param interactive: A boolean indicating whether interactive
+                        is to be enabled. If interactive mode is
+                        on, rendering should be on as well.
+    :param console_output: A boolean indicating whether simulation
+                           output is to be displayed in the console.
+    :param save_logs: A boolean indicating whether simulation output
+                      is to be saved in a log file.
     """
 
     if interactive:
