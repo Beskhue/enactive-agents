@@ -23,7 +23,7 @@ The controller package contains modules implementing the ways with which a user 
 
 Experiment
 ----------
-The experiment package contains modules to set up various experiments using the existing model. So, the *model* package implements the agents and the basic world logic, and the *experiment* package is used to set up experiments using this model. An experiment defines a world layout, defines the agents that interact in the world, and uses the basic world logic to define the interaction logic. For example, an experiment can define a "step" and "bump" interaction, and can then define whether an agent that is attempting to step successfully steps or bumps depending on whether there is a structure in front of the agent.
+The experiment package contains modules to set up various experiments using the existing model. So, the *model* package implements the agents and the basic world logic, and the *experiment* package is used to set up experiments using this model. An experiment defines a world layout, defines the agents that interact in the world, and uses the basic world logic to define the interaction logic. Additionally, an experiment can define when the simulation should automatically end, and can calculate metrics at each simulation tick. For example, an experiment can define a "step" and "bump" interaction, and can then define whether an agent that is attempting to step successfully steps or bumps depending on whether there is a structure in front of the agent.
 
 Usage
 =====
