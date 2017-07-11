@@ -352,3 +352,36 @@ An example piece of complex logic is shown below. Here, two agents can destroy a
                     self.world.add_enact_logic(entity, enact_logic)
                     entity.add_primitives(primitives)
                     entity.add_motivations(motivation)
+
+Automated experimentation
+=========================
+Experiments can define functions to alter the world state.
+These functions are automatically called during the simulation with the world parameter and the world time in ticks.
+This functionality is meant to enable automating experiments.
+
+For example, an experiment can be defined where food is automatically added to the world if there is no food present.
+The food is only to be placed at a "free position," i.e. a position where no other entity (wall, agent) is located.
+
+::
+
+    import random
+
+    class Exp(experiment.Experiment):
+
+        def __init__(self):
+            # Define the world and agent(s)
+            # ...
+
+            def add_food(world, t):
+                if len(world.get_entities_of_type(model.structure.Food)) == 0:
+                    # Add food
+                    positions = world.get_free_positions()
+                    p = random.choice(positions)
+
+                    food = model.structure.Food()
+                    food.set_position(p)
+                    world.add_entity(food)
+
+            self.world.add_mutate_callback(add_food)
+
+Note that multiple such mutate functions can be added to a single world.
