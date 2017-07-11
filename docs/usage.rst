@@ -30,6 +30,7 @@ Usage
 .. toctree::
 
     usage.experiments
+    usage.running
     usage.controls
     usage.vision
     usage.boredom
