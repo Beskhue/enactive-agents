@@ -166,6 +166,8 @@ class Sprite(pygame.sprite.Sprite):
                 interaction = interaction.get_primitive_interaction()
             if interaction.get_name() == "Step" and interaction.get_result() == "Fail":
                 color = (255,0,0,255)
+            elif interaction.get_name() == "Cuddle" and interaction.get_result() == "Succeed":
+                color = (0,255,0,255)
         return color
 
     def get_surface(self):
