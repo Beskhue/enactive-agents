@@ -14,6 +14,11 @@ In the most basic sense, an experiment consists of a world and a number of agent
 - define the primitive interactions agents can take, and assign these interactions to the agents;
 - define the agent-world interaction logic.
 
+Additionally, experiments can:
+
+- define functions to mutate the world state at each tick for automated experimentation;
+- define when a simulation should automatically stop;
+- define a function to calculate metrics.
 
 Defining the world
 ==================
