@@ -406,3 +406,24 @@ For example, to halt the experiment automatically after 5,000 ticks:
         
         def halt(self, t):
             return t == 5000
+            
+Keeping track of metrics
+========================
+In experiments it might be useful to automatically keep track of arbitrary metrics.
+For example, one might want to keep track of the amount of available food and an agent's homeostatic energy level over time.
+This is possbile by overriding the :func:`experiment.experiment.Experiment.calculate_metrics` method.
+The method is called automatically after each tick during simulation, and should return a dictionary of named metrics.
+The metrics are stored in a JSON-file.
+
+::
+
+    class Exp(experiment.Experiment):
+
+        def __init__(self):
+            # Define the world and agent(s)
+            # ...
+        
+        def calculate_metrics(self):
+            metrics = {'available_food': len(self.world.get_entities_of_type(model.structure.Food))}
+            for a in self.world.get_entities_of_type(model.agent.Agent):
+                metrics[a.get_name()] = a.get_homeostatic_value("energy")
