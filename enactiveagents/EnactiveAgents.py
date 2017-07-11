@@ -89,7 +89,7 @@ def init():
 
     return surface
 
-def run_experiment(experiment_, render = True, interactive = True, console_output = True):
+def run_experiment(experiment_, render = True, interactive = True, console_output = True, save_logs = True):
     """
     Run an experiment until it halts. Simulates the world defined 
     by the experiment and handles control events.
@@ -141,6 +141,13 @@ def run_experiment(experiment_, render = True, interactive = True, console_outpu
         # Enable console logger
         AppState.get_state().enable_console_logger()
 
+    if save_logs:
+        # Store experiment logs
+        if not os.path.isdir(settings.RESULTS_DIR):
+            os.makedirs(settings.RESULTS_DIR)
+        file_path = os.path.join(settings.RESULTS_DIR, "%s - %s.log" % (strftime("%Y%m%dT%H%M%S"), experiment_.__class__.__name__))
+        AppState.get_state().enable_file_logger(file_path)
+
     # Start the webserver.
     webserver.register({'traces': trace_view})
     webserver.start()
@@ -167,7 +174,7 @@ def main():
     experiments.append(experiment.basic.BasicVisionExperiment())
 
     for experiment_ in experiments:
-        run_experiment(experiment_, render = False, interactive = False, console_output = True)
+        run_experiment(experiment_, render = True, interactive = True, console_output = True, save_logs = True)
 
 if __name__ == '__main__':
     """
