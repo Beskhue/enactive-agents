@@ -1,7 +1,7 @@
-==================
-Simulation control
-==================
-The simulation can be controlled with keyboard commands. The following commands are implemented:
+==============================
+Interactive simulation control
+==============================
+The simulation can be controlled interactively with keyboard commands. The following commands are implemented:
 
 ================ ======================================================
 Key              Command
