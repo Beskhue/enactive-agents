@@ -144,6 +144,16 @@ class BasicHomeostaticExperiment(experiment.Experiment):
                 if isinstance(entity, model.agent.HomeostaticConstructiveAgent):
                     entity.set_homeostatic_value("energy", 100)
 
+    def calculate_metrics(self):
+        metrics = {}
+        for a in self.world.get_entities_of_type(model.agent.Agent):
+            metrics[a.get_name()] = a.get_homeostatic_value("energy")
+
+        return metrics
+
+    def halt(self, t):
+        return t > 150
+
 class BasicCoexsistenceExperiment(experiment.Experiment):
     world_representation = [
         "wwwww",
