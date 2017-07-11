@@ -385,3 +385,24 @@ The food is only to be placed at a "free position," i.e. a position where no oth
             self.world.add_mutate_callback(add_food)
 
 Note that multiple such mutate functions can be added to a single world.
+
+Automatically stopping simulations
+==================================
+To automatically stop a world simulation once some condition is satisfied, an experiment can override the :func:`experiment.experiment.Experiment.halt` method.
+The method gets as parameter the current world time in ticks.
+It should return a boolean indicating whether simulation should be halted.
+Additionally, as the method is defined as a member of the experiment class, it has access to the simulated world through the :code:`self.world` class object member.
+As such, it is possible to define arbitrary stopping conditions.
+
+For example, to halt the experiment automatically after 5,000 ticks:
+
+::
+
+    class Exp(experiment.Experiment):
+
+        def __init__(self):
+            # Define the world and agent(s)
+            # ...
+        
+        def halt(self, t):
+            return t == 5000
